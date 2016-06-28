@@ -2,7 +2,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Network.hpp>
 #include <iostream>
-class Client{
+class Client {
 private: sf::TcpSocket client_socket;
 public:
 	Client();
