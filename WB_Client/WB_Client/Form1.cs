@@ -19,6 +19,7 @@ namespace WB_Client
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            int skakdlkk;
             //var uno = "DICH";
         }
     }
