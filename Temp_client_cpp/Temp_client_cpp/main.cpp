@@ -14,7 +14,6 @@ int main() {
 
 	cout << name.size() << endl;
 
-
 	char ns[1];
 	ns[0] = to_string(name.length()).c_str()[0];
 	
