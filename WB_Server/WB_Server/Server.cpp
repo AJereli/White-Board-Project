@@ -4,6 +4,9 @@
 
 Server::Server(){
 	getUsersInfo(info_of_usres);
+	
+	
+	
 }
 Server::Server(unsigned int p) {
 	port = p;
@@ -27,14 +30,40 @@ void Server::initListen() { // »нициализирует слушающий сокет
 }
 bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr <Client> & client) {// јвторизаци€ на сервере. True если успешно, false иначе. 
 	
-	char name_size[3];
+	char name_size[1];
+	char pass_size[1];
 	std::size_t received = 0;
+
 	client_socket->receive(name_size, sizeof(name_size), received);
-	string name(name_size);
-	name.erase(3);
+	int iname_size = atoi(name_size) + 1;
+	cout << "iname_size: " << iname_size << endl;
+	char * name_c = new char[iname_size];	
+	client_socket->receive(name_c, iname_size, received);
+	cout << "Name: " << name_c << endl;
 	
-	std::cout << "The client said: " << name << std::endl;
-	return true;
+	
+	client_socket->receive(pass_size, sizeof(pass_size), received);
+	int ipass_size = atoi(pass_size) + 1;
+	cout << "ipass_size: " << ipass_size << endl;
+	char * pas = new char[ipass_size];
+	client_socket->receive(pas, ipass_size, received);
+	cout << "Pass: " <<  pas << endl;
+
+
+	for (auto it = info_of_usres.begin(); it != info_of_usres.end(); ++it) {
+		if (it->first == name_c)
+			if (it->second == pas) {
+				cout << "Welcom " << it->first << endl;
+				return true;
+				
+			}
+				
+	}
+
+	delete[] name_c;
+	delete[] pas;
+
+	return false;
 }
 
 void Server::startListening() {
@@ -53,9 +82,11 @@ void Server::startListening() {
 				if (listener.accept(*client_socket) == sf::Socket::Done) { // ≈сли клиент успешно подсоеденилс€ к сокету
 					cout << "some one try to connecnt" << endl;
 
-					authorization(client_socket, client);
-					users.push_back(make_pair(client_socket, client));
-					selector.add(*client_socket);
+					if (authorization(client_socket, client)) {
+						users.push_back(make_pair(client_socket, client));
+						selector.add(*client_socket);
+					}
+					
 				}
 			}
 			else {
