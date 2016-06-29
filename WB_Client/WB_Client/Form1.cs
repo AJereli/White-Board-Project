@@ -38,7 +38,7 @@ namespace WB_Client
                 MessageBox.Show("Заебись!");
             }
             else
-            {
+        {
                 MessageBox.Show("Пароль или логин введены неправильно!");
             }
         }
