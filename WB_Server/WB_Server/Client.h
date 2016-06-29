@@ -7,7 +7,7 @@ private: sf::TcpSocket client_socket;
 public:
 	Client();
 	Client(sf::TcpSocket * _client_socket);
-	sf::TcpSocket* getClietnSocket() { return &client_socket; }
+	const sf::TcpSocket& getClietnSocket() { return std::ref(client_socket); }
 	~Client();
 };
 
