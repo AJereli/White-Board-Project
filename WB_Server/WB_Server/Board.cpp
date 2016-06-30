@@ -1,0 +1,56 @@
+#include "Board.h"
+
+
+
+
+
+Board::Board(shared_ptr <Client> & _creator, shared_ptr <sf::TcpSocket> & _sock, sf::TcpListener * listener) {
+	cout << "Before: " << _creator.use_count() << endl;
+	creator = (_creator);
+	sock_creator = _sock;
+	members.add(*listener);
+	sock_of_members.push_back(sock_creator);
+	members.add(*sock_creator);
+
+	board_online = 1;
+	boar_main_thr = new sf::Thread(&Board::workingOnBoard, this);
+	boar_main_thr->launch();
+	cout << "After: " << _creator.use_count() << endl;
+}
+
+void Board::workingOnBoard() {
+	while (board_online) {
+		
+		if (members.wait()) {
+			
+			for (auto it = sock_of_members.begin(); it != sock_of_members.end(); ++it) {
+				sf::TcpSocket & client = **it;
+				if (members.isReady(client)) {
+					
+					char query_code[1];
+					size_t rec;
+					if (client.receive(query_code, 1, rec) == sf::Socket::Done) {
+						
+						if (query_code[0] == draw_board_code) {
+							cout << "sd";
+							char coord[4];
+							/*if (client.receive(coord, 4, rec) == sf::Socket::Done) {
+								cout << coord << endl;
+							}*/
+						}
+					}
+				}
+			}
+		}	
+
+	}
+}
+
+Board::~Board(){
+	cout << "del" << endl;
+	board_online = 0;
+	if (boar_main_thr != nullptr) {
+		boar_main_thr->terminate();
+		delete boar_main_thr;
+	}
+}
