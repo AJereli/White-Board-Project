@@ -6,7 +6,7 @@ class Board;
 Server::Server(){
 	getUsersInfo(info_of_usres);
 	
-	
+	all_boards.resize(100);
 	
 }
 Server::Server(unsigned int p) {
@@ -117,11 +117,14 @@ void Server::startListening() {
 							if ((int)query_code[0] == 5 && BOARD_CNT < 100) {
 								answer[0] = server_ok_code;
 								client.send(answer, 1);
-								all_boards.push_back(Board(it->second, it->first));
-								all_boards[BOARD_CNT].setBoard_ID(BOARD_CNT);
-								BOARD_CNT++;
 								
+								all_boards[BOARD_CNT] = new Board(it->second, it->first, &listener);
+								all_boards[BOARD_CNT]->setBoard_ID(BOARD_CNT);
+								BOARD_CNT++;
+								selector.remove(client);
 							}
+							
+							
 						}
 					}
 				}

@@ -8,6 +8,7 @@
 #include <memory>
 class Client;
 class Board;
+
 class Server{
 private: 
 		unsigned int port = 8000;
@@ -20,8 +21,9 @@ private:
 
 		vector <pair <string, string> > info_of_usres;
 		list <pair < shared_ptr <sf::TcpSocket>, shared_ptr <Client> > > users; // Список пользователей. Пара из клиент-сокета и клиента - пользователь.
-		vector <Board> all_boards;
-		sf::Mutex listen_mutex;
+		vector <Board*> all_boards;
+
+		//sf::Mutex listen_mutex;
 
 		bool authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr <Client> & client);
 		void initListen();
