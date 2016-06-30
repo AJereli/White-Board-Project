@@ -37,6 +37,9 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 	char * pas = nullptr;
 	int iname_size = 0;
 	int ipass_size = 0;
+
+	
+	
 	if (client_socket->receive(name_size, sizeof(name_size), received) == sf::Socket::Done) {
 		iname_size = atoi(name_size) + 1;
 		name_c  = new char[iname_size];
@@ -48,7 +51,7 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 		pas = new char[ipass_size];
 		client_socket->receive(pas, ipass_size, received);
 	}
-
+	
 
 
 	/*cout << "iname_size: " << iname_size << endl;
@@ -59,7 +62,7 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 	for (auto it = info_of_usres.begin(); it != info_of_usres.end(); ++it) // Поиск юзера в БД
 		if (it->first == name_c)
 			if (it->second == pas) {
-				client->setStatus(USER_CONFIRMED);
+				client->setStatus(USER_ONLINE);
 				client->setName(name_c);
 				cout << "Welcom " << it->first << endl;
 				return true;
@@ -91,12 +94,12 @@ void Server::startListening() {
 						users.push_back(make_pair(client_socket, client));
 						selector.add(*client_socket);
 						char answer[1];
-						answer[0] = server_ok_kode ;
+						answer[0] = server_ok_code ;
 						client_socket->send(answer, 1);
 					}
 					else {
 						char answer[1];
-						answer[0] = wrong_pass_kode;
+						answer[0] = wrong_pass_code;
 						client_socket->send(answer, 1);
 					}
 					
@@ -105,8 +108,16 @@ void Server::startListening() {
 			else {
 				for (auto it = users.begin(); it != users.end(); ++it) {
 					sf::TcpSocket & client = *it->first;
-					if (selector.isReady(client) == sf::Socket::Done && it->second->getStatus() == USER_CONFIRMED) {
-						//Send some Packet
+					if (selector.isReady(client) && it->second->getStatus() == USER_ONLINE) {
+						char query_code[1];
+						size_t rec;
+						if (client.receive(query_code, 1, rec) == sf::Socket::Done){
+							cout << "New query, code: " << (int)query_code[0] << endl;
+							if ((int)query_code[0] == 5 && BOARD_CNT < 100) {
+								client.send(server_ok_code, 1);
+								//Board bobo(*it->first, *it->second);
+							}
+						}
 					}
 				}
 			}

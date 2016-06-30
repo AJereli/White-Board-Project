@@ -7,8 +7,8 @@ using namespace std;
 
 int main() {
 	int port = 8000;
-	string name = "admdfin";
-	string pass = "passss";
+	string name = "admin";
+	string pass = "passw";
 	sf::TcpSocket socket;
 	std::size_t received = 0;
 
@@ -30,11 +30,18 @@ int main() {
 	sf::Int8 t;
 	sf::Packet p;
 	if (socket.receive(ans, sizeof(ans), received) == sf::Socket::Done) {
-		if (static_cast <int> (ans[1] == 0)) {
+		if (static_cast <int> (ans[0]) == 0) {
 			cout << "Welcome" << endl;
+			ans[0] = 5;
+			if (socket.send(ans, 1) == sf::Socket::Done) {
+				socket.receive(ans, 1, received);
+				if (static_cast <int> (ans[0]) == 0) {
+					cout << "BOARD CREATE" << endl;
+				}
+			}
 		}
 		else {
-			cout << "Wrong log or pass" << endl;
+			cout << "Wrong log or pass error code: " << (int)ans[0] << endl;
 		}
 	}
 	
