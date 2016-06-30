@@ -10,6 +10,8 @@ namespace WB_Client
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Menu());
+            Application.Run(new board());
             Application.Run(new Authorization());
         }
     }
