@@ -4,15 +4,21 @@
 #include <iostream>
 #include "Client.h"
 #include <list>
-
+#include <memory>
+class Client;
 class Server{
 private: 
 		unsigned int port = 8000;
 		bool running = 0;
+
 		sf::TcpListener listener;
 		sf::SocketSelector selector; //  онтейнер дл€ массового взаимодействи€ с сокетами
-		
-		std::list<Client > clients; 
+
+		vector <pair <string, string> > info_of_usres;
+		list <pair < shared_ptr <sf::TcpSocket>, shared_ptr <Client> > > users; // —писок пользователей. ѕара из клиент-сокета и клиента - пользователь.
+
+		bool authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr <Client> & client);
+		void initListen();
 public:
 	Server();
 	Server(unsigned int p);
