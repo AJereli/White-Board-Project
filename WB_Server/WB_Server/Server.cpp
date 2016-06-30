@@ -1,7 +1,8 @@
 #include "Server.h"
+#include "Board.h"
 #pragma comment(lib, "sfml-network.lib")
 
-
+class Board;
 Server::Server(){
 	getUsersInfo(info_of_usres);
 	
@@ -75,11 +76,11 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 }
 
 void Server::startListening() {
-
+	char answer[1];
 	initListen();
 	while (running) {
 		
-		if (selector.wait(sf::Time(sf::seconds(0.3)))){ // Ожидание принимающего сокета
+		if (selector.wait(sf::Time(sf::seconds(0.3f)))){ // Ожидание принимающего сокета
 			
 			if (selector.isReady(listener)) {// Если слушающий сокет готов принимать
 				
@@ -93,12 +94,12 @@ void Server::startListening() {
 					if (authorization(client_socket, client)) {
 						users.push_back(make_pair(client_socket, client));
 						selector.add(*client_socket);
-						char answer[1];
+						
 						answer[0] = server_ok_code ;
 						client_socket->send(answer, 1);
 					}
 					else {
-						char answer[1];
+						
 						answer[0] = wrong_pass_code;
 						client_socket->send(answer, 1);
 					}
@@ -114,8 +115,12 @@ void Server::startListening() {
 						if (client.receive(query_code, 1, rec) == sf::Socket::Done){
 							cout << "New query, code: " << (int)query_code[0] << endl;
 							if ((int)query_code[0] == 5 && BOARD_CNT < 100) {
-								client.send(server_ok_code, 1);
-								//Board bobo(*it->first, *it->second);
+								answer[0] = server_ok_code;
+								client.send(answer, 1);
+								all_boards.push_back(Board(it->second, it->first));
+								all_boards[BOARD_CNT].setBoard_ID(BOARD_CNT);
+								BOARD_CNT++;
+								
 							}
 						}
 					}

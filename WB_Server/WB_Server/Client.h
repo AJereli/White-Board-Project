@@ -4,7 +4,8 @@
 #include "consts.h"
 #include "System_Fucn.h"
 #include <iostream>
-#include "Board.h"
+
+#include <memory>
 class Client {
 private: sf::TcpSocket * client_socket = nullptr;
 		 char status = USER_WAIT_CONFIRM;
