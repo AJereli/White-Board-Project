@@ -31,6 +31,7 @@
             this.LoginTextBox = new System.Windows.Forms.RichTextBox();
             this.PasswordTextBox = new System.Windows.Forms.RichTextBox();
             this.EnterBatton = new System.Windows.Forms.Button();
+            this.Box = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // LoginTextBox
@@ -61,11 +62,19 @@
             this.EnterBatton.UseVisualStyleBackColor = true;
             this.EnterBatton.Click += new System.EventHandler(this.EnterBatton_Click);
             // 
+            // Box
+            // 
+            this.Box.Location = new System.Drawing.Point(76, 26);
+            this.Box.Name = "Box";
+            this.Box.Size = new System.Drawing.Size(100, 20);
+            this.Box.TabIndex = 3;
+            // 
             // Authorization
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Controls.Add(this.Box);
             this.Controls.Add(this.EnterBatton);
             this.Controls.Add(this.PasswordTextBox);
             this.Controls.Add(this.LoginTextBox);
@@ -73,6 +82,7 @@
             this.Text = "Авторизация";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -81,6 +91,7 @@
         private System.Windows.Forms.RichTextBox LoginTextBox;
         private System.Windows.Forms.RichTextBox PasswordTextBox;
         private System.Windows.Forms.Button EnterBatton;
+        private System.Windows.Forms.TextBox Box;
     }
 }
 

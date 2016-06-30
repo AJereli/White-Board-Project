@@ -9,8 +9,7 @@ namespace WB_Client
         {
             InitializeComponent();
         }
-        private string loginForm;
-        private string passwordForm;
+
         private void Form1_Load(object sender, EventArgs e)
         {
             
@@ -26,21 +25,20 @@ namespace WB_Client
 
         }
 
+        public bool result()
+        {
+            if (LoginTextBox.Text == "revi4" && PasswordTextBox.Text == "112595")
+                return true;
+            else
+                return false;
+        }
+
         private void EnterBatton_Click(object sender, EventArgs e)
         {
-            loginForm = LoginTextBox.Text;
-            passwordForm = PasswordTextBox.Text;
-            User MainUser = new User();
-            string login = MainUser.getLogin();
-            string password = MainUser.getPassword();
-            if (loginForm == login && passwordForm == password)
-            {
-                MessageBox.Show("Заебись!");
-            }
+            if (result())
+                Box.Text = "1";
             else
-            {
-                MessageBox.Show("Пароль или логин введены неправильно!");
-            }
+                Box.Text = "0";
         }
     }
 }
