@@ -20,7 +20,7 @@ public:
 
 	void setBoard_ID(int b_ID) { board_ID = b_ID; }
 
-	void addUser();
+	void addUser(shared_ptr <sf::TcpSocket> & _sock);
 	void workingOnBoard();
 
 	~Board();

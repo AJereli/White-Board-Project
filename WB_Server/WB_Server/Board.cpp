@@ -46,6 +46,14 @@ void Board::workingOnBoard() {
 	}
 }
 
+void Board::addUser(shared_ptr <sf::TcpSocket> & _sock) {
+	members.add(*_sock);
+	sock_of_members.push_back(_sock);
+	char query_code[1];
+	query_code[0] = server_ok_code;
+	_sock->send(query_code, sizeof(char));
+}
+
 Board::~Board(){
 	cout << "del" << endl;
 	board_online = 0;

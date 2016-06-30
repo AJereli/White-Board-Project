@@ -113,19 +113,24 @@ void Server::startListening() {
 						char query_code[1];
 						size_t rec;
 						if (client.receive(query_code, 1, rec) == sf::Socket::Done){
+
 							cout << "New query, code: " << (int)query_code[0] << endl;
-							if ((int)query_code[0] == 5 && BOARD_CNT < 100) {
+
+							if ((int)query_code[0] == new_board_code && BOARD_CNT < 100) {
 								answer[0] = server_ok_code;
 								client.send(answer, 1);
-								
+
 								all_boards[BOARD_CNT] = new Board(it->second, it->first, &listener);
 								all_boards[BOARD_CNT]->setBoard_ID(BOARD_CNT);
 								BOARD_CNT++;
+
 								selector.remove(client);
 							}
-							
-							
+							if ((int)query_code[0] == draw_board_code) {
+								
+							}
 						}
+
 					}
 				}
 			}
