@@ -5,8 +5,8 @@
 Server::Server(){
 	getUsersInfo(info_of_usres);
 	
-	
-	
+
+		
 }
 Server::Server(unsigned int p) {
 	port = p;
@@ -16,7 +16,7 @@ void Server::initListen() { // Инициализирует слушающий сокет
 	if (listener.listen(port) == sf::Socket::Done) {
 		cout << "Start server" << endl;
 		running = true;
-	}
+}
 	else {
 		////// Переписать на исключениях
 		int ex;
@@ -72,7 +72,7 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 }
 
 void Server::startListening() {
-
+	
 	initListen();
 	while (running) {
 		
@@ -86,17 +86,17 @@ void Server::startListening() {
 				
 				if (listener.accept(*client_socket) == sf::Socket::Done) { // Если клиент успешно подсоеденился к сокету
 					cout << "some one try to connecnt" << endl;
-
+					
 					if (authorization(client_socket, client)) {
 						users.push_back(make_pair(client_socket, client));
 						selector.add(*client_socket);
 						char answer[1];
-						answer[0] = server_ok_code ;
+						answer[0] = server_ok_kode ;
 						client_socket->send(answer, 1);
 					}
 					else {
 						char answer[1];
-						answer[0] = wrong_pass_code;
+						answer[0] = wrong_pass_kode;
 						client_socket->send(answer, 1);
 					}
 					

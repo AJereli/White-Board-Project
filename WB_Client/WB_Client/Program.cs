@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WB_Client
@@ -18,6 +15,12 @@ namespace WB_Client
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Menu());
             Application.Run(new board());
+            Application.Run(new Authorization());
+            User mainUser = new User();
+            //string login = "revi4";
+            //string password = "112595";
+            mainUser.setLogin("revi4");
+            mainUser.setPassword("112595");
         }
     }
 }

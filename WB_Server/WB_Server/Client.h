@@ -1,13 +1,21 @@
 #pragma once
 #include <SFML/System.hpp>
 #include <SFML/Network.hpp>
+#include "consts.h"
+#include "System_Fucn.h"
 #include <iostream>
 class Client {
-private: sf::TcpSocket client_socket;
+private: sf::TcpSocket * client_socket = nullptr;
+		 char status = USER_WAIT_CONFIRM;
+		 string name = "NoName";
 public:
 	Client();
-	Client(sf::TcpSocket * _client_socket);
-	const sf::TcpSocket& getClietnSocket() { return std::ref(client_socket); }
+	
+	sf::TcpSocket * getClietnSocket() { return const_cast <sf::TcpSocket *> (client_socket); }
+	char getStatus() { return status; }
+	void setStatus(const char st) { status = st; }
+	void setName(char * _name) { name = _name; }
+
 	~Client();
 };
 
