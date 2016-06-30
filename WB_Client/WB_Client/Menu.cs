@@ -24,29 +24,23 @@ namespace WB_Client
         private void loadOfBoard_Click(object sender, EventArgs e)//Создание новой доски. Работает при клике на нее
         {
                     
-        }
-
+        }        
         private void creatingOfBoard_Click(object sender, EventArgs e)//Загрузка доски.Работает при клике на нее
         {
-
-            board F2 = new board(); //переход к чистой доске
+            Board F2 = new Board(); //переход к чистой доске
             F2.Show();
             this.Close();//закрываем Menu
-        }
-        private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
-        {
-            Application.Exit(); //Закрытие приложения
-        }
-        //запрос на создание доски 5!!!!! query_board_code = 5
-        static private int port = 8000;
-        static private IPAddress ipAddr = IPAddress.Parse("127.0.1.1");
-        static void SendMessageFromSocket()
-        {
-            byte[] bytes = new byte[1024];
-  
-
-
-
-        }
+         }
+         private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
+         {
+             Application.Exit(); //Закрытие приложения
+         }
+         //запрос на создание доски 5!!!!! query_board_code = 5
+         static private int port = 8000;
+         static private IPAddress ipAddr = IPAddress.Parse("127.0.1.1");
+         static void SendMessageFromSocket()
+         {
+             byte[] bytes = new byte[1024]; 
+         }
     }
 }

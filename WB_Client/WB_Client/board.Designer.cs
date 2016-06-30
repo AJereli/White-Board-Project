@@ -1,6 +1,6 @@
 ﻿namespace WB_Client
 {
-    partial class Form1
+    partial class Board
     {
         /// <summary>
         /// Required designer variable.
@@ -30,14 +30,14 @@
         {
             this.SuspendLayout();
             // 
-            // Form1
+            // Board
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Name = "Form1";
-            this.Text = "board";
-            this.Load += new System.EventHandler(this.Form1_Load_1);
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Name = "Board";
+            this.Text = "Board";
+            this.Load += new System.EventHandler(this.Board_Load);
             this.ResumeLayout(false);
 
         }
