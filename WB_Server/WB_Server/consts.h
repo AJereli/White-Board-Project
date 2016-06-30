@@ -9,8 +9,8 @@ const char authorize_code = 1;
 
 
 
-const char query_board_code = 5;
-
+const char new_board_code = 5;
+const char connect_board_code = 6;
 const char draw_board_code = 7;
 
 

@@ -20,7 +20,7 @@ namespace WB_Client
         private string passwordForm;
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
         }
 
         private void LoginTextBox_TextChanged(object sender, EventArgs e)
@@ -45,7 +45,7 @@ namespace WB_Client
                 MessageBox.Show("Заебись!");
             }
             else
-        {
+            {
                 MessageBox.Show("Пароль или логин введены неправильно!");
             }
         }
