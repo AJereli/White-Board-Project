@@ -32,7 +32,7 @@ void Board::workingOnBoard() {
 					if (client.receive(query_code, sizeof(char), rec) == sf::Socket::Done) {
 						
 						if (query_code[0] == draw_board_code) {
-							
+							cout << "sd";
 							char coord[4];
 							if (client.receive(coord, sizeof(int), rec) == sf::Socket::Done) {
 								cout << coord << endl;

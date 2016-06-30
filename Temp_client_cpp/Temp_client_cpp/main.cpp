@@ -17,14 +17,13 @@ void workOnWin(sf::TcpSocket * arg) {
 			
 			if (event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Left) {
 				//cout << sf::Mouse::getPosition(win).x << " " << sf::Mouse::getPosition(win).y << endl;
-				string st;
-				st = sf::Mouse::getPosition(win).x;
-				cout << atoi(st.c_str()) << endl;
+				
+				
 				char query_code[1];
 				query_code[0] = draw_board_code;
 				size_t rec;
 				if (client.send(query_code, 1) == sf::Socket::Done) {
-					
+					client.send(to_string(sf::Mouse::getPosition(win).x).c_str(), sizeof(int));
 				}
 			}
 				
