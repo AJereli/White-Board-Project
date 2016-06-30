@@ -16,7 +16,8 @@ namespace WB_Client
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(new Menu());
+            Application.Run(new board());
         }
     }
 }
