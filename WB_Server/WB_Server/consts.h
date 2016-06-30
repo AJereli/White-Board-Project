@@ -4,7 +4,7 @@ using namespace std;
 
 const char server_ok_kode = 0;
 const char authorize_kode = 1;
-
+const char wrong_pass_kode = 2;
 
 
 
