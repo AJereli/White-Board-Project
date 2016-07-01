@@ -16,7 +16,7 @@ namespace WB_Client
         {
             InitializeComponent();
         }
-
+            
         private void Board_Load(object sender, EventArgs e)
         {
 

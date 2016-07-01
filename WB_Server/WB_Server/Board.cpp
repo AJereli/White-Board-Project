@@ -20,7 +20,7 @@ Board::Board(shared_ptr <Client> & _creator, shared_ptr <sf::TcpSocket> & _sock,
 
 void Board::workingOnBoard() {
 	while (board_online) {
-		
+		sf::sleep(sf::microseconds(100));
 		if (members.wait()) {
 			
 			for (auto it = sock_of_members.begin(); it != sock_of_members.end(); ++it) {
@@ -29,14 +29,14 @@ void Board::workingOnBoard() {
 					
 					char query_code[1];
 					size_t rec;
-					if (client.receive(query_code, 1, rec) == sf::Socket::Done) {
+					if (client.receive(query_code, sizeof(char), rec) == sf::Socket::Done) {
 						
 						if (query_code[0] == draw_board_code) {
-							cout << "sd";
+							
 							char coord[4];
-							/*if (client.receive(coord, 4, rec) == sf::Socket::Done) {
+							if (client.receive(coord, sizeof(int), rec) == sf::Socket::Done) {
 								cout << coord << endl;
-							}*/
+							}
 						}
 					}
 				}
