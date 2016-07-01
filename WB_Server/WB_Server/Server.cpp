@@ -126,8 +126,19 @@ void Server::startListening() {
 
 								selector.remove(client);
 							}
-							if ((int)query_code[0] == draw_board_code) {
-								
+							if ((int)query_code[0] == connect_board_code) {//Подключение к доске
+								char name_size[1];
+								size_t received;
+								if (client.receive(name_size, sizeof(name_size), received) == sf::Socket::Done) {// Узнаем имя основателя доски
+									int iname_size = atoi(name_size) + 1;
+									char * name_c = new char[iname_size];
+									client.receive(name_c, iname_size, received);
+									for (int i = 0; i < all_boards.size(); ++i) {//Если найдется такое имя, подключаемся к доске
+										if (all_boards[i]->getCreaterName() == name_c) { 
+											all_boards[i]->addUser(it->first);
+										}
+									}
+								}
 							}
 						}
 

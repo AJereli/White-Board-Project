@@ -34,10 +34,12 @@ namespace WB_Client
 
         private void Enter_Click(object sender, EventArgs e)
         {
-            if (Login.Text == "revi4" && Password.Text == "112595")
+            if (Login.Text == "revi4" && Password.Text == "11")
             {
                 Menu menuShow = new Menu();
-                menuShow.Show();
+                //menuShow.Show();
+                menuShow.ShowDialog();
+                
                 this.Close();
             }
             else

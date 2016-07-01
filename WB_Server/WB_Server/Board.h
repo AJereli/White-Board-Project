@@ -22,6 +22,7 @@ public:
 
 	void addUser(shared_ptr <sf::TcpSocket> & _sock);
 	void workingOnBoard();
+	string getCreaterName() { return creator->getName(); }
 
 	~Board();
 };

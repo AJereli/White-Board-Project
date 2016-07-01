@@ -52,6 +52,7 @@ void Board::addUser(shared_ptr <sf::TcpSocket> & _sock) {
 	char query_code[1];
 	query_code[0] = server_ok_code;
 	_sock->send(query_code, sizeof(char));
+	cout << sock_of_members.size() << endl;
 }
 
 Board::~Board(){
