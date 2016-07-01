@@ -8,7 +8,7 @@ class Board
 private:
 		int board_ID;
 		bool board_online = 0;
-		shared_ptr <Client> creator;
+		shared_ptr <Client> creator = nullptr;
 
 		shared_ptr <sf::TcpSocket> sock_creator;
 		sf::SocketSelector members ;
@@ -22,7 +22,7 @@ public:
 
 	void addUser(shared_ptr <sf::TcpSocket> & _sock);
 	void workingOnBoard();
-	string getCreaterName() { return creator->getName(); }
+	string getCreaterName();
 
 	~Board();
 };

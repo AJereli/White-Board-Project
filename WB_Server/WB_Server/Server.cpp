@@ -79,8 +79,8 @@ void Server::startListening() {
 	char answer[1];
 	initListen();
 	while (running) {
-		
-		if (selector.wait(sf::Time(sf::seconds(0.3f)))){ // Ожидание принимающего сокета
+		sf::sleep(sf::microseconds(1000));
+		if (selector.wait(sf::seconds(0.3f))){ // Ожидание принимающего сокета
 			
 			if (selector.isReady(listener)) {// Если слушающий сокет готов принимать
 				
@@ -133,8 +133,9 @@ void Server::startListening() {
 									int iname_size = atoi(name_size) + 1;
 									char * name_c = new char[iname_size];
 									client.receive(name_c, iname_size, received);
-									for (int i = 0; i < all_boards.size(); ++i) {//Если найдется такое имя, подключаемся к доске
+									for (int i = 0; i < BOARD_CNT; ++i) { //Если найдется такое имя, подключаемся к доске
 										if (all_boards[i]->getCreaterName() == name_c) { 
+											selector.remove(client);
 											all_boards[i]->addUser(it->first);
 										}
 									}
