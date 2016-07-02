@@ -137,7 +137,7 @@ void Server::startListening() {
 					cout << "some one try to connecnt" << endl;
 					client_socket->receive(answer, 1, rec);
 
-					if (answer[0] == authorize_code)
+					if (answer[0] == authorize_code)// Запрос авторизации
 						if (authorization(client_socket, client)) {
 							cout << "authorization\n";
 							users.push_back(make_pair(client_socket, client));
@@ -151,7 +151,7 @@ void Server::startListening() {
 							answer[0] = wrong_pass_code;
 							client_socket->send(answer, 1);
 						}
-					else if (answer[0] == registration_code)
+					else if (answer[0] == registration_code) // Запрос регистрации
 						if (registration(client_socket, client)) {
 							cout << "registration\n";
 							answer[0] = server_ok_code;
