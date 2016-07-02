@@ -9,5 +9,6 @@ bool getUsersInfo(vector <pair <string, string> > & info_of_usres) { // —читывае
 		users_read >> name >> pass;
 		info_of_usres.push_back(make_pair(name, pass));
 	}
+	users_read.close();
 	return true;
 }
