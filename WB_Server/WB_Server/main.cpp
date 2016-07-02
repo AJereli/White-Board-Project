@@ -1,24 +1,14 @@
-#include <iostream>
-#include <SFML/System.hpp>
-#include <SFML/Network.hpp>
-#include "Client.h"
-#include "Server.h"
-#include <list>
-#include <vector>
+#include "System_Fucn.h"
 
 using namespace std;
 
 
-
-
-
-
-
 int main() {
-	
-	
 	Server serv;
-
+	
+	
+	ofstream users_write("info/users_data.txt", ios_base::app);
+	
 	
 	serv.startListening();
 

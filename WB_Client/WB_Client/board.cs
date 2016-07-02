@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace WB_Client
 {
-    public partial class board : Form
+    public partial class Board : Form
     {
-        public board()
+        public Board()
         {
             InitializeComponent();
+        }
+            
+        private void Board_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

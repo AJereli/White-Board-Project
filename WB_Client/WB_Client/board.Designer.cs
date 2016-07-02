@@ -1,6 +1,6 @@
 ﻿namespace WB_Client
 {
-    partial class board
+    partial class Board
     {
         /// <summary>
         /// Required designer variable.
@@ -28,9 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // Board
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Text = "board";
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Name = "Board";
+            this.Text = "Board";
+            this.Load += new System.EventHandler(this.Board_Load);
+            this.ResumeLayout(false);
+
         }
 
         #endregion
