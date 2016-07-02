@@ -42,18 +42,21 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 	
 	
 	if (client_socket->receive(name_size, sizeof(name_size), received) == sf::Socket::Done) {
-		iname_size = atoi(name_size) + 1;
+		iname_size = atoi(name_size) ;
 		name_c  = new char[iname_size];
 		client_socket->receive(name_c, iname_size, received);
+		
 	}
 	
 	if (client_socket->receive(pass_size, sizeof(pass_size), received) == sf::Socket::Done) {
 		ipass_size = atoi(pass_size) + 1;
 		pas = new char[ipass_size];
 		client_socket->receive(pas, ipass_size, received);
+		
 	}
 	
-
+	/*cout << string(name_c, iname_size) << endl;
+	cout << string(pas, iname_size) << endl;*/
 
 	/*cout << "iname_size: " << iname_size << endl;
 	cout << "Name: " << name_c << endl;
@@ -126,8 +129,8 @@ void Server::startListening() {
 	char answer[1];
 	initListen();
 	while (running) {
-		
-		if (selector.wait(sf::Time(sf::seconds(0.3f)))){ // Ожидание принимающего сокета
+		sf::sleep(sf::microseconds(1000));
+		if (selector.wait(sf::seconds(0.3f))){ // Ожидание принимающего сокета
 			
 			if (selector.isReady(listener)) {// Если слушающий сокет готов принимать
 				
@@ -156,6 +159,40 @@ void Server::startListening() {
 			else {
 				for (auto it = users.begin(); it != users.end(); ++it) {
 					sf::TcpSocket & client = *it->first;
+					if (selector.isReady(client) && it->second->getStatus() == USER_ONLINE) {
+						char query_code[1];
+						size_t rec;
+						if (client.receive(query_code, 1, rec) == sf::Socket::Done){
+
+							cout << "New query, code: " << (int)query_code[0] << endl;
+
+							if ((int)query_code[0] == new_board_code && BOARD_CNT < 100) {
+								answer[0] = server_ok_code;
+								client.send(answer, 1);
+
+								all_boards[BOARD_CNT] = new Board(it->second, it->first, &listener);
+								all_boards[BOARD_CNT]->setBoard_ID(BOARD_CNT);
+								BOARD_CNT++;
+
+								selector.remove(client);
+							}
+							if ((int)query_code[0] == connect_board_code) {//Подключение к доске
+								char name_size[1];
+								size_t received;
+								if (client.receive(name_size, sizeof(name_size), received) == sf::Socket::Done) {// Узнаем имя основателя доски
+									int iname_size = atoi(name_size) + 1;
+									char * name_c = new char[iname_size];
+									client.receive(name_c, iname_size, received);
+									for (int i = 0; i < BOARD_CNT; ++i) { //Если найдется такое имя, подключаемся к доске
+										if (all_boards[i]->getCreaterName() == name_c) { 
+											selector.remove(client);
+											all_boards[i]->addUser(it->first);
+										}
+									}
+								}
+							}
+						}
+
 					if (selector.isReady(client) && it->second->getStatus() == USER_ONLINE) {
 						char query_code[1];
 						size_t rec;

@@ -98,6 +98,7 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>C:\SFML_VS_2014\SFML-2.3.2\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>SFML_DYNAMIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

@@ -40,7 +40,8 @@ int main() {
 	sf::TcpSocket socket;
 	//sf::RenderWindow * win = new sf::RenderWindow(sf::VideoMode(200, 200), "QQ");
 	
-	
+	draw_arr.setPrimitiveType(sf::LinesStrip);
+
 	int port = 8000;
 	string name = "admin";
 	string pass = "passw";
@@ -67,15 +68,31 @@ int main() {
 	if (socket.receive(ans, sizeof(ans), received) == sf::Socket::Done) {
 		if (static_cast <int> (ans[0]) == 0) {
 			cout << "Welcome" << endl;
-			ans[0] = 5;
-			if (socket.send(ans, 1) == sf::Socket::Done) {
-				socket.receive(ans, 1, received);
-				if (static_cast <int> (ans[0]) == 0) {
-					cout << "BOARD CREATE" << endl;
-					
-					th.launch();
+			int t;
+			cin >> t;
+			if (t == 5) {
+				ans[0] = 5;
+				if (socket.send(ans, 1) == sf::Socket::Done) {
+					socket.receive(ans, 1, received);
+					if (static_cast <int> (ans[0]) == 0) {
+						cout << "BOARD CREATE" << endl;
+
+						th.launch();
+					}
 				}
 			}
+			if (t == 6) {
+				ans[0] = 6;
+				if (socket.send(ans, 1) == sf::Socket::Done) {
+					socket.send(to_string(pass.length()).c_str(), 1);
+					socket.send(name.c_str(), name.size() + 1);
+					socket.receive(ans, 1, received);
+					if (ans[0] == server_ok_code) {
+						th.launch();
+					}
+				}
+			}
+			
 		}
 		else {
 			cout << "Wrong log or pass error code: " << (int)ans[0] << endl;

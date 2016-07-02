@@ -58,7 +58,9 @@
     <Compile Include="Board.Designer.cs">
       <DependentUpon>Board.cs</DependentUpon>
     </Compile>
-    <Compile Include="Menu.cs" />
+    <Compile Include="Menu.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Menu.Designer.cs">
       <DependentUpon>Menu.cs</DependentUpon>
     </Compile>
@@ -72,10 +74,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Menu.resx">
       <DependentUpon>Menu.cs</DependentUpon>
-    </EmbeddedResource>
-    <Compile Include="User.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="User.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
