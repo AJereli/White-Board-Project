@@ -5,6 +5,7 @@ namespace WB_Client
 {
     static class Program
     {
+        
         [STAThread]
         static void Main()
         {

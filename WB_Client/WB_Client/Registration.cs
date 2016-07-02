@@ -9,12 +9,16 @@ namespace WB_Client
     public partial class Registration : Form
     {
         static public int port = 8000;
-        static public int wrong_name_code = 101;
-        static public int server_ok_code = 0;
-        static public int registration_code = 2;
+        static public byte[] wrong_name_code = new byte[1];
+        
+        static public byte[] server_ok_code = new byte[1];
+        static public byte[] registration_code = new byte[1];
 
         public Registration()
         {
+            wrong_name_code[0] = 101;
+            server_ok_code[0] = 0;
+            registration_code[0] = 2;
             InitializeComponent();
         }
 
@@ -50,7 +54,7 @@ namespace WB_Client
             int loginLength = Login.Text.Length;
             int emailLenght = Email.Text.Length;
             int passwordLength = Password.Text.Length;
-            client.Send(Encoding.UTF8.GetBytes(registration_code.ToString()));
+            client.Send(registration_code);
             client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
             client.Send(Encoding.UTF8.GetBytes(Login.Text));           
             client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
@@ -59,11 +63,12 @@ namespace WB_Client
             client.Send(Encoding.UTF8.GetBytes(Email.Text));
 
             client.Receive(bytes);
+          
 
-            if (bytes[0] == server_ok_code)
+            if (bytes[0] == server_ok_code[0])
                 return true;
 
-            else if (bytes[0] == wrong_name_code)
+            else if (bytes[0] == wrong_name_code[0])
                 return false;
             else
                 return false;
@@ -77,6 +82,7 @@ namespace WB_Client
                 menuShow.Show();
                 this.Close();*/
                 MessageBox.Show("Все ок");
+                Close();
             }
             else
             {

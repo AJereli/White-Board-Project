@@ -9,12 +9,19 @@ namespace WB_Client
 
     public partial class Authorization : Form
     {
-        static private int port = 8000;
-        static private int wrong_pass_code = -2;
-        static private int server_ok_code = 0;
+        static public int port = 8000;
+        static public byte[] wrong_pass_code = new byte[1];
+        
 
+        static public byte[] server_ok_code = new byte[1];
+        static public byte[] authorize_code = new byte[1];
+
+        
         public Authorization()
         {
+            wrong_pass_code[0] = 100;
+            server_ok_code[0] = 0;
+            authorize_code[0] = 1;
             InitializeComponent();
         }
 
@@ -33,7 +40,7 @@ namespace WB_Client
 
         }
 
-        public bool postingServer(int port)
+        public bool authorizationServer(int port)
         {
             byte[] bytes = new byte[1024];
 
@@ -42,10 +49,9 @@ namespace WB_Client
             Socket client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
             client.Connect(ipEndPoint);
-
-            int loginLength = Login.Text.Length ;
-            int passwordLength = Password.Text.Length ;
-           
+            int loginLength = Login.Text.Length;
+            int passwordLength = Password.Text.Length;
+            client.Send(authorize_code);
             client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
             client.Send(Encoding.UTF8.GetBytes(Login.Text));
             client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
@@ -53,11 +59,9 @@ namespace WB_Client
 
             client.Receive(bytes);
 
-
-           
-            if (bytes[0] == server_ok_code)
+            if (bytes[0] == server_ok_code[0])
                 return true;
-            else if (bytes[0] == wrong_pass_code)
+            else if (bytes[0] == wrong_pass_code[0])
                 return false;
             else
                 return false;
@@ -65,7 +69,7 @@ namespace WB_Client
 
         private void Enter_Click(object sender, EventArgs e)
         {
-            if (postingServer(port))
+            if (authorizationServer(port))
             {
                 Menu menuShow = new Menu();
                 menuShow.Show();
@@ -75,6 +79,13 @@ namespace WB_Client
             {
                 MessageBox.Show("Неправильное имя или пароль!");
             }
+        }
+
+        private void registration_Click(object sender, EventArgs e)
+        {
+            Registration registrationShow = new Registration();
+            registrationShow.Show();
+            //this.Close();
         }
     }
 }

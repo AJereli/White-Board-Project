@@ -46,9 +46,9 @@
             // 
             // Email
             // 
-            this.Email.Location = new System.Drawing.Point(67, 87);
+            this.Email.Location = new System.Drawing.Point(67, 110);
             this.Email.Name = "Email";
-            this.Email.Size = new System.Drawing.Size(150, 30);
+            this.Email.Size = new System.Drawing.Size(150, 25);
             this.Email.TabIndex = 4;
             this.Email.Text = "";
             this.Email.TextChanged += new System.EventHandler(this.Email_TextChanged);
@@ -57,16 +57,16 @@
             // 
             this.Login.Location = new System.Drawing.Point(67, 38);
             this.Login.Name = "Login";
-            this.Login.Size = new System.Drawing.Size(150, 30);
+            this.Login.Size = new System.Drawing.Size(150, 25);
             this.Login.TabIndex = 3;
             this.Login.Text = "";
             this.Login.TextChanged += new System.EventHandler(this.Login_TextChanged);
             // 
             // Password
             // 
-            this.Password.Location = new System.Drawing.Point(67, 135);
+            this.Password.Location = new System.Drawing.Point(67, 74);
             this.Password.Name = "Password";
-            this.Password.Size = new System.Drawing.Size(150, 30);
+            this.Password.Size = new System.Drawing.Size(150, 25);
             this.Password.TabIndex = 6;
             this.Password.Text = "";
             this.Password.TextChanged += new System.EventHandler(this.Password_TextChanged);

@@ -5,7 +5,6 @@
 class Board;
 Server::Server() {
 	getUsersInfo(info_of_usres);
-
 	all_boards.resize(100);
 
 }
@@ -27,7 +26,6 @@ void Server::initListen() { // Инициализирует слушающий сокет
 		////// Переписать на исключениях
 	}
 	selector.add(listener);
-
 }
 bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr <Client> & client) {// Авторизация на сервере. True если успешно, false иначе. 	
 	char name_size[1];
@@ -63,7 +61,6 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 		delete[] name_c;
 	if (pas != nullptr)
 		delete[] pas;
-
 	return false;
 }
 
@@ -77,34 +74,29 @@ bool Server::registration(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr
 	bool name_check = 1;
 	ofstream users_write("info/users_data.txt", ios_base::app);
 
-
 	if (client_socket->receive(info_size, 1, received) == sf::Socket::Done)
-		i_n = atoi(info_size) + 1;
+		i_n = atoi(info_size);
 
 	name = new char[i_n];
 	client_socket->receive(name, i_n, received);
-	for (auto it = info_of_usres.begin(); it != info_of_usres.end(); ++it) {
+	for (auto it = info_of_usres.begin(); it != info_of_usres.end(); ++it) 
 		if (it->first == string(name, i_n)) {
 			name_check = 0;
 			break;
 		}
-	}
-
 	
-
 	if (client_socket->receive(info_size, 1, received) == sf::Socket::Done)
-		i_p = atoi(info_size) + 1;
+		i_p = atoi(info_size);
 	passw = new char[i_p];
 	client_socket->receive(passw, i_p, received);
-
+	
 	if (client_socket->receive(info_size, 1, received) == sf::Socket::Done)
-		i_e = atoi(info_size) + 1;
+		i_e = atoi(info_size);
 	email = new char[i_e];
 	client_socket->receive(email, i_e, received);
 
-	cout << "name: " << string(name, i_n) << " passw: " << string(passw, i_p) << " email: " << string(email, i_e) << endl;
 	if (name_check)
-		users_write << string(name, i_n) << string(passw, i_p) << string(email, i_e);
+		users_write  << string(name, i_n) << " " << string(passw, i_p) << " " << string(email, i_e) << endl;
 
 	users_write.close();
 	name != nullptr ? delete[] name : 1;
@@ -134,26 +126,24 @@ void Server::startListening() {
 
 
 				if (listener.accept(*client_socket) == sf::Socket::Done) { // Если клиент успешно подсоеденился к сокету
-					cout << "some one try to connecnt" << endl;
+					
 					client_socket->receive(answer, 1, rec);
-
-					if (answer[0] == authorize_code)// Запрос авторизации
+					cout << "some one try to connecnt with code: " << answer[0];
+					if (answer[0] == authorize_code) // Запрос авторизации
 						if (authorization(client_socket, client)) {
 							cout << "authorization\n";
 							users.push_back(make_pair(client_socket, client));
 							selector.add(*client_socket);
-
 							answer[0] = server_ok_code;
 							client_socket->send(answer, 1);
 						}
 						else {
-
 							answer[0] = wrong_pass_code;
 							client_socket->send(answer, 1);
 						}
-					else if (answer[0] == registration_code) // Запрос регистрации
+					
+					else if ((int)answer[0] ==(int) registration_code)  // Запрос регистрации
 						if (registration(client_socket, client)) {
-							cout << "registration\n";
 							answer[0] = server_ok_code;
 							client_socket->send(answer, 1);
 						}
@@ -161,7 +151,7 @@ void Server::startListening() {
 							answer[0] = wrong_name_code;
 							client_socket->send(answer, 1);
 						}
-
+					
 				}
 			}
 			else {
