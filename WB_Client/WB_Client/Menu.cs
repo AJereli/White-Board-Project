@@ -21,12 +21,12 @@ namespace WB_Client
         {
 
         }
-        private void loadOfBoard_Click(object sender, EventArgs e)//Создание новой доски. Работает при клике на нее
+        private void loadOfBoard_Click(object sender, EventArgs e)//Загрузка новой доски. Работает при клике на нее
         {
                     
         }
 
-        private void creatingOfBoard_Click(object sender, EventArgs e)//Загрузка доски.Работает при клике на нее
+        private void creatingOfBoard_Click(object sender, EventArgs e)//Создание доски.Работает при клике на нее
         {
 
             board F2 = new board(); //переход к чистой доске
@@ -39,12 +39,15 @@ namespace WB_Client
         }
         //запрос на создание доски 5!!!!! query_board_code = 5
         static private int port = 8000;
-        static private IPAddress ipAddr = IPAddress.Parse("127.0.1.1");
+       // static private IPAddress ipAddr = IPAddress.Parse("127.0.1.1");
         static void SendMessageFromSocket()
         {
-            byte[] bytes = new byte[1024];
-  
-
+            byte[] bytes = new byte[1024]; //выделяем память под сервер
+            //удаленная точка для сокета
+            IPHostEntry ipHost = Dns.GetHostEntry("127.0.1.1");
+            IPAddress ipAddr = ipHost.AddressList[0];
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port); 
+            Socket sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);//схемы адрессации, поддержка потокового соединения. TCP
 
 
         }
