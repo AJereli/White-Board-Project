@@ -1,6 +1,6 @@
 ﻿namespace WB_Client
 {
-    partial class Authorization
+    partial class Registration
     {
         /// <summary>
         /// Required designer variable.
@@ -28,71 +28,70 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.Enter = new System.Windows.Forms.Button();
+            this.Email = new System.Windows.Forms.RichTextBox();
             this.Login = new System.Windows.Forms.RichTextBox();
             this.Password = new System.Windows.Forms.RichTextBox();
-            this.Enter = new System.Windows.Forms.Button();
-            this.registration = new System.Windows.Forms.Button();
             this.SuspendLayout();
+            // 
+            // Enter
+            // 
+            this.Enter.Location = new System.Drawing.Point(67, 183);
+            this.Enter.Name = "Enter";
+            this.Enter.Size = new System.Drawing.Size(150, 23);
+            this.Enter.TabIndex = 5;
+            this.Enter.Text = "Зарегистрироваться";
+            this.Enter.UseVisualStyleBackColor = true;
+            this.Enter.Click += new System.EventHandler(this.Enter_Click);
+            // 
+            // Email
+            // 
+            this.Email.Location = new System.Drawing.Point(67, 87);
+            this.Email.Name = "Email";
+            this.Email.Size = new System.Drawing.Size(150, 30);
+            this.Email.TabIndex = 4;
+            this.Email.Text = "";
+            this.Email.TextChanged += new System.EventHandler(this.Email_TextChanged);
             // 
             // Login
             // 
-            this.Login.Location = new System.Drawing.Point(59, 39);
+            this.Login.Location = new System.Drawing.Point(67, 38);
             this.Login.Name = "Login";
             this.Login.Size = new System.Drawing.Size(150, 30);
-            this.Login.TabIndex = 0;
+            this.Login.TabIndex = 3;
             this.Login.Text = "";
             this.Login.TextChanged += new System.EventHandler(this.Login_TextChanged);
             // 
             // Password
             // 
-            this.Password.Location = new System.Drawing.Point(59, 103);
+            this.Password.Location = new System.Drawing.Point(67, 135);
             this.Password.Name = "Password";
             this.Password.Size = new System.Drawing.Size(150, 30);
-            this.Password.TabIndex = 1;
+            this.Password.TabIndex = 6;
             this.Password.Text = "";
             this.Password.TextChanged += new System.EventHandler(this.Password_TextChanged);
             // 
-            // Enter
-            // 
-            this.Enter.Location = new System.Drawing.Point(93, 168);
-            this.Enter.Name = "Enter";
-            this.Enter.Size = new System.Drawing.Size(75, 23);
-            this.Enter.TabIndex = 2;
-            this.Enter.Text = "Войти";
-            this.Enter.UseVisualStyleBackColor = true;
-            this.Enter.Click += new System.EventHandler(this.Enter_Click);
-            // 
-            // registration
-            // 
-            this.registration.Location = new System.Drawing.Point(59, 226);
-            this.registration.Name = "registration";
-            this.registration.Size = new System.Drawing.Size(150, 23);
-            this.registration.TabIndex = 3;
-            this.registration.Text = "Регистрация";
-            this.registration.UseVisualStyleBackColor = true;
-            this.registration.Click += new System.EventHandler(this.registration_Click);
-            // 
-            // Authorization
+            // Registration
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Controls.Add(this.registration);
-            this.Controls.Add(this.Enter);
             this.Controls.Add(this.Password);
+            this.Controls.Add(this.Enter);
+            this.Controls.Add(this.Email);
             this.Controls.Add(this.Login);
-            this.Name = "Authorization";
-            this.Text = "Authorization";
-            this.Load += new System.EventHandler(this.Authorization_Load);
+            this.Name = "Registration";
+            this.Text = "Registration";
+            this.Load += new System.EventHandler(this.Registration_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
+        private System.Windows.Forms.Button Enter;
+        private System.Windows.Forms.RichTextBox Email;
         private System.Windows.Forms.RichTextBox Login;
         private System.Windows.Forms.RichTextBox Password;
-        private System.Windows.Forms.Button Enter;
-        private System.Windows.Forms.Button registration;
     }
 }

@@ -6,19 +6,19 @@ using System.Net;
 
 namespace WB_Client
 {
-    public partial class Authorization : Form
+    public partial class Registration : Form
     {
         static public int port = 8000;
-        static public int wrong_pass_code = 100;
+        static public int wrong_name_code = 101;
         static public int server_ok_code = 0;
-        static public int authorize_code = 1;
+        static public int registration_code = 2;
 
-        public Authorization()
+        public Registration()
         {
             InitializeComponent();
         }
 
-        private void Authorization_Load(object sender, EventArgs e)
+        private void Registration_Load(object sender, EventArgs e)
         {
 
         }
@@ -28,12 +28,17 @@ namespace WB_Client
 
         }
 
+        private void Email_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
         private void Password_TextChanged(object sender, EventArgs e)
         {
 
         }
 
-        public bool authorizationServer(int port)
+        public bool registrationServer(int port)
         {
             byte[] bytes = new byte[1024];
 
@@ -43,19 +48,22 @@ namespace WB_Client
 
             client.Connect(ipEndPoint);
             int loginLength = Login.Text.Length;
+            int emailLenght = Email.Text.Length;
             int passwordLength = Password.Text.Length;
-            client.Send(Encoding.UTF8.GetBytes(authorize_code.ToString()));
+            client.Send(Encoding.UTF8.GetBytes(registration_code.ToString()));
             client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
-            client.Send(Encoding.UTF8.GetBytes(Login.Text));
+            client.Send(Encoding.UTF8.GetBytes(Login.Text));           
             client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
             client.Send(Encoding.UTF8.GetBytes(Password.Text));
+            client.Send(Encoding.UTF8.GetBytes(emailLenght.ToString()));
+            client.Send(Encoding.UTF8.GetBytes(Email.Text));
 
-            client.Receive(bytes);            
+            client.Receive(bytes);
 
             if (bytes[0] == server_ok_code)
                 return true;
 
-            else if (bytes[0] == wrong_pass_code)
+            else if (bytes[0] == wrong_name_code)
                 return false;
             else
                 return false;
@@ -63,23 +71,17 @@ namespace WB_Client
 
         private void Enter_Click(object sender, EventArgs e)
         {
-            if (authorizationServer(port))
+            if (registrationServer(port))
             {
-                Menu menuShow = new Menu();
+                /*Menu menuShow = new Menu();
                 menuShow.Show();
-                this.Close();
+                this.Close();*/
+                MessageBox.Show("Все ок");
             }
             else
             {
-                MessageBox.Show("Неправильное имя или пароль!");
+                MessageBox.Show("Это имя или Em@al занято!");
             }
-        }
-
-        private void registration_Click(object sender, EventArgs e)
-        {
-            Registration registrationShow = new Registration();
-            registrationShow.Show();
-            this.Close();
         }
     }
 }

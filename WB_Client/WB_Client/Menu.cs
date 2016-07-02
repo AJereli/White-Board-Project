@@ -28,7 +28,7 @@ namespace WB_Client
         private void creatingOfBoard_Click(object sender, EventArgs e)//Загрузка доски.Работает при клике на нее
         {
             Board F2 = new Board(); //переход к чистой доске
-            F2.Show();
+            F2.ShowDialog();
             this.Close();//закрываем Menu
          }
          private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
