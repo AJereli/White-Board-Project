@@ -42,18 +42,21 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 	
 	
 	if (client_socket->receive(name_size, sizeof(name_size), received) == sf::Socket::Done) {
-		iname_size = atoi(name_size) + 1;
+		iname_size = atoi(name_size) ;
 		name_c  = new char[iname_size];
 		client_socket->receive(name_c, iname_size, received);
+		
 	}
 	
 	if (client_socket->receive(pass_size, sizeof(pass_size), received) == sf::Socket::Done) {
 		ipass_size = atoi(pass_size) + 1;
 		pas = new char[ipass_size];
 		client_socket->receive(pas, ipass_size, received);
+		
 	}
 	
-
+	/*cout << string(name_c, iname_size) << endl;
+	cout << string(pas, iname_size) << endl;*/
 
 	/*cout << "iname_size: " << iname_size << endl;
 	cout << "Name: " << name_c << endl;
@@ -61,8 +64,8 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 	cout << "Pass: " << pas << endl;*/
 
 	for (auto it = info_of_usres.begin(); it != info_of_usres.end(); ++it) // Поиск юзера в БД
-		if (it->first == name_c)
-			if (it->second == pas) {
+		if (it->first == string(name_c, iname_size))
+			if (it->second == string(pas, iname_size)) {
 				client->setStatus(USER_ONLINE);
 				client->setName(name_c);
 				cout << "Welcom " << it->first << endl;
