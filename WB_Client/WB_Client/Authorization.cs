@@ -46,9 +46,7 @@ namespace WB_Client
         {
             byte[] bytes = new byte[1024];
 
-            IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
-            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-            Socket client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        
 
             client.Connect(ipEndPoint);
             int loginLength = Login.Text.Length;
@@ -75,7 +73,7 @@ namespace WB_Client
             {
                 Menu menuShow = new Menu();
                 menuShow.Show();
-                this.Close();
+                this.Hide();
             }
             else
             {

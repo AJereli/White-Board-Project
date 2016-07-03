@@ -46,11 +46,11 @@ namespace WB_Client
 
             IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-            Socket client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            Socket client = Authorization.client;
 
-            client.Connect(ipEndPoint);
+           // client.Connect(ipEndPoint);
 
-            client.Send(query_board_code);
+            Authorization.client.Send(query_board_code);
 
             client.Receive(bytes);
 
@@ -65,7 +65,7 @@ namespace WB_Client
         private void creatingOfBoard_Click(object sender, EventArgs e)//Загрузка доски.Работает при клике на нее
         {
             if (chekingServer(port)) {
-                Board F2 = new Board(); //переход к чистой доске
+                Board F2 = new Board(); //переход к чистойs доске
                 F2.ShowDialog();
                 this.Close();//закрываем Menu
             }
