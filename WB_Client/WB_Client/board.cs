@@ -24,22 +24,7 @@ namespace WB_Client
         
         private void Board_MouseMove(object sender, MouseEventArgs e)
         {
-            
-            if (e.Button == MouseButtons.Left)
-            {
-                //richTextBox1.AppendText( line_cnt.ToString());
-               
-                    
-                    Graphics g = this.CreateGraphics();
-
-                    Pen pen = new Pen(Color.Black, 2);
-                    g.DrawLine(pen, old_x, old_y, e.X, e.Y);
-                    line_cnt++;
-                    old_x = e.X;
-                    old_y = e.Y;
-             
-            }
-           
+                 
         }
         private void Board_Load(object sender, EventArgs e)
         {
@@ -54,7 +39,7 @@ namespace WB_Client
 
         private void Board_MouseUp(object sender, MouseEventArgs e)
         {
-            lol = true;
+           
         }
 
         private void timer1_Tick(object sender, EventArgs e)
