@@ -46,7 +46,7 @@ namespace WB_Client
         {
             byte[] bytes = new byte[1024];
 
-        
+
 
             client.Connect(ipEndPoint);
             int loginLength = Login.Text.Length;
@@ -74,8 +74,7 @@ namespace WB_Client
                 Menu menuShow = new Menu();
                 this.Hide();
                 menuShow.Show();
-
-                this.Hide();
+                
             }
             else
             {
