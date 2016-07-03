@@ -85,6 +85,7 @@
             this.Controls.Add(this.Login);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "Registration";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Регистрация";
             this.Load += new System.EventHandler(this.Registration_Load);
             this.ResumeLayout(false);
