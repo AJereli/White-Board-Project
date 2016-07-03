@@ -3,66 +3,98 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Windows.Input;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Windows;
 using System.Windows.Forms;
 using Timer = System.Timers.Timer;
-using System.Timers;
+using System.Runtime.InteropServices;
 
 namespace WB_Client
 {
+
+    
     public partial class Board : Form
     {
-        Thread countThread = null;
         bool lol = false;
-        float old_x = 0, old_y = 0;
-        static int line_cnt = 0;
-        public Board() { 
-        
+        Thread myThread;
+        List<Curve> curve_list;
+        Graphics m_grp;
+        List<Point> tmp_points;
+
+
+        public Board() {
             InitializeComponent();
+            curve_list = new List<Curve>() ;
+            m_grp = CreateGraphics();
+          
+            timer1.Start();
+            
         }
        
         
         private void Board_MouseMove(object sender, MouseEventArgs e)
         {
-            
-            if (e.Button == MouseButtons.Left)
-            {
-                //richTextBox1.AppendText( line_cnt.ToString());
-               
-                    
-                    Graphics g = this.CreateGraphics();
 
-                    Pen pen = new Pen(Color.Black, 2);
-                    g.DrawLine(pen, old_x, old_y, e.X, e.Y);
-                    line_cnt++;
-                    old_x = e.X;
-                    old_y = e.Y;
-             
+          
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && lol)
+            {
+                Point pt = new Point(e.X, e.Y);
+                tmp_points.Add(pt);
             }
-           
+
         }
         private void Board_Load(object sender, EventArgs e)
         {
-            
+           
         }
 
         private void Board_MouseDown(object sender, MouseEventArgs e)
         {
-            
-
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
+            {
+                lol = true;
+                tmp_points = new List<Point>();
+                Point pt = new Point(e.X, e.Y);
+                tmp_points.Add(pt);
+            }
+            else
+            {
+                richTextBox1.AppendText("qdwqdq\n");
+                for (int i = 0; i < curve_list.Count; i++)
+                {
+                    if (curve_list[1].Contains(new Point(e.X, e.Y)))
+                    {
+                        richTextBox1.AppendText(i.ToString() + "\n");
+                    }
+                }
+            }
+           
         }
+       
+       
 
         private void Board_MouseUp(object sender, MouseEventArgs e)
         {
-            lol = true;
+            lol = false;
+            curve_list.Add(new Curve(tmp_points));
+            
+           
+       
+
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            m_grp.Clear(Color.White);
+            foreach (var a in curve_list)
+            {
+                a.Draw(m_grp);
+            }
 
         }
 
@@ -71,4 +103,49 @@ namespace WB_Client
 
         }
     }
+    class Curve
+    {
+        private List<Point> points { get; set; }
+
+        private int thinkness { get; set; }
+        private Color penColor { get; set; }
+
+        public Curve(List<Point> pnts)
+        {
+            points = pnts;
+            thinkness = 2;
+            penColor = Color.Black;
+        }
+        private GraphicsPath GetPath()
+        {
+            var path = new GraphicsPath();
+            if (points.Count != 0)
+                path.AddCurve(points.ToArray());
+            return path;
+        }
+
+        private Pen GetPen()
+        {
+            return new Pen(penColor, thinkness);
+        }
+
+        public void Draw(Graphics g)
+        {
+            using (var pen = GetPen())
+            using (var path = GetPath())
+            {
+                g.DrawPath(pen, path);
+            }
+        }
+
+        public bool Contains(Point p)
+        {
+            using (var pen = GetPen())
+            using (var path = GetPath())
+            {
+                return path.IsOutlineVisible(p, pen);
+            }
+        }
+    }
+
 }
