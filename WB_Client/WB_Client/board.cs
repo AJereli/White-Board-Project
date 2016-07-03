@@ -20,9 +20,10 @@ namespace WB_Client
     
     public partial class Board : Form
     {
-        bool lol = false;
+        bool pressed = false;
 
         int mode = 0;
+        int idOfShape = -1;
         List<Curve> curve_list;
         Graphics m_grp;
         List<Point> tmp_points;
@@ -32,7 +33,8 @@ namespace WB_Client
             InitializeComponent();
             curve_list = new List<Curve>() ;
             m_grp = CreateGraphics();
-          
+            this.DoubleBuffered = true;
+            m_grp.Clear(Color.White);
             timer1.Start();
             
         }
@@ -42,13 +44,27 @@ namespace WB_Client
         {
 
           
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && lol && mode == 1)
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && pressed && mode == 1)
             {
                 Point pt = new Point(e.X, e.Y);
                 tmp_points.Add(pt);
                 curve_list[curve_list.Count - 1].points = tmp_points;
             }
 
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 0)
+            {
+                
+                if (idOfShape == -1)
+                    return;
+                Point stPoint = curve_list[idOfShape].select_point;
+                curve_list[idOfShape].offset = new Point (e.X - stPoint.X, e.Y - stPoint.Y);
+                richTextBox1.AppendText(new Point(e.X - stPoint.X, e.Y - stPoint.Y).ToString() + '\n');
+                for (int i = 0; i < curve_list[idOfShape].points.Capacity; i++)
+                {
+
+                    curve_list[idOfShape].points[i].Offset(curve_list[idOfShape].offset);
+                }
+            }
         }
         private void Board_Load(object sender, EventArgs e)
         {
@@ -60,25 +76,29 @@ namespace WB_Client
             if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 1)
             {
                 curve_list.Add(new Curve());
-                lol = true;
+                pressed = true;
                 tmp_points = new List<Point>();
-                Point pt = new Point(e.X, e.Y);
-                tmp_points.Add(pt);
+                tmp_points.Add(e.Location);
 
             }
-             
+
+
             if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 0)
             {
+               
                 for (int i = 0; i < curve_list.Count; i++)
                 {
-                    
                     if (curve_list[i].Contains(new Point(e.X, e.Y)))
                     {
-                        richTextBox1.AppendText(i.ToString() + "\n");
+                        curve_list[i].select_point = e.Location;
+                        idOfShape = i;
+                        richTextBox1.AppendText("Selected: " + idOfShape.ToString() + '\n');
+                        break;
                     }
                 }
+               
             }
-           
+
         }
        
        
@@ -86,20 +106,20 @@ namespace WB_Client
         private void Board_MouseUp(object sender, MouseEventArgs e)
         {
             if (mode == 1) {
-                lol = false;
-                //curve_list.Add(new Curve(tmp_points));
+                pressed = false;
+                
                 richTextBox1.AppendText(tmp_points.Count.ToString() + " точек\n");
-            }
-            
-            
-           
-       
+            }else if (mode == 0)
+                idOfShape = -1;
+
+
+
 
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            m_grp.Clear(Color.White);
+            
             foreach (var a in curve_list)
             {
                 a.Draw(m_grp);
@@ -122,16 +142,25 @@ namespace WB_Client
             mode = 1;
         }
     }
-    class Curve
+    abstract class Shape
     {
         public List<Point> points { get; set; }
-
         public int thinkness { get; set; }
+        public Point offset { get; set; }
+        public Point select_point { get; set; }
         public Color penColor { get; set; }
+        protected Pen GetPen()
+        {
+            return new Pen(penColor, thinkness);
+        }
+    }
+    class Curve :  Shape    {
+    
 
         public Curve()
         {
             thinkness = 2;
+            points = new List<Point>();
             penColor = Color.Black;
         }
         public Curve(List<Point> pnts)
@@ -148,13 +177,11 @@ namespace WB_Client
             return path;
         }
 
-        private Pen GetPen()
-        {
-            return new Pen(penColor, thinkness);
-        }
+       
 
         public void Draw(Graphics g)
         {
+           
             using (var pen = GetPen())
             using (var path = GetPath())
             {
