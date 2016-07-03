@@ -11,7 +11,7 @@ namespace WB_Client
     {
         static public int port = 8000;
         static public byte[] wrong_pass_code = new byte[1];
-        
+
 
         static public byte[] server_ok_code = new byte[1];
         static public byte[] authorize_code = new byte[1];
