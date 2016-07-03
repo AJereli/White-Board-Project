@@ -78,11 +78,10 @@ namespace WB_Client
         {
             if (registrationServer(port))
             {
-                /*Menu menuShow = new Menu();
+                MessageBox.Show("Успешно загегестрировались!");
+                Menu menuShow = new Menu();
+                this.Hide();
                 menuShow.Show();
-                this.Close();*/
-                MessageBox.Show("Все ок");
-                Close();
             }
             else
             {

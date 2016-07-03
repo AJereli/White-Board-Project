@@ -36,6 +36,8 @@
             // 
             // Login
             // 
+            this.Login.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Login.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Login.Location = new System.Drawing.Point(59, 39);
             this.Login.Name = "Login";
             this.Login.Size = new System.Drawing.Size(150, 30);
@@ -45,6 +47,7 @@
             // 
             // Password
             // 
+            this.Password.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Password.Location = new System.Drawing.Point(59, 103);
             this.Password.Name = "Password";
             this.Password.Size = new System.Drawing.Size(150, 30);
@@ -81,8 +84,9 @@
             this.Controls.Add(this.Enter);
             this.Controls.Add(this.Password);
             this.Controls.Add(this.Login);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "Authorization";
-            this.Text = "Authorization";
+            this.Text = "Авторизация";
             this.Load += new System.EventHandler(this.Authorization_Load);
             this.ResumeLayout(false);
 

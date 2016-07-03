@@ -46,27 +46,30 @@
             // 
             // Email
             // 
+            this.Email.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Email.Location = new System.Drawing.Point(67, 110);
             this.Email.Name = "Email";
-            this.Email.Size = new System.Drawing.Size(150, 25);
+            this.Email.Size = new System.Drawing.Size(150, 30);
             this.Email.TabIndex = 4;
             this.Email.Text = "";
             this.Email.TextChanged += new System.EventHandler(this.Email_TextChanged);
             // 
             // Login
             // 
+            this.Login.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Login.Location = new System.Drawing.Point(67, 38);
             this.Login.Name = "Login";
-            this.Login.Size = new System.Drawing.Size(150, 25);
+            this.Login.Size = new System.Drawing.Size(150, 30);
             this.Login.TabIndex = 3;
             this.Login.Text = "";
             this.Login.TextChanged += new System.EventHandler(this.Login_TextChanged);
             // 
             // Password
             // 
+            this.Password.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Password.Location = new System.Drawing.Point(67, 74);
             this.Password.Name = "Password";
-            this.Password.Size = new System.Drawing.Size(150, 25);
+            this.Password.Size = new System.Drawing.Size(150, 30);
             this.Password.TabIndex = 6;
             this.Password.Text = "";
             this.Password.TextChanged += new System.EventHandler(this.Password_TextChanged);
@@ -80,8 +83,9 @@
             this.Controls.Add(this.Enter);
             this.Controls.Add(this.Email);
             this.Controls.Add(this.Login);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "Registration";
-            this.Text = "Registration";
+            this.Text = "Регистрация";
             this.Load += new System.EventHandler(this.Registration_Load);
             this.ResumeLayout(false);
 
