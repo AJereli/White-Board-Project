@@ -13,8 +13,17 @@ namespace WB_Client
 {
     public partial class Menu : Form
     {
+        static private int port = 8000;
+        static public byte[] query_board_code = new byte[1]; //5
+        static public byte[] connect_board_code = new byte[1]; //6
+        static public byte[] create_board_err_code = new byte[1]; //105
+        static public byte[] server_ok_code = new byte[1];
         public Menu()
         {
+            server_ok_code[0] = 0;
+            query_board_code[0] = 5;
+            create_board_err_code[0] = 105;
+            connect_board_code[0] = 6;
             InitializeComponent();
         }
         private void Menu_Load(object sender, EventArgs e)//Создаем меню
@@ -30,27 +39,24 @@ namespace WB_Client
              Application.Exit(); //Закрытие приложения
          }
         //запрос на создание доски 5!!!!! query_board_code = 5
-        static private int port = 8000;
-        static private int query_board_code = 5;
-        static private int connect_board_code = 6;
-        static private int create_board_err_code = 105;
-
         public bool chekingServer(int port)
          {
              byte[] bytes = new byte[1024];
 
-            IPAddress ipAddr = IPAddress.Parse("127.0.1.1");
+            IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
             Socket client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
             client.Connect(ipEndPoint);
 
+            client.Send(query_board_code);
+
             client.Receive(bytes);
 
-            if (bytes[0] == query_board_code )
+            if (bytes[0] == server_ok_code[0])
                 return true;
 
-            else if (bytes[0] == create_board_err_code)
+            else if (bytes[0] == create_board_err_code[0])
                 return false;
             else
                 return false;
