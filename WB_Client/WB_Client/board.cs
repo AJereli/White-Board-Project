@@ -21,7 +21,8 @@ namespace WB_Client
     public partial class Board : Form
     {
         bool lol = false;
-        Thread myThread;
+
+        int mode = 0;
         List<Curve> curve_list;
         Graphics m_grp;
         List<Point> tmp_points;
@@ -41,10 +42,11 @@ namespace WB_Client
         {
 
           
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && lol)
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && lol && mode == 1)
             {
                 Point pt = new Point(e.X, e.Y);
                 tmp_points.Add(pt);
+                curve_list[curve_list.Count - 1].points = tmp_points;
             }
 
         }
@@ -55,19 +57,22 @@ namespace WB_Client
 
         private void Board_MouseDown(object sender, MouseEventArgs e)
         {
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 1)
             {
+                curve_list.Add(new Curve());
                 lol = true;
                 tmp_points = new List<Point>();
                 Point pt = new Point(e.X, e.Y);
                 tmp_points.Add(pt);
+
             }
-            else
+             
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 0)
             {
-                richTextBox1.AppendText("qdwqdq\n");
                 for (int i = 0; i < curve_list.Count; i++)
                 {
-                    if (curve_list[1].Contains(new Point(e.X, e.Y)))
+                    
+                    if (curve_list[i].Contains(new Point(e.X, e.Y)))
                     {
                         richTextBox1.AppendText(i.ToString() + "\n");
                     }
@@ -80,8 +85,12 @@ namespace WB_Client
 
         private void Board_MouseUp(object sender, MouseEventArgs e)
         {
-            lol = false;
-            curve_list.Add(new Curve(tmp_points));
+            if (mode == 1) {
+                lol = false;
+                //curve_list.Add(new Curve(tmp_points));
+                richTextBox1.AppendText(tmp_points.Count.ToString() + " точек\n");
+            }
+            
             
            
        
@@ -102,14 +111,29 @@ namespace WB_Client
         {
 
         }
+
+        private void Select_Click(object sender, EventArgs e)
+        {
+            mode = 0;
+        }
+
+        private void Pen_Click(object sender, EventArgs e)
+        {
+            mode = 1;
+        }
     }
     class Curve
     {
-        private List<Point> points { get; set; }
+        public List<Point> points { get; set; }
 
-        private int thinkness { get; set; }
-        private Color penColor { get; set; }
+        public int thinkness { get; set; }
+        public Color penColor { get; set; }
 
+        public Curve()
+        {
+            thinkness = 2;
+            penColor = Color.Black;
+        }
         public Curve(List<Point> pnts)
         {
             points = pnts;
