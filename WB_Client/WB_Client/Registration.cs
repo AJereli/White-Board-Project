@@ -112,5 +112,14 @@ namespace WB_Client
                 MessageBox.Show("Минимальное количество символов в поле Login 3!");
             }
         }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) //закрытие окна при нажатии клавиши "Esc"
+        {
+            if (keyData == Keys.Escape)
+            {
+                this.Close();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
     }
 }
