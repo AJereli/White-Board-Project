@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -90,6 +91,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Registration.resx">
       <DependentUpon>Registration.cs</DependentUpon>
@@ -106,6 +108,42 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\color1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\black.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\blue.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\green.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\line.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\pink.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\rect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\red.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\select.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\select_color.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\yellow.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
