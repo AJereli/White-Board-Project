@@ -37,9 +37,42 @@ namespace WB_Client
         }
         private void Menu_Load(object sender, EventArgs e)//Создаем меню
         {
+            System.Timers.Timer myTimer = new System.Timers.Timer(10000); //Создаем таймер
+            myTimer.Elapsed += new System.Timers.ElapsedEventHandler(myTimerPing);
+            myTimer.Start();
 
         }
-       
+        public bool chekingPing(int port) //функция отправки пинга
+        {
+            byte[] bytes = new byte[1024];
+
+            IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
+            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
+
+            Authorization.client.Send(ping_of_server);
+
+            client.Receive(bytes);
+
+            if (bytes[0] == ping_of_server[0])
+                return true;
+
+            else
+                return false;
+        }
+        void myTimerPing(object sender, System.Timers.ElapsedEventArgs e) //посылка пинга
+        {
+            if (chekingPing(port))
+            {
+                 //видимо просто работает
+            }
+            else
+            {
+                MessageBox.Show("А сервер то упал");
+                Application.Exit();
+            }
+        }
+
+
         private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
          {
              Application.Exit(); //Закрытие приложения
