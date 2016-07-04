@@ -116,7 +116,7 @@ namespace WB_Client
         {
             if (keyData == Keys.Escape)
             {
-                this.Close();
+                Application.Exit();
                 return true;
             }
             return base.ProcessCmdKey(ref msg, keyData);
