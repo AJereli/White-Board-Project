@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -37,6 +38,7 @@ namespace WB_Client
         virtual protected GraphicsPath GetPath() // Без переопределния подходит только под Curve
         {
             var path = new GraphicsPath();
+            MessageBox.Show(path.ToString());
             try
             {
                 if (points.Count != 0)

@@ -34,6 +34,7 @@ namespace WB_Client
         int mode = 0;
         int idOfShape = -1; // Сюда Номер выбранного объекта в списке
         int actualThickness = 2;
+        static int loadMode;
 
         Point prevLoc;
         Color selectedColor = Color.Black;
@@ -84,7 +85,7 @@ namespace WB_Client
                     Point offset = new Point(e.X - stPoint.X, (e.Y - stPoint.Y)); // Смещение
                     shape_list[idOfShape].transform.Translate(offset.X, offset.Y, MatrixOrder.Append);
                     shape_list[idOfShape].select_point = e.Location; // Новая "нулевая" точка 
-
+                    
                 }
                 prevLoc = e.Location;
             }
