@@ -80,6 +80,7 @@
             this.Controls.Add(this.richTextBox1);
             this.DoubleBuffered = true;
             this.Name = "Board";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Board";
             this.Load += new System.EventHandler(this.Board_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Board_MouseDown);

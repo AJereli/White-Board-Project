@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Net;
@@ -13,6 +14,8 @@ namespace WB_Client
         
         static public byte[] server_ok_code = new byte[1];
         static public byte[] registration_code = new byte[1];
+
+        static public string pattern = @"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" + @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$";
 
         public Registration()
         {
@@ -76,18 +79,38 @@ namespace WB_Client
 
         private void Enter_Click(object sender, EventArgs e)
         {
-            if (registrationServer(port))
+            if (Login.Text.Length >= 3)
             {
-                /*Menu menuShow = new Menu();
-                menuShow.Show();
-                this.Close();*/
-                MessageBox.Show("Все ок");
-                Close();
+                if (Password.Text.Length >= 5)
+                {
+                    if (Regex.IsMatch(Email.Text, pattern, RegexOptions.IgnoreCase))//Проверка соответствия строки шаблону
+                    {
+                        if (registrationServer(port))
+                        {
+                            MessageBox.Show("Успешно загегестрировались!");
+                            Menu menuShow = new Menu();
+                            this.Hide();
+                            menuShow.Show();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Это имя занято!");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Некорректный email!");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Минимальное количество символов в поле Password 5!");
+                }
             }
             else
             {
-                MessageBox.Show("Это имя или Em@al занято!");
-            }
+                MessageBox.Show("Минимальное количество символов в поле Login 3!");
+            }        
         }
     }
 }

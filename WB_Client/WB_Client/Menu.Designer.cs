@@ -35,7 +35,7 @@
             // 
             // exitingFromProgram
             // 
-            this.exitingFromProgram.Location = new System.Drawing.Point(77, 298);
+            this.exitingFromProgram.Location = new System.Drawing.Point(77, 134);
             this.exitingFromProgram.Name = "exitingFromProgram";
             this.exitingFromProgram.Size = new System.Drawing.Size(120, 23);
             this.exitingFromProgram.TabIndex = 0;
@@ -45,7 +45,7 @@
             // 
             // loadOfBoard
             // 
-            this.loadOfBoard.Location = new System.Drawing.Point(77, 172);
+            this.loadOfBoard.Location = new System.Drawing.Point(77, 79);
             this.loadOfBoard.Name = "loadOfBoard";
             this.loadOfBoard.Size = new System.Drawing.Size(120, 23);
             this.loadOfBoard.TabIndex = 1;
@@ -55,7 +55,7 @@
             // 
             // creatingOfBoard
             // 
-            this.creatingOfBoard.Location = new System.Drawing.Point(77, 59);
+            this.creatingOfBoard.Location = new System.Drawing.Point(77, 21);
             this.creatingOfBoard.Name = "creatingOfBoard";
             this.creatingOfBoard.Size = new System.Drawing.Size(120, 23);
             this.creatingOfBoard.TabIndex = 2;
@@ -67,12 +67,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(276, 358);
+            this.ClientSize = new System.Drawing.Size(284, 261);
             this.Controls.Add(this.creatingOfBoard);
             this.Controls.Add(this.loadOfBoard);
             this.Controls.Add(this.exitingFromProgram);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "Menu";
-            this.Text = "Menu";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Меню";
             this.Load += new System.EventHandler(this.Menu_Load);
             this.ResumeLayout(false);
 
