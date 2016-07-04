@@ -27,6 +27,7 @@ private:
 
 		bool authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr <Client> & client);
 		void initListen();
+		bool Server::registration(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr <Client> & client);
 public:
 	Server();
 	Server(unsigned int p);

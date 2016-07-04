@@ -16,6 +16,12 @@ const char draw_board_code = 7;
 const char wrong_pass_code = 100;
 const char wrong_name_code = 101;
 
+
+
+
+const char create_board_err_code = 105;
+
+
 ////////
 
 //////// USERS CODE

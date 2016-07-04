@@ -6,12 +6,60 @@
 using namespace std;
 
 const char draw_board_code = 7;
+const char server_ok_code = 0;
+
+sf::VertexArray draw_arr;
+
+string makeDrawPacket(sf::Vector2i & coords, int mode = 2) {
+	string draw_packet_str = to_string(coords.x) + '+' + to_string(coords.y) + '+' + to_string(mode);	
+	return draw_packet_str;
+}
+pair <sf::Vector2i, int> parsePacket(char * draw_packet) {
+	int mode_max_len = 5; // Ќасколько длинным может быть значением mode (parsed.second)
+	pair <sf::Vector2i, int> parsed;
+	string dp_str = draw_packet;
+	int f_p = dp_str.find_first_of('+'); // f_p - first plus, находит место первого вхождени€ знака '+'
+	int e_p = dp_str.find_last_of('+');// e_p - end plus, находит место последнего вхождени€ знака '+'
+	parsed.first.x = atoi(dp_str.substr(0, f_p).c_str());
+	parsed.first.y = atoi(dp_str.substr(f_p + 1, e_p - f_p - 1).c_str());
+	parsed.second = atoi(dp_str.substr(e_p + 1, mode_max_len).c_str());
+
+	cout << "parsed: " << parsed.first.x << " " << parsed.first.y << " " << parsed.second << endl;
+
+	return parsed;
+}
+
+void drawPoint( pair <sf::Vector2i, int> & pnt) {
+	sf::Vertex vertex;
+	vertex.color = sf::Color::Black;
+	for (int i = pnt.first.x; i < pnt.first.x + pnt.second; i++) {
+		for (int j = pnt.first.y; j < pnt.first.y + pnt.second; j++) {
+			vertex.position = sf::Vector2f(i, j);
+			draw_arr.append(vertex);
+		}
+	}
+	cout << draw_arr.getVertexCount() << endl;
+}
 
 void workOnWin(sf::TcpSocket * arg) {
-	sf::RenderWindow win(sf::VideoMode(150, 150), "QQ");
+	sf::RenderWindow win(sf::VideoMode(500, 150), "QQ");
 	sf::TcpSocket & client = *arg;
+	sf::SocketSelector sel;
+	sel.add(client);
+	size_t rec;
+	char draw_packet[12];
+	bool other_chenge = 0;
+	bool you_chenge = 0;
 	while (1) {
+		sf::sleep(sf::microseconds(100));
 		sf::Event event;
+		if (sel.wait(sf::seconds(0.003f))) {
+			if (sel.isReady(client)) {
+				if (client.receive(draw_packet, sizeof(int) * 3, rec) == sf::Socket::Done) {
+					drawPoint(parsePacket(draw_packet));
+				}
+			}
+		}
 		while (win.pollEvent(event)) {
 			
 			
@@ -22,14 +70,20 @@ void workOnWin(sf::TcpSocket * arg) {
 				char query_code[1];
 				query_code[0] = draw_board_code;
 				size_t rec;
+				
+				drawPoint(make_pair(sf::Mouse::getPosition(win), 2));
+				cout << makeDrawPacket(sf::Mouse::getPosition(win)) << endl;
 				if (client.send(query_code, 1) == sf::Socket::Done) {
-					client.send(to_string(sf::Mouse::getPosition(win).x).c_str(), sizeof(int));
+					client.send(makeDrawPacket(sf::Mouse::getPosition(win), 2).c_str(), sizeof(int)*3);
 				}
 			}
 				
 		}
 		win.clear(sf::Color::White);
 
+		
+		win.draw(draw_arr);
+		
 		
 
 		win.display();
