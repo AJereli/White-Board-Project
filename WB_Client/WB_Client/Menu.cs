@@ -6,9 +6,12 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Net;
+using System.Threading;
 namespace WB_Client
 {
     public partial class Menu : Form
@@ -20,6 +23,8 @@ namespace WB_Client
         static public byte[] create_board_err_code = new byte[1]; //105
         static public byte[] server_ok_code = new byte[1];
         static public byte[] connect_board_err_code = new byte[1]; //106
+        static public byte[] ping_of_server = new byte[1];
+        static public Socket client = Authorization.client;
         public Menu()
         {
             server_ok_code[0] = 0;
@@ -27,13 +32,15 @@ namespace WB_Client
             create_board_err_code[0] = 105;
             connect_board_code[0] = 6;
             connect_board_err_code[0] = 106;
+            ping_of_server[0] = 10;
             InitializeComponent();
         }
         private void Menu_Load(object sender, EventArgs e)//Создаем меню
         {
 
-        }     
-         private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
+        }
+       
+        private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
          {
              Application.Exit(); //Закрытие приложения
          }
@@ -43,15 +50,9 @@ namespace WB_Client
 
             IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-            Socket client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            /*int loginLength = Login.Text.Length;*/
 
             client.Connect(ipEndPoint);
   
-
-            /* client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
-             client.Send(Encoding.UTF8.GetBytes(Login.Text)); */
-
 
             client.Send(connect_board_code);
 
@@ -71,7 +72,7 @@ namespace WB_Client
             {
                 Board F2 = new Board();
                 F2.ShowDialog();
-                this.Close();
+                this.Hide();
             }
             else
             {
@@ -84,9 +85,6 @@ namespace WB_Client
 
             IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-            Socket client = Authorization.client;
-
-           // client.Connect(ipEndPoint);
 
             Authorization.client.Send(query_board_code);
 
@@ -105,7 +103,7 @@ namespace WB_Client
             if (chekingServer(port)) {
                 Board F2 = new Board(); //переход к чистойs доске
                 F2.ShowDialog();
-                this.Close();//закрываем Menu
+                this.Hide();//закрываем Menu
             }
             else
             {
