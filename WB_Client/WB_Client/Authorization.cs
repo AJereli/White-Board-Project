@@ -11,7 +11,9 @@ namespace WB_Client
     {
         static public int port = 8000;
         static public byte[] wrong_pass_code = new byte[1];
-
+        static public IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
+        static public IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
+        static public Socket client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         static public byte[] server_ok_code = new byte[1];
         static public byte[] authorize_code = new byte[1];
@@ -44,9 +46,7 @@ namespace WB_Client
         {
             byte[] bytes = new byte[1024];
 
-            IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
-            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-            Socket client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        
 
             client.Connect(ipEndPoint);
             int loginLength = Login.Text.Length;
@@ -74,7 +74,11 @@ namespace WB_Client
                 Menu menuShow = new Menu();            
                 this.Hide();
                 menuShow.Show();
+<<<<<<< HEAD
 
+=======
+                this.Hide();
+>>>>>>> refs/remotes/origin/master
             }
             else
             {
