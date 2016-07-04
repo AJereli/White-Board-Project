@@ -69,17 +69,30 @@ namespace WB_Client
 
         private void Enter_Click(object sender, EventArgs e)
         {
-            if (authorizationServer(port))
+            if (Login.Text.Length >= 3)
             {
-                Menu menuShow = new Menu();            
-                this.Hide();
-                menuShow.Show();
-
-                this.Hide();
+                if (Password.Text.Length >= 5)
+                {
+                    if (authorizationServer(port))
+                    {
+                        Menu menuShow = new Menu();
+                        this.Hide();
+                        menuShow.Show();
+                        this.Hide();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Неверное имя или пароль!");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Неверное имя или пароль!");
+                }
             }
             else
             {
-                MessageBox.Show("Неправильное имя или пароль!");
+                MessageBox.Show("Неверное имя или пароль!");
             }
         }
 
@@ -88,6 +101,15 @@ namespace WB_Client
             Registration registrationShow = new Registration();            
             this.Hide();
             registrationShow.Show();
+        }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) //закрытие окна при нажатии клавиши "Esc"
+        {
+            if (keyData == Keys.Escape)
+            {
+                this.Close();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }
