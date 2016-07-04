@@ -71,8 +71,10 @@ namespace WB_Client
         {
             if (authorizationServer(port))
             {
-                Menu menuShow = new Menu();
+                Menu menuShow = new Menu();            
+                this.Hide();
                 menuShow.Show();
+
                 this.Hide();
             }
             else
@@ -83,9 +85,9 @@ namespace WB_Client
 
         private void registration_Click(object sender, EventArgs e)
         {
-            Registration registrationShow = new Registration();
+            Registration registrationShow = new Registration();            
+            this.Hide();
             registrationShow.Show();
-            //this.Close();
         }
     }
 }
