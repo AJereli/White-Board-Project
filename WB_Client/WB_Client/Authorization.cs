@@ -74,11 +74,8 @@ namespace WB_Client
                 Menu menuShow = new Menu();            
                 this.Hide();
                 menuShow.Show();
-<<<<<<< HEAD
 
-=======
                 this.Hide();
->>>>>>> refs/remotes/origin/master
             }
             else
             {
