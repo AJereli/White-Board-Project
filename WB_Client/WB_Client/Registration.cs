@@ -79,25 +79,38 @@ namespace WB_Client
 
         private void Enter_Click(object sender, EventArgs e)
         {
-            if (Regex.IsMatch(Email.Text, pattern, RegexOptions.IgnoreCase))//Проверка соответствия строки шаблону
+            if (Login.Text.Length >= 3)
             {
-                if (registrationServer(port))
+                if (Password.Text.Length >= 5)
                 {
-                    MessageBox.Show("Успешно загегестрировались!");
-                    Menu menuShow = new Menu();
-                    this.Hide();
-                    menuShow.Show();
+                    if (Regex.IsMatch(Email.Text, pattern, RegexOptions.IgnoreCase))//Проверка соответствия строки шаблону
+                    {
+                        if (registrationServer(port))
+                        {
+                            MessageBox.Show("Успешно загегестрировались!");
+                            Menu menuShow = new Menu();
+                            this.Hide();
+                            menuShow.Show();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Это имя занято!");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Некорректный email!");
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Это имя занято!");
+                    MessageBox.Show("Минимальное количество символов в поле Password 5!");
                 }
             }
             else
             {
-                MessageBox.Show("Некорректный email!");
-            }
-                    
+                MessageBox.Show("Минимальное количество символов в поле Login 3!");
+            }        
         }
     }
 }
