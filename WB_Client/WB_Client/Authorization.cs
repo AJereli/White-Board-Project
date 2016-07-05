@@ -45,8 +45,9 @@ namespace WB_Client
         public bool authorizationServer(int port)
         {
             byte[] bytes = new byte[1024];
-
-        
+            
+            SocketException error = new SocketException();
+            int code = error.NativeErrorCode;
 
             client.Connect(ipEndPoint);
             int loginLength = Login.Text.Length;
