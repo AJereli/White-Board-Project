@@ -74,13 +74,13 @@ namespace WB_Client
             {
                 if (Password.Text.Length >= 5)
                 {
-                    if (authorizationServer(port))
-                    {
-                        Menu menuShow = new Menu();
-                        this.Hide();
-                        menuShow.Show();
-                        this.Hide();
-                    }
+            if (authorizationServer(port))
+            {
+                Menu menuShow = new Menu();            
+                this.Hide();
+                menuShow.Show();
+                
+            }
                     else
                     {
                         MessageBox.Show("Неверное имя или пароль!");

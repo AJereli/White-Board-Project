@@ -13,7 +13,7 @@ namespace WB_Client
 {
     public partial class Menu : Form
     {
-        
+        static public Socket client = Authorization.client;
         static private int port = 8000;
         static public byte[] query_board_code = new byte[1]; //5
         static public byte[] connect_board_code = new byte[1]; //6
@@ -27,6 +27,9 @@ namespace WB_Client
             connect_board_code[0] = 6;
             InitializeComponent();
         }
+
+        
+
         private void Menu_Load(object sender, EventArgs e)//Создаем меню
         {
 
@@ -46,11 +49,11 @@ namespace WB_Client
 
             IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-            Socket client = Authorization.client;
+           
 
            // client.Connect(ipEndPoint);
 
-            Authorization.client.Send(query_board_code);
+            client.Send(query_board_code);
 
             client.Receive(bytes);
 
