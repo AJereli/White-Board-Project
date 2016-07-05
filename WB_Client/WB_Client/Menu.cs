@@ -25,6 +25,7 @@ namespace WB_Client
         static public byte[] connect_board_err_code = new byte[1]; //106
         static public byte[] ping_of_server = new byte[1];
         static public Socket client = Authorization.client;
+        static public int loadMode;
         public Menu()
         {
             server_ok_code[0] = 0;
@@ -49,7 +50,7 @@ namespace WB_Client
             IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
 
-            Authorization.client.Send(ping_of_server);
+            client.Send(ping_of_server);
 
             client.Receive(bytes);
 
@@ -67,7 +68,13 @@ namespace WB_Client
             }
             else
             {
-                MessageBox.Show("А сервер то упал");
+                Thread.Sleep(15000);//делей перед падением
+                if (chekingPing(port))
+                {
+
+                }
+                else
+                    MessageBox.Show("А сервер то упал");
                 Application.Exit();
             }
         }
@@ -103,6 +110,8 @@ namespace WB_Client
         {
             if (loadingServer(port))
             {
+
+                loadMode=6;
                 Board F2 = new Board();
                 F2.ShowDialog();
                 this.Hide();
@@ -134,6 +143,7 @@ namespace WB_Client
         private void creatingOfBoard_Click(object sender, EventArgs e)//Загрузка доски.Работает при клике на нее
         {
             if (chekingServer(port)) {
+                loadMode = 5;
                 Board F2 = new Board(); //переход к чистойs доске
                 F2.ShowDialog();
                 this.Hide();//закрываем Menu
