@@ -44,28 +44,37 @@ namespace WB_Client
 
         public bool authorizationServer(int port)
         {
-            byte[] bytes = new byte[1024];
-            
-            SocketException error = new SocketException();
-            int code = error.NativeErrorCode;
+            try
+            {
+                byte[] bytes = new byte[1024];
 
-            client.Connect(ipEndPoint);
-            int loginLength = Login.Text.Length;
-            int passwordLength = Password.Text.Length;
-            client.Send(authorize_code);
-            client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
-            client.Send(Encoding.UTF8.GetBytes(Login.Text));
-            client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
-            client.Send(Encoding.UTF8.GetBytes(Password.Text));
+                SocketException error = new SocketException();
+                int code = error.NativeErrorCode;
+                int loginLength = Login.Text.Length;
+                int passwordLength = Password.Text.Length;
+                client.Connect(ipEndPoint);
+                client.Send(authorize_code);
+                client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
+                client.Send(Encoding.UTF8.GetBytes(Login.Text));
+                client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
+                client.Send(Encoding.UTF8.GetBytes(Password.Text));
 
-            client.Receive(bytes);
+                client.Receive(bytes);
+                if (bytes[0] == server_ok_code[0])
+                    return true;
+                else if (bytes[0] == wrong_pass_code[0])
+                {
 
-            if (bytes[0] == server_ok_code[0])
-                return true;
-            else if (bytes[0] == wrong_pass_code[0])
+                    return false;
+                }
+                    
+                else return false;
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка соединения с сервером!");
                 return false;
-            else
-                return false;
+            }            
         }
 
         private void Enter_Click(object sender, EventArgs e)
@@ -74,14 +83,13 @@ namespace WB_Client
             {
                 if (Password.Text.Length >= 5)
                 {
-            if (authorizationServer(port))
-            {
-                Menu menuShow = new Menu();            
-                this.Hide();
-                menuShow.Show();
-                
-            }
-                    else
+                    if (authorizationServer(port))
+                    {
+                        Menu menuShow = new Menu();            
+                        this.Hide();
+                        menuShow.Show();                
+                    }
+                    else                    
                     {
                         MessageBox.Show("Неверное имя или пароль!");
                     }

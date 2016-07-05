@@ -159,7 +159,7 @@ namespace WB_Client
         private void timer1_Tick(object sender, EventArgs e)
         {
 
-            m_grp.Clear(Color.White);
+            //m_grp.Clear(Color.White);
 
             foreach (var a in shape_list)
             {
