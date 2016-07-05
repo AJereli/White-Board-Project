@@ -10,7 +10,8 @@ const char registration_code = 2;
 
 const char new_board_code = 5;
 const char connect_board_code = 6;
-const char draw_board_code = 7;
+
+const char new_shape_code = 7;
 
 
 const char wrong_pass_code = 100;

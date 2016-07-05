@@ -33,8 +33,11 @@ namespace WB_Client
         */
         int mode = 0;
         int idOfShape = -1; // Сюда Номер выбранного объекта в списке
-        int actualThickness = 2;
+        int actualThickness = 2; // Текузая ширина кисти
         static int loadMode;
+        static public byte[] new_shape_code = new byte[1];
+        static public byte[] typeOfShape = new byte[1];
+
 
         Point prevLoc;
         Color selectedColor = Color.Black;
@@ -47,7 +50,9 @@ namespace WB_Client
             m_grp.Clear(Color.White);
             m_grp.SmoothingMode = SmoothingMode.AntiAlias;
             timer1.Start();
-            WB_Client.Menu.ActiveForm.Close();
+            new_shape_code[0] = 7;
+            //WB_Client.Menu.ActiveForm.Close();
+            
             prevLoc = new Point();
         }
 
@@ -57,6 +62,10 @@ namespace WB_Client
             if ((e.Button & MouseButtons.Left) == MouseButtons.Left && pressed && mode == 1)
             {
                 Point pt = new Point(e.X, e.Y);
+                //client.Send(pt);
+                BitConverter.GetBytes(pt.X);
+                string msg = pt.X.ToString() + '+' + pt.Y.ToString();
+                //client.Send(Encoding.UTF8.GetBytes(msg));
                 shape_list[shape_list.Count - 1].points.Add(pt); // Добавляем точки в режиме рисования
             }
 
@@ -130,7 +139,13 @@ namespace WB_Client
                     }
                     break;
                 case 1: // Draw curve
+                    typeOfShape[0] = 1;
                     shape_list.Add(new Curve());
+                    string query = typeOfShape[0].ToString() + '+' + shape_list.Count.ToString() + '+' + selectedColor.ToArgb().ToString() + '+' + actualThickness.ToString();
+                    richTextBox1.AppendText(query + '\n');
+                    client.Send(Encoding.UTF8.GetBytes(query));
+                    //timerFoServ.Start();
+                    
                     pressed = true;
                     shape_list[shape_list.Count - 1].points.Add(e.Location);
                     shape_list[shape_list.Count - 1].penColor = selectedColor;
@@ -148,7 +163,12 @@ namespace WB_Client
         private void Board_MouseUp(object sender, MouseEventArgs e) // ЛКМ поднята
         {
             if (mode == 1)
+            {
+               // timerFoServ.Stop();
                 pressed = false;
+                client.Send(Encoding.UTF8.GetBytes("END"));
+              
+            }
             else if (mode == 0)
             {
                 if (idOfShape != -1)
@@ -168,9 +188,15 @@ namespace WB_Client
             }
 
         }
+        private void timerFoServ_Tick(object sender, EventArgs e)
+        {
+            byte[] infoBuff = new byte[64];
+            //int rec = client.Receive(infoBuff);
+            
+            
+        }
 
 
-        
         private void Select_Click(object sender, EventArgs e)
         {
             mode = 0;
@@ -227,6 +253,8 @@ namespace WB_Client
         {
             actualThickness = select_thickness.Value;
         }
+
+       
     }
 
    
