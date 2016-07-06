@@ -3,7 +3,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Net;
-
+using System.Threading;
 namespace WB_Client
 {
 
@@ -13,8 +13,8 @@ namespace WB_Client
         static public byte[] wrong_pass_code = new byte[1];
         static public IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
         static public IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-        static public Socket client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
+        static public Socket client;
+        static public string name;
         static public byte[] server_ok_code = new byte[1];
         static public byte[] authorize_code = new byte[1];
 
@@ -45,16 +45,17 @@ namespace WB_Client
         public bool authorizationServer(int port)
         {
             byte[] bytes = new byte[1024];
+            client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp); 
 
-        
 
             client.Connect(ipEndPoint);
             int loginLength = Login.Text.Length;
             int passwordLength = Password.Text.Length;
             client.Send(authorize_code);
-            client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
+           // client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
             client.Send(Encoding.UTF8.GetBytes(Login.Text));
-            client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
+            // client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
+            Thread.Sleep(123);
             client.Send(Encoding.UTF8.GetBytes(Password.Text));
 
             client.Receive(bytes);
@@ -62,7 +63,10 @@ namespace WB_Client
             if (bytes[0] == server_ok_code[0])
                 return true;
             else if (bytes[0] == wrong_pass_code[0])
+            {
+                client.Close();
                 return false;
+            }
             else
                 return false;
         }
@@ -75,6 +79,7 @@ namespace WB_Client
                 {
             if (authorizationServer(port))
             {
+                name = Login.Text;
                 Menu menuShow = new Menu();            
                 this.Hide();
                 menuShow.Show();

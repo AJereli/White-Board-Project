@@ -30,8 +30,12 @@ void Board::broadcastPainting() {
 					
 					size_t rec = 0;
 					if (client.receive(query, sizeof(query), rec) == sf::Socket::Done) {
-						for (auto say_all = sock_of_members.begin(); say_all != sock_of_members.end(); ++say_all)
-							(**say_all).send(query, rec);
+						//cout << string(query, rec) << endl;
+						for (auto say_all = sock_of_members.begin(); say_all != sock_of_members.end(); ++say_all) {
+							sf::sleep(sf::microseconds(25));
+							if (say_all != it)
+								(**say_all).send(query, rec);
+						}
 					}
 				}
 			}
@@ -42,10 +46,9 @@ void Board::broadcastPainting() {
 
 void Board::addUser(shared_ptr <sf::TcpSocket> & _sock) {
 	members.add(*_sock);
+	cout << "Connect" << endl;
 	sock_of_members.push_back(_sock);
-	char query_code[1];
-	query_code[0] = server_ok_code;
-	_sock->send(query_code, sizeof(char));
+	
 	cout << sock_of_members.size() << endl;
 }
 

@@ -31,11 +31,12 @@
             this.exitingFromProgram = new System.Windows.Forms.Button();
             this.loadOfBoard = new System.Windows.Forms.Button();
             this.creatingOfBoard = new System.Windows.Forms.Button();
+            this.UserName = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // exitingFromProgram
             // 
-            this.exitingFromProgram.Location = new System.Drawing.Point(77, 134);
+            this.exitingFromProgram.Location = new System.Drawing.Point(77, 206);
             this.exitingFromProgram.Name = "exitingFromProgram";
             this.exitingFromProgram.Size = new System.Drawing.Size(120, 23);
             this.exitingFromProgram.TabIndex = 0;
@@ -45,9 +46,9 @@
             // 
             // loadOfBoard
             // 
-            this.loadOfBoard.Location = new System.Drawing.Point(77, 79);
+            this.loadOfBoard.Location = new System.Drawing.Point(77, 134);
             this.loadOfBoard.Name = "loadOfBoard";
-            this.loadOfBoard.Size = new System.Drawing.Size(120, 23);
+            this.loadOfBoard.Size = new System.Drawing.Size(120, 34);
             this.loadOfBoard.TabIndex = 1;
             this.loadOfBoard.Text = "Load Board ";
             this.loadOfBoard.UseVisualStyleBackColor = true;
@@ -63,11 +64,22 @@
             this.creatingOfBoard.UseVisualStyleBackColor = true;
             this.creatingOfBoard.Click += new System.EventHandler(this.creatingOfBoard_Click);
             // 
+            // UserName
+            // 
+            this.UserName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.UserName.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.UserName.Location = new System.Drawing.Point(77, 98);
+            this.UserName.Name = "UserName";
+            this.UserName.Size = new System.Drawing.Size(120, 30);
+            this.UserName.TabIndex = 3;
+            this.UserName.Text = "";
+            // 
             // Menu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Controls.Add(this.UserName);
             this.Controls.Add(this.creatingOfBoard);
             this.Controls.Add(this.loadOfBoard);
             this.Controls.Add(this.exitingFromProgram);
@@ -85,6 +97,7 @@
         private System.Windows.Forms.Button exitingFromProgram;
         private System.Windows.Forms.Button loadOfBoard;
         private System.Windows.Forms.Button creatingOfBoard;
+        private System.Windows.Forms.RichTextBox UserName;
     }
 }
 
