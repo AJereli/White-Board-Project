@@ -201,4 +201,5 @@ void Server::startListening() {
 }
 Server::~Server()
 {
+	listener.close();
 }

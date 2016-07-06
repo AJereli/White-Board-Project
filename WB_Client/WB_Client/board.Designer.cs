@@ -44,6 +44,7 @@
             this.Pencil = new System.Windows.Forms.PictureBox();
             this.Select = new System.Windows.Forms.PictureBox();
             this.select_thickness = new System.Windows.Forms.TrackBar();
+            this.timerFoServ = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.anyColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.yellow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blue)).BeginInit();
@@ -60,7 +61,7 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(617, 427);
+            this.richTextBox1.Location = new System.Drawing.Point(696, 448);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(158, 96);
             this.richTextBox1.TabIndex = 0;
@@ -68,7 +69,7 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 10;
+            this.timer1.Interval = 20;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // anyColor
@@ -212,12 +213,16 @@
             this.select_thickness.Value = 2;
             this.select_thickness.Scroll += new System.EventHandler(this.select_thickness_Scroll);
             // 
+            // timerFoServ
+            // 
+            this.timerFoServ.Tick += new System.EventHandler(this.timerFoServ_Tick);
+            // 
             // Board
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(787, 535);
+            this.ClientSize = new System.Drawing.Size(866, 556);
             this.Controls.Add(this.select_thickness);
             this.Controls.Add(this.anyColor);
             this.Controls.Add(this.yellow);
@@ -272,5 +277,6 @@
         private System.Windows.Forms.PictureBox yellow;
         private System.Windows.Forms.PictureBox anyColor;
         private System.Windows.Forms.TrackBar select_thickness;
+        private System.Windows.Forms.Timer timerFoServ;
     }
 }

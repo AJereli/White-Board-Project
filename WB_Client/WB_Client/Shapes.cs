@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -20,6 +21,7 @@ namespace WB_Client
 
 
         public bool selected { get; set; }
+
         public int resizing { get; set; }
         public int size = 10; // Размер прямоугольников-тригеров.   
         public int thinkness { get; set; } // Толищна кисти для рисования
@@ -37,6 +39,7 @@ namespace WB_Client
         virtual protected GraphicsPath GetPath() // Без переопределния подходит только под Curve
         {
             var path = new GraphicsPath();
+            
             try
             {
                 if (points.Count != 0)
@@ -63,43 +66,6 @@ namespace WB_Client
         }
         protected Pen GetPen() { return new Pen(penColor, thinkness); }
     }
-    class Curve : Shape
-    {
-
-
-        public Curve()
-        {
-            selected = false;
-            resizing = -1;
-            thinkness = 2;
-            transform = new Matrix();
-            points = new List<Point>();
-            penColor = Color.Black;
-            List<Shape> arl = new List<Shape>();
-
-
-        }
-        public Curve(List<Point> pnts)
-        {
-            selected = false;
-            points = pnts;
-            thinkness = 2;
-            penColor = Color.Black;
-        }
-
-
-    }
-    class Rect : Shape
-    {
-
-
-        public Rect()
-        {
-
-
-        }
-
-
-
-    }
+    
+    
 }

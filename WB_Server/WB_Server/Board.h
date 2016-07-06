@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "System_Fucn.h"
 #include "Client.h"
 
 
@@ -9,7 +10,7 @@ private:
 		int board_ID;
 		bool board_online = 0;
 		shared_ptr <Client> creator = nullptr;
-
+		vector <pair <int, vector<char* > > > all_shapes; /// First - Type of shape , Senond Part of shape in byte;
 		shared_ptr <sf::TcpSocket> sock_creator;
 		sf::SocketSelector members ;
 		vector <shared_ptr <sf::TcpSocket>>  sock_of_members;
@@ -21,7 +22,7 @@ public:
 	void setBoard_ID(int b_ID) { board_ID = b_ID; }
 
 	void addUser(shared_ptr <sf::TcpSocket> & _sock);
-	void workingOnBoard();
+	void broadcastPainting();
 	string getCreaterName();
 
 	~Board();
