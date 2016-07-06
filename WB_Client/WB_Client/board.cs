@@ -190,8 +190,8 @@ namespace WB_Client
         }
         private void timerFoServ_Tick(object sender, EventArgs e)
         {
-            byte[] infoBuff = new byte[64];
-            //int rec = client.Receive(infoBuff);
+            byte[] infoBuff = new byte[512];
+            int rec = client.Receive(infoBuff);
             
             
         }
