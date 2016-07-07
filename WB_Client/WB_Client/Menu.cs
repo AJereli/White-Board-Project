@@ -153,5 +153,10 @@ namespace WB_Client
                 MessageBox.Show("Нельзя создать доску!");
             }
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
