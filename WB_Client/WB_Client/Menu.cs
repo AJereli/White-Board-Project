@@ -15,6 +15,7 @@ namespace WB_Client
     {
         static public Socket client = Authorization.client;
         static private int port = 8000;
+        static public int loadMode;
         static public string name;
         static public byte[] query_board_code = new byte[1]; //5
         static public byte[] connect_board_code = new byte[1]; //6
@@ -44,6 +45,7 @@ namespace WB_Client
             client.Receive(answer);
             if (answer[0] == server_ok_code[0])
             {
+                loadMode = 6;
                 Board F2 = new Board(); //переход к чистойs доске
                 F2.ShowDialog();
 
@@ -85,8 +87,9 @@ namespace WB_Client
             if (chekingServer(port))
             {
                 Board F2 = new Board(); //переход к чистойs доске
+                loadMode = 5;
                 F2.ShowDialog();
-                this.Close();//закрываем Menu
+                this.Hide();//закрываем Menu
             }
             else
             {

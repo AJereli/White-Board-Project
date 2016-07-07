@@ -10,11 +10,15 @@ private:
 		int board_ID;
 		bool board_online = 0;
 		shared_ptr <Client> creator = nullptr;
-		vector <pair <int, vector<char* > > > all_shapes; /// First - Type of shape , Senond Part of shape in byte;
+		vector <pair <string, vector<string> > > all_shapes; // First - settings of shape - type, id, color, thickness !!! Not otherwise !!!!
+																  // Senond Part of shape in byte;
 		shared_ptr <sf::TcpSocket> sock_creator;
 		sf::SocketSelector members ;
 		vector <shared_ptr <sf::TcpSocket>>  sock_of_members;
 		sf::Thread * boar_main_thr = nullptr;
+		sf::Thread * sendBoardThr = nullptr;
+
+		void sendBoard();
 public:
 	
 	Board(shared_ptr <Client> & _creator, shared_ptr <sf::TcpSocket> & _sock, sf::TcpListener * mem);

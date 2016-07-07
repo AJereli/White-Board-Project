@@ -7,7 +7,6 @@ int main() {
 	Server serv;
 	
 	
-	
 	serv.startListening();
 
 	return 0;

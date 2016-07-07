@@ -23,7 +23,6 @@ namespace WB_Client
         Thread broadCast;
         List<Tuple<int, Shape>> shape_list;// Коллекция фигур
 
-        List<Shape> inbox_shape_list;
         Graphics m_grp; // main_graphics
 
         bool pressed = false;
@@ -46,21 +45,75 @@ namespace WB_Client
         public Board()
         {
             InitializeComponent();
-            name = WB_Client.Menu.name;
-            shape_list = new List<Tuple<int, Shape>>();
-            m_grp = CreateGraphics();
-            user_name.Text = name;
-            DoubleBuffered = true;
-            m_grp.Clear(Color.White);
-            m_grp.SmoothingMode = SmoothingMode.AntiAlias;
-            timer1.Start();
-            new_shape_code[0] = 7;
+
+            loadMode = WB_Client.Menu.loadMode;
             WB_Client.Menu.ActiveForm.Close();
+            user_name.Text = WB_Client.Menu.name;
+
+            shape_list = new List<Tuple<int, Shape>>();
+
+            m_grp = CreateGraphics();
+
+            DoubleBuffered = true;
+
+            m_grp.SmoothingMode = SmoothingMode.HighQuality;
+
+            timer1.Start();
+
+            if (loadMode == 6)
+            {
+                loadBoard();
+            }
             broadCast = new Thread(delegate () { broadcastToTheWorld(); });
             broadCast.Start();
+
+            new_shape_code[0] = 7;
+
+
             prevLoc = new Point();
         }
+        private void loadBoard()
+        {
 
+
+            byte[] buff = new byte[256];
+            int rec = client.Receive(buff);
+            string msg = new string(Encoding.UTF8.GetChars(buff), 0, rec);
+            int numbOfShape = Convert.ToInt32(msg);
+            for (int i = 0; i < numbOfShape; ++i)
+            {
+                rec = client.Receive(buff);
+                msg = new string(Encoding.UTF8.GetChars(buff), 0, rec);
+                string[] parsed = msg.Split('+');
+                if (parsed.Length == 5)
+                {
+                    if (parsed[0] == "1")
+                    {
+                        //int id = Convert.ToInt32(parsed[2]);
+                        shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Curve()));
+                        shape_list[shape_list.Count - 1].Item2.penColor = Color.FromArgb(Convert.ToInt32(parsed[2]));
+                        shape_list[shape_list.Count - 1].Item2.thinkness = Convert.ToInt32(parsed[3]);
+                    }
+                    for (int j = 0; j < Convert.ToInt32(parsed[4]); ++j)
+                    {
+                        rec = client.Receive(buff);
+                        msg = new string(Encoding.UTF8.GetChars(buff), 0, rec);
+                        parsed = msg.Split('+');
+                        if (parsed.Length == 3)
+                        {
+                            int index = Convert.ToInt32(parsed[2]);
+                            Point coords = new Point(Convert.ToInt32(parsed[0]), Convert.ToInt32(parsed[1]));
+
+                            shape_list[index].Item2.points.Add(coords);
+                        }
+                    }
+
+                }
+
+            }
+
+
+        }
         private void Board_MouseMove(object sender, MouseEventArgs e)// События, происходящие пока мыши двигается
         {
 
@@ -107,12 +160,11 @@ namespace WB_Client
         }
         private void Board_Load(object sender, EventArgs e)
         {
-
         }
         private void Board_FormClosing(object sender, FormClosingEventArgs e)
         {
             broadCast.Abort();
-            
+
             Application.Exit();
         }
         private void Board_MouseDown(object sender, MouseEventArgs e)// События, когда опущенна ЛКМ
@@ -182,7 +234,7 @@ namespace WB_Client
             {
                 // timerFoServ.Stop();
                 pressed = false;
-                
+
 
             }
             else if (mode == 0)
@@ -201,7 +253,7 @@ namespace WB_Client
 
             for (int i = 0; i < shape_list.Count; ++i)
             {
-               
+
                 shape_list[i].Item2.Draw(m_grp);
             }
 
@@ -214,7 +266,7 @@ namespace WB_Client
             while (true)
             {
                 Thread.Sleep(10);
-                byte[] infoBuff = new byte[512];
+                byte[] infoBuff = new byte[256];
 
                 int rec = client.Receive(infoBuff);
                 string msg = new string(Encoding.UTF8.GetChars(infoBuff), 0, rec);
@@ -236,26 +288,28 @@ namespace WB_Client
                         });
                     }
 
-                  
+
                 }
                 else if (parsed.Length == 3)
                 {
                     int index = Convert.ToInt32(parsed[2]);
 
                     Point coords = new Point(Convert.ToInt32(parsed[0]), Convert.ToInt32(parsed[1]));
-                    try {
+                    try
+                    {
                         if (canLoadFromOther)
                             shape_list[index].Item2.points.Add(coords);
-                    }catch (ArgumentOutOfRangeException)
+                    }
+                    catch (ArgumentOutOfRangeException)
                     {
                         richTextBox1.AppendText("WRONG IDX: " + index.ToString() + '\n');
-                        for(int i = shape_list.Count; i <= index; ++i)
+                        for (int i = shape_list.Count; i <= index; ++i)
                         {
                             shape_list.Add(new Tuple<int, Shape>(i, new Curve()));
                         }
                         canLoadFromOther = false;
                     }
-                    
+
                 }
 
 

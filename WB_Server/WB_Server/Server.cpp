@@ -176,12 +176,9 @@ void Server::startListening() {
 								client.receive(name_c, 128, received);			
 								for (int i = 0; i < BOARD_CNT; ++i) { //Если найдется такое имя, подключаемся к доске
 									if (all_boards[i]->getCreaterName() == string(name_c, received)) {
-										char query_code[1];
-										query_code[0] = server_ok_code;
-										client.send(query_code, sizeof(char));
+										//connectingThread = new sf::Thread(&all_boards[i]->addUser, it->first);
 										all_boards[i]->addUser(it->first);
-										selector.remove(client);
-										
+										selector.remove(client);	
 									}
 								}
 
@@ -198,5 +195,9 @@ void Server::startListening() {
 }
 Server::~Server()
 {
+	if (connectingThread != nullptr) {
+		connectingThread->terminate();
+		delete connectingThread;
+	}
 	listener.close();
 }
