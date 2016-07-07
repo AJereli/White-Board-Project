@@ -13,7 +13,7 @@ namespace WB_Client
         static public byte[] wrong_pass_code = new byte[1];
         static public IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
         static public IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-        static public Socket client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        static public Socket client;
 
         static public byte[] server_ok_code = new byte[1];
         static public byte[] authorize_code = new byte[1];
@@ -46,10 +46,9 @@ namespace WB_Client
         {
             try
             {
+                client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 byte[] bytes = new byte[1024];
 
-                SocketException error = new SocketException();
-                int code = error.NativeErrorCode;
                 int loginLength = Login.Text.Length;
                 int passwordLength = Password.Text.Length;
                 client.Connect(ipEndPoint);
@@ -64,13 +63,13 @@ namespace WB_Client
                     return true;
                 else if (bytes[0] == wrong_pass_code[0])
                 {
-
+                    client.Close();
                     return false;
                 }
 
                 else return false;
             }
-            catch
+            catch(SocketException error)
             {
                 MessageBox.Show("Ошибка соединения с сервером!");
                 return false;
