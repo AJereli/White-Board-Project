@@ -18,6 +18,7 @@ namespace WB_Client
     {
         
         static private int port = 8000;
+        static public string name;
         static public byte[] query_board_code = new byte[1]; //5
         static public byte[] connect_board_code = new byte[1]; //6
         static public byte[] create_board_err_code = new byte[1]; //105
@@ -32,64 +33,45 @@ namespace WB_Client
             query_board_code[0] = 5;
             create_board_err_code[0] = 105;
             connect_board_code[0] = 6;
-            connect_board_err_code[0] = 106;
-            ping_of_server[0] = 10;
+            name = Authorization.name;
             InitializeComponent();
         }
+
+
+
         private void Menu_Load(object sender, EventArgs e)//Создаем меню
         {
-            System.Timers.Timer myTimer = new System.Timers.Timer(10000); //Создаем таймер
-            myTimer.Elapsed += new System.Timers.ElapsedEventHandler(myTimerPing);
-            myTimer.Start();
 
         }
-        public bool chekingPing(int port) //функция отправки пинга
+        private void loadOfBoard_Click(object sender, EventArgs e)
         {
-            byte[] bytes = new byte[1024];
-
-            IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
-            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-
-            client.Send(ping_of_server);
-
-            client.Receive(bytes);
-
-            if (bytes[0] == ping_of_server[0])
-                return true;
-
-            else
-                return false;
-        }
-        void myTimerPing(object sender, System.Timers.ElapsedEventArgs e) //посылка пинга
-        {
-            if (chekingPing(port))
+            client.Send(connect_board_code);
+            client.Send(Encoding.UTF8.GetBytes(UserName.Text));
+            byte[] answer = new byte[16];
+            client.Receive(answer);
+            if (answer[0] == server_ok_code[0])
             {
-                 //видимо просто работает
+                Board F2 = new Board(); //переход к чистойs доске
+                F2.ShowDialog();
+
             }
             else
             {
-                Thread.Sleep(15000);//делей перед падением
-                if (chekingPing(port))
-                {
-
-                }
-                else
-                    MessageBox.Show("А сервер то упал");
-                Application.Exit();
+                MessageBox.Show("Не сегодня!");
             }
         }
-
-
         private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
-         {
-             Application.Exit(); //Закрытие приложения
-         }
-        public bool loadingServer(int port)
+        {
+            Application.Exit(); //Закрытие приложения
+        }
+        //запрос на создание доски 5!!!!! query_board_code = 5
+        public bool chekingServer(int port)
         {
             byte[] bytes = new byte[1024];
 
             IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
+
 
             client.Connect(ipEndPoint);
   
@@ -125,8 +107,7 @@ namespace WB_Client
          {
              byte[] bytes = new byte[1024];
 
-            IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
-            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
+           // client.Connect(ipEndPoint);
 
             Authorization.client.Send(query_board_code);
 

@@ -44,6 +44,9 @@
             this.Pencil = new System.Windows.Forms.PictureBox();
             this.Select = new System.Windows.Forms.PictureBox();
             this.select_thickness = new System.Windows.Forms.TrackBar();
+            this.timerFoServ = new System.Windows.Forms.Timer(this.components);
+            this.user_name = new System.Windows.Forms.Label();
+            this.debug_lable = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.anyColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.yellow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blue)).BeginInit();
@@ -68,7 +71,7 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 10;
+            this.timer1.Interval = 20;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // anyColor
@@ -212,12 +215,39 @@
             this.select_thickness.Value = 2;
             this.select_thickness.Scroll += new System.EventHandler(this.select_thickness_Scroll);
             // 
+            // timerFoServ
+            // 
+            this.timerFoServ.Tick += new System.EventHandler(this.timerFoServ_Tick);
+            // 
+            // user_name
+            // 
+            this.user_name.AutoSize = true;
+            this.user_name.Location = new System.Drawing.Point(192, 20);
+            this.user_name.Name = "user_name";
+            this.user_name.Size = new System.Drawing.Size(35, 13);
+            this.user_name.TabIndex = 14;
+            this.user_name.Text = "label2";
+            this.user_name.Click += new System.EventHandler(this.user_name_Click);
+            // 
+            // debug_lable
+            // 
+            this.debug_lable.AutoSize = true;
+            this.debug_lable.Location = new System.Drawing.Point(392, 490);
+            this.debug_lable.MinimumSize = new System.Drawing.Size(200, 25);
+            this.debug_lable.Name = "debug_lable";
+            this.debug_lable.Size = new System.Drawing.Size(200, 25);
+            this.debug_lable.TabIndex = 15;
+            this.debug_lable.Text = "label1";
+            this.debug_lable.Click += new System.EventHandler(this.debug_lable_Click);
+            // 
             // Board
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(866, 556);
+            this.Controls.Add(this.debug_lable);
+            this.Controls.Add(this.user_name);
             this.Controls.Add(this.select_thickness);
             this.Controls.Add(this.anyColor);
             this.Controls.Add(this.yellow);
@@ -235,6 +265,7 @@
             this.Name = "Board";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Board";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Board_FormClosing);
             this.Load += new System.EventHandler(this.Board_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Board_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Board_MouseMove);
@@ -252,6 +283,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Select)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.select_thickness)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -272,5 +304,8 @@
         private System.Windows.Forms.PictureBox yellow;
         private System.Windows.Forms.PictureBox anyColor;
         private System.Windows.Forms.TrackBar select_thickness;
+        private System.Windows.Forms.Timer timerFoServ;
+        private System.Windows.Forms.Label user_name;
+        private System.Windows.Forms.Label debug_lable;
     }
 }

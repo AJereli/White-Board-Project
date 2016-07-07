@@ -30,37 +30,31 @@ void Server::initListen() { // Инициализирует слушающий сокет
 bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr <Client> & client) {// Авторизация на сервере. True если успешно, false иначе. 	
 	char name_size[1];
 	char pass_size[1];
-	size_t received = 0;
-	char * name_c = nullptr;
-	char * pas = nullptr;
-	int iname_size = 0;
-	int ipass_size = 0;
-
-
-	if (client_socket->receive(name_size, sizeof(name_size), received) == sf::Socket::Done) {
-		iname_size = atoi(name_size);
-		name_c = new char[iname_size];
-		client_socket->receive(name_c, iname_size, received);
-	}
-	if (client_socket->receive(pass_size, sizeof(pass_size), received) == sf::Socket::Done) {
-		ipass_size = atoi(pass_size) + 1;
-		pas = new char[ipass_size];
-		client_socket->receive(pas, ipass_size, received);
-	}
-
+	size_t received_name = 0;
+	size_t received_pass = 0;
+	char * name_c = new char[256];
+	char * pass = new char[256];
+		
+	client_socket->receive(name_c, 256, received_name);
+	cout << string(name_c, received_name) << endl;;
+	
+	
+	client_socket->receive(pass, 256, received_pass);
+	cout << string(pass, received_pass) << endl;;
+	
 	for (auto it = info_of_usres.begin(); it != info_of_usres.end(); ++it) // Поиск юзера в БД
-		if (it->first == string(name_c, iname_size))
-			if (it->second == string(pas, iname_size)) {
+		if (it->first == string(name_c, received_name))
+			if (it->second == string(pass, received_pass)) {
 				client->setStatus(USER_ONLINE);
-				client->setName(name_c);
+				client->setName(string(name_c, received_name));
 				cout << "Welcom " << it->first << endl;
 				return true;
 			}
 
 	if (name_c != nullptr)
 		delete[] name_c;
-	if (pas != nullptr)
-		delete[] pas;
+	if (pass != nullptr)
+		delete[] pass;
 	return false;
 }
 
@@ -79,24 +73,24 @@ bool Server::registration(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr
 
 	name = new char[i_n];
 	client_socket->receive(name, i_n, received);
-	for (auto it = info_of_usres.begin(); it != info_of_usres.end(); ++it) 
+	for (auto it = info_of_usres.begin(); it != info_of_usres.end(); ++it)
 		if (it->first == string(name, i_n)) {
 			name_check = 0;
 			break;
 		}
-	
+
 	if (client_socket->receive(info_size, 1, received) == sf::Socket::Done)
 		i_p = atoi(info_size);
 	passw = new char[i_p];
 	client_socket->receive(passw, i_p, received);
-	
+
 	if (client_socket->receive(info_size, 1, received) == sf::Socket::Done)
 		i_e = atoi(info_size);
 	email = new char[i_e];
 	client_socket->receive(email, i_e, received);
 
 	if (name_check)
-		users_write  << string(name, i_n) << " " << string(passw, i_p) << " " << string(email, i_e) << endl;
+		users_write << string(name, i_n) << " " << string(passw, i_p) << " " << string(email, i_e) << endl;
 
 	users_write.close();
 	name != nullptr ? delete[] name : 1;
@@ -126,9 +120,9 @@ void Server::startListening() {
 
 
 				if (listener.accept(*client_socket) == sf::Socket::Done) { // Если клиент успешно подсоеденился к сокету
-					
+
 					client_socket->receive(answer, 1, rec);
-					cout << "some one try to connecnt with code: " << answer[0];
+					cout << "some one try to connecnt with code: " << answer[0] << endl;;
 					if (answer[0] == authorize_code) // Запрос авторизации
 						if (authorization(client_socket, client)) {
 							cout << "authorization\n";
@@ -141,8 +135,8 @@ void Server::startListening() {
 							answer[0] = wrong_pass_code;
 							client_socket->send(answer, 1);
 						}
-					
-					else if ((int)answer[0] ==(int) registration_code)  // Запрос регистрации
+
+					else if ((int)answer[0] == (int)registration_code)  // Запрос регистрации
 						if (registration(client_socket, client)) {
 							answer[0] = server_ok_code;
 							client_socket->send(answer, 1);
@@ -151,7 +145,7 @@ void Server::startListening() {
 							answer[0] = wrong_name_code;
 							client_socket->send(answer, 1);
 						}
-					
+
 				}
 			}
 			else {
@@ -175,19 +169,22 @@ void Server::startListening() {
 								selector.remove(client);
 							}
 							if ((int)query_code[0] == connect_board_code) {//Подключение к доске
-								char name_size[1];
+								
 								size_t received;
-								if (client.receive(name_size, sizeof(name_size), received) == sf::Socket::Done) {// Узнаем имя основателя доски
-									int iname_size = atoi(name_size) + 1;
-									char * name_c = new char[iname_size];
-									client.receive(name_c, iname_size, received);
-									for (int i = 0; i < BOARD_CNT; ++i) { //Если найдется такое имя, подключаемся к доске
-										if (all_boards[i]->getCreaterName() == name_c) {
-											selector.remove(client);
-											all_boards[i]->addUser(it->first);
-										}
+
+								char * name_c = new char[128];
+								client.receive(name_c, 128, received);			
+								for (int i = 0; i < BOARD_CNT; ++i) { //Если найдется такое имя, подключаемся к доске
+									if (all_boards[i]->getCreaterName() == string(name_c, received)) {
+										char query_code[1];
+										query_code[0] = server_ok_code;
+										client.send(query_code, sizeof(char));
+										all_boards[i]->addUser(it->first);
+										selector.remove(client);
+										
 									}
 								}
+
 							}
 						}
 
@@ -201,4 +198,5 @@ void Server::startListening() {
 }
 Server::~Server()
 {
+	listener.close();
 }

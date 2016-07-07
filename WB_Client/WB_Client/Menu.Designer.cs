@@ -49,7 +49,7 @@
             // 
             this.loadOfBoard.Location = new System.Drawing.Point(644, 98);
             this.loadOfBoard.Name = "loadOfBoard";
-            this.loadOfBoard.Size = new System.Drawing.Size(120, 23);
+            this.loadOfBoard.Size = new System.Drawing.Size(120, 34);
             this.loadOfBoard.TabIndex = 1;
             this.loadOfBoard.Text = "Load Board ";
             this.loadOfBoard.UseVisualStyleBackColor = true;
