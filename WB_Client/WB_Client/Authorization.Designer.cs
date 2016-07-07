@@ -59,6 +59,7 @@
             // 
             this.Enter.Location = new System.Drawing.Point(93, 168);
             this.Enter.Name = "Enter";
+            this.Enter.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Enter.Size = new System.Drawing.Size(75, 23);
             this.Enter.TabIndex = 2;
             this.Enter.Text = "Войти";
@@ -77,6 +78,7 @@
             // 
             // Authorization
             // 
+            this.AcceptButton = this.Enter;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;

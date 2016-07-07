@@ -11,126 +11,166 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Forms;
-using Timer = System.Timers.Timer;
-using System.Runtime.InteropServices;
+using System.Collections;
+using System.Net.Sockets;
 
 namespace WB_Client
 {
 
-    
     public partial class Board : Form
     {
+        static public Socket client = WB_Client.Menu.client;
+        
+        List<Shape> shape_list; // Коллекция фигур
+        Graphics m_grp; // main_graphics
+
         bool pressed = false;
+
         /*
         mode == 0 - режим выбора
         mode == 1 - карандаш
         ..........
         */
         int mode = 0;
-       
-        List<Curve> curve_list; // Список кривых !!!!! НАДО ПЕРЕДЕЛАТЬ В КОЛЛЕКЦИЮ !!!!!!!
         int idOfShape = -1; // Сюда Номер выбранного объекта в списке
-        Graphics m_grp; // main_graphics
+        int actualThickness = 2;
+        static int loadMode;
 
-        public Board() {
+        Point prevLoc;
+        Color selectedColor = Color.Black;
+        public Board()
+        {
             InitializeComponent();
-            curve_list = new List<Curve>() ;
+            shape_list = new List<Shape>();
             m_grp = CreateGraphics();
             DoubleBuffered = true;
             m_grp.Clear(Color.White);
+            m_grp.SmoothingMode = SmoothingMode.AntiAlias;
             timer1.Start();
-            
+            WB_Client.Menu.ActiveForm.Close();
+            prevLoc = new Point();
         }
-       
-        
+
         private void Board_MouseMove(object sender, MouseEventArgs e)// События, происходящие пока мыши двигается
         {
 
-          
             if ((e.Button & MouseButtons.Left) == MouseButtons.Left && pressed && mode == 1)
             {
                 Point pt = new Point(e.X, e.Y);
-                curve_list[curve_list.Count - 1].points.Add(pt); // Добавляем точки в режиме рисования
+                shape_list[shape_list.Count - 1].points.Add(pt); // Добавляем точки в режиме рисования
             }
 
             if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 0)// Перемещаем в режиме выбора
             {
-                
                 if (idOfShape == -1)
                     return;
-                Point stPoint = curve_list[idOfShape].select_point;
-                Point offset = new Point(e.X - stPoint.X, (e.Y - stPoint.Y)); // Смещение
-                for (int i = 0; i < curve_list[idOfShape].points.Count; i++)// Смещение каждой точки на offset
+                if (shape_list[idOfShape].resizing == 1 )
                 {
-                    int x = curve_list[idOfShape].points[i].X; // Текущие координаты
-                    int y = curve_list[idOfShape].points[i].Y;
-                    curve_list[idOfShape].points[i] = new Point(x + offset.X, y + offset.Y);
+                    if (e.Location.Y > prevLoc.Y)
+                        shape_list[idOfShape].transform.Scale(1, 1.01f);
+                    if (e.Location.Y < prevLoc.Y)
+                        shape_list[idOfShape].transform.Scale(1, 0.99f);
+
                 }
-                curve_list[idOfShape].select_point = e.Location; // Новая "нулевая" точка
+                else if (shape_list[idOfShape].resizing == 2)
+                {
+                    if (e.Location.X > prevLoc.X)
+                        shape_list[idOfShape].transform.Scale(1.01f, 1);
+                    if (e.Location.X < prevLoc.X)
+                        shape_list[idOfShape].transform.Scale(0.99f, 1);
+                }
+                else
+                {
+                    Point stPoint = shape_list[idOfShape].select_point;
+                    Point offset = new Point(e.X - stPoint.X, (e.Y - stPoint.Y)); // Смещение
+                    shape_list[idOfShape].transform.Translate(offset.X, offset.Y, MatrixOrder.Append);
+                    shape_list[idOfShape].select_point = e.Location; // Новая "нулевая" точка 
+                    
+                }
+                prevLoc = e.Location;
             }
         }
         private void Board_Load(object sender, EventArgs e)
         {
-           
-        }
 
+        }
         private void Board_MouseDown(object sender, MouseEventArgs e)// События, когда опущенна ЛКМ
         {
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 1)
-            {
-                curve_list.Add(new Curve());
-                pressed = true;
-                curve_list[curve_list.Count - 1].points.Add(e.Location);
-            }
 
+            if ((e.Button & MouseButtons.Left) != MouseButtons.Left)
+                return;
 
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 0)
+            switch (mode)
             {
-               
-                for (int i = 0; i < curve_list.Count; i++) // Проверяем, попали мы в кривую или нет !!!!! Позже тут должны быть проверки на попадания в многоугольники
-                {
-                    if (curve_list[i].Contains(new Point(e.X, e.Y)))
+                case 0: // Selecting and move
+                    for (int i = 0; i < shape_list.Count; i++) // Проверяем, попали мы в кривую или нет #### Позже тут должны быть проверки на попадания в многоугольники ####
                     {
-                        curve_list[i].select_point = e.Location;
-                        idOfShape = i;
-                        richTextBox1.AppendText("Selected: " + idOfShape.ToString() + '\n');
-                        break;
+                        if (shape_list[i].selected)
+                        {
+                            if (shape_list[i].recF[1].Contains(e.Location))
+                            {
+                                idOfShape = i;
+                                shape_list[i].resizing = 1;
+                            }else if (shape_list[i].recF[2].Contains(e.Location))
+                            {
+                                idOfShape = i;
+                                shape_list[i].resizing = 2;
+                            }
+                            else shape_list[i].selected = false;
+                        }
+                        if (shape_list[i].Contains(new Point(e.X, e.Y)) && idOfShape == -1) // Первое попадание в фигуру
+                        {
+                            shape_list[i].select_point = e.Location;
+                            shape_list[i].selected = true;
+                            idOfShape = i;
+                            
+                            richTextBox1.AppendText(shape_list[idOfShape].GetType().ToString() + '\n');
+
+                        }
                     }
-                }
-               
+                    break;
+                case 1: // Draw curve
+                    shape_list.Add(new Curve());
+                    pressed = true;
+                    shape_list[shape_list.Count - 1].points.Add(e.Location);
+                    shape_list[shape_list.Count - 1].penColor = selectedColor;
+                    shape_list[shape_list.Count - 1].thinkness = actualThickness;
+                    break;
+
+                default: break;
             }
+
+
+
 
         }
-       
-       
 
         private void Board_MouseUp(object sender, MouseEventArgs e) // ЛКМ поднята
         {
-            if (mode == 1) 
+            if (mode == 1)
                 pressed = false;
             else if (mode == 0)
+            {
+                if (idOfShape != -1)
+                    shape_list[idOfShape].resizing = -1;
                 idOfShape = -1;
-
-
-
-
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+
             m_grp.Clear(Color.White);
-            foreach (var a in curve_list)
+
+            foreach (var a in shape_list)
             {
                 a.Draw(m_grp);
             }
 
         }
 
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
-        {
 
-        }
-
+        
         private void Select_Click(object sender, EventArgs e)
         {
             mode = 0;
@@ -140,59 +180,55 @@ namespace WB_Client
         {
             mode = 1;
         }
-    }
-    abstract class Shape // Базовый класс для фигур
-    {
-        public List<Point> points { get; set; } // Вершины фигуры
-        public int thinkness { get; set; } // Толищна кисти для рисования
-        public Point offset { get; set; } // Смещение
-        public Point select_point { get; set; } // "Нулевая" точка, исп. в перемещнии фигуры
-        public Color penColor { get; set; } // Цвет кистм
 
-
-
-        protected Pen GetPen()  { return new Pen(penColor, thinkness); }
-    }
-    class Curve :  Shape    {
-    
-
-        public Curve()
+        private void anyColor_Click(object sender, EventArgs e)
         {
-            thinkness = 2;
-            points = new List<Point>();
-            penColor = Color.Black;
-        }
-        public Curve(List<Point> pnts)
-        {
-            points = pnts;
-            thinkness = 2;
-            penColor = Color.Black;
-        }
-        private GraphicsPath GetPath()
-        {
-            var path = new GraphicsPath();
-            if (points.Count != 0)
-                path.AddCurve(points.ToArray());
-            return path;
+            colorDialog1.ShowDialog();
+            selectedColor = colorDialog1.Color;
         }
 
-       
-
-        public void Draw(Graphics g)
+        private void yellow_Click(object sender, EventArgs e)
         {
-           
-            g.DrawPath(GetPen(), GetPath());
-            
+            Bitmap bmp = new Bitmap(WB_Client.Properties.Resources.yellow);
+            selectedColor = bmp.GetPixel(15, 15);
         }
 
-        public bool Contains(Point p)
+        private void blue_Click(object sender, EventArgs e)
         {
-            using (var pen = GetPen())
-            using (var path = GetPath())
-            {
-                return path.IsOutlineVisible(p, pen);
-            }
+            Bitmap bmp = new Bitmap(WB_Client.Properties.Resources.blue);
+            selectedColor = bmp.GetPixel(15, 15);
+        }
+
+        private void green_Click(object sender, EventArgs e)
+        {
+            Bitmap bmp = new Bitmap(WB_Client.Properties.Resources.green);
+            selectedColor = bmp.GetPixel(15, 15);
+        }
+
+        private void pink_Click(object sender, EventArgs e)
+        {
+            Bitmap bmp = new Bitmap(WB_Client.Properties.Resources.pink);
+            selectedColor = bmp.GetPixel(15, 15);
+        }
+
+        private void red_Click(object sender, EventArgs e)
+        {
+            Bitmap bmp = new Bitmap(WB_Client.Properties.Resources.red);
+            selectedColor = bmp.GetPixel(15, 15);
+        }
+
+        private void black_Click(object sender, EventArgs e)
+        {
+            Bitmap bmp = new Bitmap(WB_Client.Properties.Resources.black);
+            selectedColor = bmp.GetPixel(15, 15);
+        }
+
+        private void select_thickness_Scroll(object sender, EventArgs e)
+        {
+            actualThickness = select_thickness.Value;
         }
     }
+
+   
 
 }

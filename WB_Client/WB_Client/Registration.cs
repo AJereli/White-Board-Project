@@ -85,12 +85,12 @@ namespace WB_Client
                 {
                     if (Regex.IsMatch(Email.Text, pattern, RegexOptions.IgnoreCase))//Проверка соответствия строки шаблону
                     {
-                        if (registrationServer(port))
-                        {
-                            MessageBox.Show("Успешно загегестрировались!");
-                            Menu menuShow = new Menu();
-                            this.Hide();
-                            menuShow.Show();
+            if (registrationServer(port))
+            {
+                MessageBox.Show("Успешно загегестрировались!");
+                Menu menuShow = new Menu();
+                this.Hide();
+                menuShow.Show();
                         }
                         else
                         {
@@ -110,7 +110,16 @@ namespace WB_Client
             else
             {
                 MessageBox.Show("Минимальное количество символов в поле Login 3!");
-            }        
+            }
+        }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData) //закрытие окна при нажатии клавиши "Esc"
+        {
+            if (keyData == Keys.Escape)
+            {
+                this.Close();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }
