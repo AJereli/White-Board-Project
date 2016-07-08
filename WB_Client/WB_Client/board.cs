@@ -30,6 +30,7 @@ namespace WB_Client
         /*
         mode == 0 - режим выбора
         mode == 1 - карандаш
+        mode == 2 - линия
         ..........
         */
         int mode = 0;
@@ -39,6 +40,9 @@ namespace WB_Client
         static public byte[] new_shape_code = new byte[1];
         static public byte[] typeOfShape = new byte[1];
         static public string name;
+        static public Point mouseF;
+        static public Point mouseS;        
+        public bool flagDown = false;
 
         Point prevLoc;
         Color selectedColor = Color.Black;
@@ -142,6 +146,11 @@ namespace WB_Client
         }
         private void Board_MouseMove(object sender, MouseEventArgs e)// События, происходящие пока мыши двигается
         {
+            if (flagDown)
+            {                
+                mouseS.X = e.X;
+                mouseS.Y = e.Y;
+            }
 
             if ((e.Button & MouseButtons.Left) == MouseButtons.Left && pressed && mode == 1)
             {
@@ -153,8 +162,16 @@ namespace WB_Client
                 client.Send(Encoding.UTF8.GetBytes(msg));
                 shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
             }
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && pressed && mode == 2)
+            {
+                Point pt = new Point(e.X, e.Y);
+                //client.Send(pt);
 
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 0)// Трансформируем в режиме выбора
+                string msg = pt.X.ToString() + '+' + pt.Y.ToString() + '+' + (shape_list.Count - 1).ToString();
+                client.Send(Encoding.UTF8.GetBytes(msg));
+                shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
+            }
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 0)// Перемещаем в режиме выбора
             {
                 if (idOfShape == -1)
                     return;
@@ -185,6 +202,7 @@ namespace WB_Client
                 prevLoc = e.Location;
             }
         }
+
         private void Board_Load(object sender, EventArgs e)
         {
 
@@ -197,9 +215,19 @@ namespace WB_Client
         }
         private void Board_MouseDown(object sender, MouseEventArgs e)// События, когда опущенна ЛКМ
         {
+            if (!flagDown)
+            {
+                mouseF.X = e.X;
+                mouseF.Y = e.Y;
+                mouseS.X = e.X;
+                mouseS.Y = e.Y;
+                flagDown = true;
+            }
 
             if ((e.Button & MouseButtons.Left) != MouseButtons.Left)
+            {       
                 return;
+            }     
 
             switch (mode)
             {
@@ -225,7 +253,6 @@ namespace WB_Client
                             shape_list[i].Item2.select_point = e.Location;
                             shape_list[i].Item2.selected = true;
                             idOfShape = i;
-                            
                             richTextBox1.AppendText(shape_list[idOfShape].GetType().ToString() + '\n');
 
                         }
@@ -250,20 +277,27 @@ namespace WB_Client
 
                 default: break;
             }
-
-
-
-
         }
 
         private void Board_MouseUp(object sender, MouseEventArgs e) // ЛКМ поднята
         {
+           if (flagDown)
+           {
+                mouseS.X = e.X;
+                mouseS.Y = e.Y;
+                flagDown = false;
+           }
+            
             if (mode == 1)
             {
                // timerFoServ.Stop();
                 pressed = false;
-
               
+            }
+            else if (mode == 2)
+            {
+                // timerFoServ.Stop();
+                pressed = false;
             }
             else if (mode == 0)
             {
@@ -347,11 +381,59 @@ namespace WB_Client
         }
 
         private void timerFoServ_Tick(object sender, EventArgs e)
+
+        private void broadcastToTheWorld() /// Broadcast to the world Out of control Broadcast to the world Ready to fold
         {
+            while (true)
+        {
+                Thread.Sleep(10);
+                byte[] infoBuff = new byte[512];
+
+                int rec = client.Receive(infoBuff);
+                string msg = new string(Encoding.UTF8.GetChars(infoBuff), 0, rec);
+                //richTextBox1.AppendText(rec.ToString());
+                string[] parsed = msg.Split('+');
+                if (parsed.Length == 4)
+                {
+                    if (parsed[0] == "1")
+                    {
+                        //int id = Convert.ToInt32(parsed[2]);
+                        shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Curve()));
+                        shape_list[shape_list.Count - 1].Item2.penColor = Color.FromArgb(Convert.ToInt32(parsed[2]));
+                        shape_list[shape_list.Count - 1].Item2.thinkness = Convert.ToInt32(parsed[3]);
             
+                        Invoke((MethodInvoker)delegate ()
+                        {
+                            debug_lable.Text = shape_list.Count.ToString() + "After come";
+                            richTextBox1.AppendText(shape_list.Count.ToString() + "After come\n");
+                        });
+                    }                  
+                }
+                else if (parsed.Length == 3)
+                {
+                    int index = Convert.ToInt32(parsed[2]);
             
+                    Point coords = new Point(Convert.ToInt32(parsed[0]), Convert.ToInt32(parsed[1]));
+                    try {
+                        if (canLoadFromOther)
+                            shape_list[index].Item2.points.Add(coords);
+                    }catch (ArgumentOutOfRangeException)
+                    {
+                        richTextBox1.AppendText("WRONG IDX: " + index.ToString() + '\n');
+                        for(int i = shape_list.Count; i <= index; ++i)
+                        {
+                            shape_list.Add(new Tuple<int, Shape>(i, new Curve()));
+                        }
+                        canLoadFromOther = false;
+                    }                    
+                }
+            }
         }
 
+        private void timerFoServ_Tick(object sender, EventArgs e)
+        {
+
+        }
 
         private void Select_Click(object sender, EventArgs e)
         {
@@ -425,14 +507,32 @@ namespace WB_Client
 
         }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void user_name_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void Board_Shown(object sender, EventArgs e)
         {
             if (loadMode == 6)
                 loadBoard();
          
             broadCast.Start();
+        private void debug_lable_Click(object sender, EventArgs e)
+        {
+
+        }
        
             new_shape_code[0] = 7;
+        }
+        private void line_Click(object sender, EventArgs e)
+        {
+            mode = 2;            
         }
     }
 

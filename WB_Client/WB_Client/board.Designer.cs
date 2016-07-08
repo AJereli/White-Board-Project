@@ -47,7 +47,10 @@
             this.line = new System.Windows.Forms.PictureBox();
             this.Pencil = new System.Windows.Forms.PictureBox();
             this.Select = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.select_thickness)).BeginInit();
+            this.select_thickness = new System.Windows.Forms.TrackBar();
+            this.timerFoServ = new System.Windows.Forms.Timer(this.components);
+            this.user_name = new System.Windows.Forms.Label();
+            this.debug_lable = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.anyColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.yellow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blue)).BeginInit();
@@ -215,6 +218,7 @@
             this.line.Size = new System.Drawing.Size(30, 30);
             this.line.TabIndex = 3;
             this.line.TabStop = false;
+            this.line.Click += new System.EventHandler(this.line_Click);
             // 
             // Pencil
             // 
@@ -239,6 +243,48 @@
             this.Select.TabIndex = 1;
             this.Select.TabStop = false;
             this.Select.Click += new System.EventHandler(this.Select_Click);
+            // 
+            // select_thickness
+            // 
+            this.select_thickness.AutoSize = false;
+            this.select_thickness.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.select_thickness.LargeChange = 2;
+            this.select_thickness.Location = new System.Drawing.Point(538, 12);
+            this.select_thickness.MaximumSize = new System.Drawing.Size(150, 30);
+            this.select_thickness.Minimum = 1;
+            this.select_thickness.MinimumSize = new System.Drawing.Size(150, 30);
+            this.select_thickness.Name = "select_thickness";
+            this.select_thickness.Size = new System.Drawing.Size(150, 30);
+            this.select_thickness.TabIndex = 12;
+            this.select_thickness.TabStop = false;
+            this.select_thickness.Tag = "Тощина кисти";
+            this.select_thickness.Value = 2;
+            this.select_thickness.Scroll += new System.EventHandler(this.select_thickness_Scroll);
+            // 
+            // timerFoServ
+            // 
+            this.timerFoServ.Tick += new System.EventHandler(this.timerFoServ_Tick);
+            // 
+            // user_name
+            // 
+            this.user_name.AutoSize = true;
+            this.user_name.Location = new System.Drawing.Point(192, 20);
+            this.user_name.Name = "user_name";
+            this.user_name.Size = new System.Drawing.Size(35, 13);
+            this.user_name.TabIndex = 14;
+            this.user_name.Text = "label2";
+            this.user_name.Click += new System.EventHandler(this.user_name_Click);
+            // 
+            // debug_lable
+            // 
+            this.debug_lable.AutoSize = true;
+            this.debug_lable.Location = new System.Drawing.Point(392, 490);
+            this.debug_lable.MinimumSize = new System.Drawing.Size(200, 25);
+            this.debug_lable.Name = "debug_lable";
+            this.debug_lable.Size = new System.Drawing.Size(200, 25);
+            this.debug_lable.TabIndex = 15;
+            this.debug_lable.Text = "label1";
+            this.debug_lable.Click += new System.EventHandler(this.debug_lable_Click);
             // 
             // Board
             // 

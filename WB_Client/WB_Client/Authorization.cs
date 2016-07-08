@@ -44,37 +44,32 @@ namespace WB_Client
 
         public bool authorizationServer(int port)
         {
-            try
-            {
-                client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            byte[] bytes = new byte[1024];
+                byte[] bytes = new byte[1024];
+            client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp); 
 
-            int loginLength = Login.Text.Length;
-            int passwordLength = Password.Text.Length;
-                client.Connect(ipEndPoint);
-            client.Send(authorize_code);
+
+            client.Connect(ipEndPoint);
+                int loginLength = Login.Text.Length;
+                int passwordLength = Password.Text.Length;
+                client.Send(authorize_code);
            // client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
-            client.Send(Encoding.UTF8.GetBytes(Login.Text));
+                client.Send(Encoding.UTF8.GetBytes(Login.Text));
                 Thread.Sleep(123);
            //client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
-            client.Send(Encoding.UTF8.GetBytes(Password.Text));
+                client.Send(Encoding.UTF8.GetBytes(Password.Text));
 
-            client.Receive(bytes);
-            if (bytes[0] == server_ok_code[0])
-                return true;
-            else if (bytes[0] == wrong_pass_code[0])
+                client.Receive(bytes);
+
+                if (bytes[0] == server_ok_code[0])
+                    return true;
+                else if (bytes[0] == wrong_pass_code[0])
                 {
                     client.Close();
-                return false;
+                    return false;
                 }
-
-                else return false;
-            }
-            catch(SocketException error)
-            {
-                MessageBox.Show("Ошибка соединения с сервером!");
+            else
                 return false;
-        }
+            
         }
 
         private void Enter_Click(object sender, EventArgs e)
@@ -83,14 +78,15 @@ namespace WB_Client
             {
                 if (Password.Text.Length >= 5)
                 {
-            if (authorizationServer(port))
-            {
+                    if (authorizationServer(port))
+                    {
                 name = Login.Text;
-                Menu menuShow = new Menu();            
-                this.Hide();
-                menuShow.Show();
-            }
-                    else
+                        Menu menuShow = new Menu();            
+                        this.Hide();
+                        menuShow.Show();                
+                
+                    }
+                    else                    
                     {
                         MessageBox.Show("Неверное имя или пароль!");
                     }

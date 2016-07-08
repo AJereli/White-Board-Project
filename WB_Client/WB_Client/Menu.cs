@@ -31,7 +31,7 @@ namespace WB_Client
             InitializeComponent();
         }
 
-
+        
 
         private void Menu_Load(object sender, EventArgs e)//Создаем меню
         {
@@ -48,27 +48,27 @@ namespace WB_Client
                 loadMode = 6;
                 Board F2 = new Board(); //переход к чистойs доске
                 F2.ShowDialog();
-
-            }
+                    
+        }        
             else
             {
                 MessageBox.Show("Не сегодня!");
             }
         }
-        private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
-        {
-            Application.Exit(); //Закрытие приложения
-        }
+         private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
+         {
+             Application.Exit(); //Закрытие приложения
+         }
         //запрос на создание доски 5!!!!! query_board_code = 5
         public bool chekingServer(int port)
-        {
-            byte[] bytes = new byte[1024];
+         {
+             byte[] bytes = new byte[1024];
 
             IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
+           
 
-
-            // client.Connect(ipEndPoint);
+           // client.Connect(ipEndPoint);
 
             client.Send(query_board_code);
 
