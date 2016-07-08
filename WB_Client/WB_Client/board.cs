@@ -154,12 +154,12 @@ namespace WB_Client
                 shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
             }
 
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 0)// Перемещаем в режиме выбора
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 0)// Трансформируем в режиме выбора
             {
                 if (idOfShape == -1)
                     return;
 
-                if (shape_list[idOfShape].Item2.resizing == 1)
+                if (shape_list[idOfShape].Item2.resizing == 1) // Масштабирование по Y
                 {
                     if (e.Location.Y > prevLoc.Y)
                         shape_list[idOfShape].Item2.transform.Scale(1, 1.01f);
@@ -167,7 +167,7 @@ namespace WB_Client
                         shape_list[idOfShape].Item2.transform.Scale(1, 0.99f);
 
                 }
-                else if (shape_list[idOfShape].Item2.resizing == 2)
+                else if (shape_list[idOfShape].Item2.resizing == 2)// Масштабирование по X
                 {
                     if (e.Location.X > prevLoc.X)
                         shape_list[idOfShape].Item2.transform.Scale(1.01f, 1);
@@ -187,14 +187,12 @@ namespace WB_Client
         }
         private void Board_Load(object sender, EventArgs e)
         {
-           
-            
 
         }
         private void Board_FormClosing(object sender, FormClosingEventArgs e)
         {
             broadCast.Abort();
-
+            timer1.Stop();
             Application.Exit();
         }
         private void Board_MouseDown(object sender, MouseEventArgs e)// События, когда опущенна ЛКМ
