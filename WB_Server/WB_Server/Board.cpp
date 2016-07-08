@@ -66,7 +66,7 @@ void Board::sendBoard() {
 	
 }
 void Board::addUser(shared_ptr <sf::TcpSocket> & _sock) {
-	char query_code[1024];
+	char query_code[64];
 	size_t rec = 0;
 	query_code[0] = server_ok_code;
 	_sock->send(query_code, sizeof(char));
@@ -84,33 +84,26 @@ void Board::addUser(shared_ptr <sf::TcpSocket> & _sock) {
 	string shapeSizeStr = to_string(all_shapes.size());
 	
 	_sock->send(shapeSizeStr.c_str(), shapeSizeStr.length());
-	// sf::sleep(sf::microseconds(100));
+	
 	
 	cout << "Send size: " << shapeSizeStr << endl;
 	 
 	for (int i = 0; i < all_shapes.size(); ++i) {
 		string info = (all_shapes[i].first + "+" + to_string(all_shapes[i].second.size()));
-		_sock->receive(query_code, 1024, rec);
+		_sock->receive(query_code, 64, rec);
 		_sock->send(info.c_str(), info.length());
-		//cout << "Send " << i << " info: " << info << endl;
-		//sf::sleep(sf::microseconds(50));
-		//_sock->receive(query_code, 1024, rec);
+		
 		string oneBigString;
 		oneBigString.append(all_shapes[i].second[0]);
 		for (auto it = 1; it < all_shapes[i].second.size(); ++it) {
-			/*_sock->receive(query_code, 1, rec);
-			_sock->send(it->c_str(), it->length());*/
-			//cout << *it << " ";
-			//sf::sleep(sf::microseconds(50));
+			
 			oneBigString.append("-"+ all_shapes[i].second[it]);
 		}
-		//cout << "oneBigString: " << oneBigString << endl;
+		
 		_sock->send(oneBigString.c_str(), oneBigString.length());
-		//cout << endl;
 	}
 	
-	/*_sock->send("END", sizeof("END"));
-	cout << "END\n";*/
+	
 	cout << sock_of_members.size() << endl;
 }
 

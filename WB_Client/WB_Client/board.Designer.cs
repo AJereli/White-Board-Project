@@ -47,10 +47,10 @@
             this.line = new System.Windows.Forms.PictureBox();
             this.Pencil = new System.Windows.Forms.PictureBox();
             this.Select = new System.Windows.Forms.PictureBox();
-            this.select_thickness = new System.Windows.Forms.TrackBar();
-            this.timerFoServ = new System.Windows.Forms.Timer(this.components);
-            this.user_name = new System.Windows.Forms.Label();
-            this.debug_lable = new System.Windows.Forms.Label();
+            
+          
+          
+          
             ((System.ComponentModel.ISupportInitialize)(this.anyColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.yellow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blue)).BeginInit();
