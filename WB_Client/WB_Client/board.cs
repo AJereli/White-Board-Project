@@ -22,7 +22,7 @@ namespace WB_Client
         static public Socket client = WB_Client.Menu.client;
         Thread broadCast;
         List<Tuple<int, Shape>> shape_list;// Коллекция фигур
-
+        
         Graphics m_grp; // main_graphics
 
         bool pressed = false;
@@ -65,7 +65,7 @@ namespace WB_Client
             m_grp.SmoothingMode = SmoothingMode.HighQuality;
 
             timer1.Start();
-
+            
             
 
             prevLoc = new Point();
@@ -110,7 +110,7 @@ namespace WB_Client
                         default: break;
                     }
                 }
-               
+
                 rec = client.Receive(buff);// Принимает точки фигуры
                 msg = new string(Encoding.UTF8.GetChars(buff), 0, rec);
                 parsed = msg.Split('-');// Парсит строку на отдельные пары вида X+Y
@@ -180,7 +180,7 @@ namespace WB_Client
                     Point offset = new Point(e.X - stPoint.X, (e.Y - stPoint.Y)); // Смещение
                     shape_list[idOfShape].Item2.transform.Translate(offset.X, offset.Y, MatrixOrder.Append);
                     shape_list[idOfShape].Item2.select_point = e.Location; // Новая "нулевая" точка 
-
+                    
                 }
                 prevLoc = e.Location;
             }
@@ -225,7 +225,7 @@ namespace WB_Client
                             shape_list[i].Item2.select_point = e.Location;
                             shape_list[i].Item2.selected = true;
                             idOfShape = i;
-
+                            
                             richTextBox1.AppendText(shape_list[idOfShape].GetType().ToString() + '\n');
 
                         }
@@ -237,8 +237,8 @@ namespace WB_Client
                     shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Curve()));
                     string query = typeOfShape[0].ToString() + '+' + selectedColor.ToArgb().ToString() + '+' + actualThickness.ToString();
                     if (!pressed)
-                        client.Send(Encoding.UTF8.GetBytes(query));
-                   
+                    client.Send(Encoding.UTF8.GetBytes(query));
+                    
 
                     debug_lable.Text = shape_list.Count.ToString() + "Before come";
                     richTextBox1.AppendText(shape_list.Count.ToString() + "Before come\n");
@@ -260,10 +260,10 @@ namespace WB_Client
         {
             if (mode == 1)
             {
-                // timerFoServ.Stop();
+               // timerFoServ.Stop();
                 pressed = false;
 
-
+              
             }
             else if (mode == 0)
             {
@@ -301,7 +301,7 @@ namespace WB_Client
                 if (parsed.Length == 3)
                 {
                     if (parsed[0] == "1")
-                    {
+        {
                         //int id = Convert.ToInt32(parsed[2]);
                         shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Curve()));
                         shape_list[shape_list.Count - 1].Item2.penColor = Color.FromArgb(Convert.ToInt32(parsed[1]));
@@ -317,7 +317,7 @@ namespace WB_Client
 
                 }
                 else if (parsed.Length == 2)
-                {
+            {
                     //int index = Convert.ToInt32(parsed[2]);
 
                     Point coords = new Point(Convert.ToInt32(parsed[0]), Convert.ToInt32(parsed[1]));
@@ -348,8 +348,8 @@ namespace WB_Client
 
         private void timerFoServ_Tick(object sender, EventArgs e)
         {
-
-
+            
+            
         }
 
 
@@ -431,11 +431,11 @@ namespace WB_Client
                 loadBoard();
          
             broadCast.Start();
-
+       
             new_shape_code[0] = 7;
         }
     }
 
-
+   
 
 }

@@ -44,31 +44,36 @@ namespace WB_Client
 
         public bool authorizationServer(int port)
         {
+            try
+            {
+                client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             byte[] bytes = new byte[1024];
-            client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp); 
 
-
-            client.Connect(ipEndPoint);
             int loginLength = Login.Text.Length;
             int passwordLength = Password.Text.Length;
+                client.Connect(ipEndPoint);
             client.Send(authorize_code);
-           // client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
+            client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
             client.Send(Encoding.UTF8.GetBytes(Login.Text));
-            // client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
-            Thread.Sleep(123);
+            client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
             client.Send(Encoding.UTF8.GetBytes(Password.Text));
 
             client.Receive(bytes);
-
             if (bytes[0] == server_ok_code[0])
                 return true;
             else if (bytes[0] == wrong_pass_code[0])
-            {
-                client.Close();
+                {
+                    client.Close();
                 return false;
+                }
+
+                else return false;
             }
-            else
+            catch(SocketException error)
+            {
+                MessageBox.Show("Ошибка соединения с сервером!");
                 return false;
+        }
         }
 
         private void Enter_Click(object sender, EventArgs e)
@@ -83,7 +88,6 @@ namespace WB_Client
                 Menu menuShow = new Menu();            
                 this.Hide();
                 menuShow.Show();
-                
             }
                     else
                     {
