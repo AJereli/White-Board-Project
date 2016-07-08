@@ -43,17 +43,19 @@ namespace WB_Client
         Point prevLoc;
         Color selectedColor = Color.Black;
 
-        Bitmap progressGif = WB_Client.Properties.Resources.loadGIF as Bitmap;
-
+        Point winCenter;
+        Bitmap progressGif;
+        Rectangle progressGifRect;
         public Board()
         {
             InitializeComponent();
+            winCenter = new Point(Size.Width / 2, Size.Height / 2);
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             SetStyle(ControlStyles.DoubleBuffer, true);
             loadMode = WB_Client.Menu.loadMode;
            // WB_Client.Menu.ActiveForm.Close();
             user_name.Text = WB_Client.Menu.name;
-
+            broadCast = new Thread(delegate () { broadcastToTheWorld(); });
             shape_list = new List<Tuple<int, Shape>>();
             
             m_grp = CreateGraphics();
@@ -68,43 +70,58 @@ namespace WB_Client
 
             prevLoc = new Point();
         }
-        private void loadBoard()
+        private void loadBoard()// Загрузка борда
         {
-
-            byte[] ans = new byte[512];
-            ans = Encoding.UTF8.GetBytes("PLS GIVE SOME PART BRO");
-            byte[] buff = new byte[16384*2];
-            int rec = client.Receive(buff);
+            this.Enabled = false;
+            //// Загрузка анимации
+            progressGif = WB_Client.Properties.Resources.loadGIF as Bitmap;
+            ImageAnimator.Animate(progressGif,
+                                        new EventHandler(this.OnFrameChanged));
+            progressGifRect = new Rectangle(winCenter, progressGif.Size);
+            ////
+            byte[] ans = new byte[64]; // Буфер для подтвержения
+            ans = Encoding.UTF8.GetBytes("PLS GIVE SOME PART BRO"); // Команда для подтверждения
+            byte[] buff = new byte[16384*2];// Основной буфер для информации и фигуре
+            int rec = client.Receive(buff); // Принимает количество фигур (если ноль, то принимает END)
             string msg = new string(Encoding.UTF8.GetChars(buff), 0, rec);
             if (msg == "END\0")
+            {
+                progressGif.Dispose();
                 return;
+            }
+                
             int numbOfShape = Convert.ToInt32(msg);
             for (int i = 0; i < numbOfShape; ++i)
             {
                 client.Send(ans);
-                rec = client.Receive(buff);
+                rec = client.Receive(buff); // Принимает тип фигуры и её параметры
                 
                 msg = new string(Encoding.UTF8.GetChars(buff), 0, rec);
-                string[] parsed = msg.Split('+');
+                string[] parsed = msg.Split('+'); // Распарсить параметры
                 if (parsed.Length == 4)
                 {
-                    if (parsed[0] == "1")
+                    switch (parsed[0])
                     {
-                        
-                        shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Curve()));
-                        shape_list[shape_list.Count - 1].Item2.penColor = Color.FromArgb(Convert.ToInt32(parsed[1]));
-                        shape_list[shape_list.Count - 1].Item2.thinkness = Convert.ToInt32(parsed[2]);
+                        case "1":
+                            shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Curve()));
+                            shape_list[shape_list.Count - 1].Item2.penColor = Color.FromArgb(Convert.ToInt32(parsed[1]));
+                            shape_list[shape_list.Count - 1].Item2.thinkness = Convert.ToInt32(parsed[2]);
+                            break;
+                        default: break;
                     }
-
                 }
                
-                rec = client.Receive(buff);
+                rec = client.Receive(buff);// Принимает точки фигуры
                 msg = new string(Encoding.UTF8.GetChars(buff), 0, rec);
-                parsed = msg.Split('-');
+                parsed = msg.Split('-');// Парсит строку на отдельные пары вида X+Y
                 for (int j = 0; j < parsed.Length; ++j)
                 {
-                   
-                    string[] lonelyPart = parsed[j].Split('+');
+                    ///// ВИЗИУАЛИЗАЦИЯ ПРОГРЕССА
+                    ImageAnimator.UpdateFrames(progressGif);
+                    m_grp.DrawImage(progressGif, winCenter);
+                    //// -------------------
+
+                    string[] lonelyPart = parsed[j].Split('+'); // Отдельные кординаты X Y
                     try {
                         Point coords = new Point(Convert.ToInt32(lonelyPart[0]), Convert.ToInt32(lonelyPart[1]));
                         shape_list[shape_list.Count - 1].Item2.points.Add(coords);
@@ -119,7 +136,8 @@ namespace WB_Client
                     
                 }
             }
-
+            this.Enabled = true;
+            progressGif.Dispose();
 
         }
         private void Board_MouseMove(object sender, MouseEventArgs e)// События, происходящие пока мыши двигается
@@ -170,6 +188,7 @@ namespace WB_Client
         private void Board_Load(object sender, EventArgs e)
         {
            
+            
 
         }
         private void Board_FormClosing(object sender, FormClosingEventArgs e)
@@ -255,20 +274,17 @@ namespace WB_Client
                 idOfShape = -1;
             }
         }
-
-        private void timer1_Tick(object sender, EventArgs e)
+        private void OnFrameChanged(object sender, EventArgs e)
         {
-
-
-            m_grp.Clear(Color.White);
-            m_grp.DrawImage(progressGif, new Point(150,150));
-            ImageAnimator.UpdateFrames(progressGif);
+            Invalidate(progressGifRect);
+        }
+        private void timer1_Tick(object sender, EventArgs e)
+        {         
+            m_grp.Clear(Color.White);       
             for (int i = 0; i < shape_list.Count; ++i)
-            {
-
                 shape_list[i].Item2.Draw(m_grp);
-            }
-
+            
+            
 
         }
 
@@ -277,7 +293,7 @@ namespace WB_Client
         {
             while (true)
             {
-                Thread.Sleep(10);
+                Thread.Sleep(15);
                 byte[] infoBuff = new byte[256];
 
                 int rec = client.Receive(infoBuff);
@@ -415,8 +431,7 @@ namespace WB_Client
         {
             if (loadMode == 6)
                 loadBoard();
-            
-            broadCast = new Thread(delegate () { broadcastToTheWorld(); });
+         
             broadCast.Start();
 
             new_shape_code[0] = 7;
