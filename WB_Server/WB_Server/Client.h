@@ -18,6 +18,7 @@ public:
 	char getStatus() { return status; }
 	void setStatus(const char st) { status = st; }
 	void setName(char * _name) { name = _name; }
+	void setName(string _name) { name = _name; }
 	string getName() { return name; }
 	int getBoard_ID() { return board_ID; }
 	void setBoard_ID(int & b_ID) { board_ID = b_ID; }
