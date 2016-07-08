@@ -30,23 +30,31 @@ void Board::broadcastPainting() {
 					int cntOfPlus = 0;
 					size_t rec = 0;
 					if (client.receive(query, sizeof(query), rec) == sf::Socket::Done) {
-						//cout << string(query, rec) << endl;
+
+						// ÑÎÕÐÀÍÅÍÈÅ ÔÈÃÓÐÛ --------
 						string str(query, rec);
+						
+						bool sayThis = true;
 						for (int i = 0; i < str.size(); ++i)
 							if (str[i] == '+')
 								cntOfPlus++;
-						if (cntOfPlus == 3)
-							all_shapes.push_back(make_pair(str, vector<string>()));
-						else if (cntOfPlus == 2) {
-							int index = stoi(str.substr(str.find_last_of('+') + 1, str.length() - str.find_last_of('+')));
-							all_shapes.at(index).second.push_back(str);
-						}
+						if (cntOfPlus == 2)
+							if (str.find("-") != string::npos)
+								all_shapes.push_back(make_pair(str, vector<string>()));
+							else
+								sayThis = false;
+						else if (cntOfPlus == 1)
+							all_shapes.at(all_shapes.size() - 1).second.push_back(str);
 						
-						for (auto say_all = sock_of_members.begin(); say_all != sock_of_members.end(); ++say_all) {		
-							sf::sleep(sf::microseconds(50));
-							if (say_all != it)
-								(**say_all).send(query, rec);
-						}
+						cout << "Shapes on board " << creator->getName() + " : " << all_shapes.size() << endl;
+						// -----------------
+
+						if (sayThis)
+							for (auto say_all = sock_of_members.begin(); say_all != sock_of_members.end(); ++say_all) {		
+								sf::sleep(sf::microseconds(50));
+								if (say_all != it)
+									(**say_all).send(query, rec);
+							}
 					}
 				}
 			}
@@ -58,32 +66,51 @@ void Board::sendBoard() {
 	
 }
 void Board::addUser(shared_ptr <sf::TcpSocket> & _sock) {
-	char query_code[1];
+	char query_code[1024];
+	size_t rec = 0;
 	query_code[0] = server_ok_code;
 	_sock->send(query_code, sizeof(char));
-	sf::sleep(sf::microseconds(100));
+	sf::sleep(sf::microseconds(10000));
 	members.add(*_sock);
 	cout << "Connect" << endl;
 	sock_of_members.push_back(_sock);
 
-	
+	char * end = "END";
+	if (all_shapes.size() == 0) {
+		_sock->send(end, sizeof(end));
+		return;
+	}
+
 	string shapeSizeStr = to_string(all_shapes.size());
+	
 	_sock->send(shapeSizeStr.c_str(), shapeSizeStr.length());
-	//cout << shapeSizeStr << endl;
-	sf::sleep(sf::microseconds(100));
+	// sf::sleep(sf::microseconds(100));
+	
+	cout << "Send size: " << shapeSizeStr << endl;
+	 
 	for (int i = 0; i < all_shapes.size(); ++i) {
 		string info = (all_shapes[i].first + "+" + to_string(all_shapes[i].second.size()));
+		_sock->receive(query_code, 1024, rec);
 		_sock->send(info.c_str(), info.length());
-		//cout << info + " - ";
-		sf::sleep(sf::microseconds(100));
-		for (auto it = all_shapes[i].second.begin(); it != all_shapes[i].second.end(); ++it) {
-			sf::sleep(sf::microseconds(100));
-			_sock->send(it->c_str(), it->length());
-		//	cout << *it + " ";
+		//cout << "Send " << i << " info: " << info << endl;
+		//sf::sleep(sf::microseconds(50));
+		//_sock->receive(query_code, 1024, rec);
+		string oneBigString;
+		oneBigString.append(all_shapes[i].second[0]);
+		for (auto it = 1; it < all_shapes[i].second.size(); ++it) {
+			/*_sock->receive(query_code, 1, rec);
+			_sock->send(it->c_str(), it->length());*/
+			//cout << *it << " ";
+			//sf::sleep(sf::microseconds(50));
+			oneBigString.append("-"+ all_shapes[i].second[it]);
 		}
+		//cout << "oneBigString: " << oneBigString << endl;
+		_sock->send(oneBigString.c_str(), oneBigString.length());
 		//cout << endl;
 	}
-	_sock->send("END", sizeof("END"));
+	
+	/*_sock->send("END", sizeof("END"));
+	cout << "END\n";*/
 	cout << sock_of_members.size() << endl;
 }
 

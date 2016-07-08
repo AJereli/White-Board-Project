@@ -89,6 +89,7 @@ namespace WB_Client
                 Board F2 = new Board(); //переход к чистойs доске
                 loadMode = 5;
                 F2.ShowDialog();
+               
                 this.Hide();//закрываем Menu
             }
             else
