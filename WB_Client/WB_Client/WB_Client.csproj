@@ -60,6 +60,7 @@
       <DependentUpon>Board.cs</DependentUpon>
     </Compile>
     <Compile Include="Curve.cs" />
+    <Compile Include="Line.cs" />
     <Compile Include="Menu.cs">
       <SubType>Form</SubType>
     </Compile>

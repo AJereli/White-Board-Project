@@ -52,9 +52,9 @@ namespace WB_Client
             int loginLength = Login.Text.Length;
             int passwordLength = Password.Text.Length;
             client.Send(authorize_code);
-           // client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
+            client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
             client.Send(Encoding.UTF8.GetBytes(Login.Text));
-            // client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
+             client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
             Thread.Sleep(123);
             client.Send(Encoding.UTF8.GetBytes(Password.Text));
 
@@ -69,7 +69,7 @@ namespace WB_Client
             }
             else
                 return false;
-            }
+            
         }
 
         private void Enter_Click(object sender, EventArgs e)

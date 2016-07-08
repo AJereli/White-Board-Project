@@ -20,9 +20,9 @@ namespace WB_Client
         public Matrix transform { get; set; } // Матрица преобразований
 
 
-        public bool selected { get; set; }
+        public bool selected { get; set; } //Выбрана ли фигура
 
-        public int resizing { get; set; }
+        public int resizing { get; set; } // Переменная для изменения размеров
         public int size = 10; // Размер прямоугольников-тригеров.   
         public int thinkness { get; set; } // Толищна кисти для рисования
 
@@ -65,7 +65,5 @@ namespace WB_Client
             }
         }
         protected Pen GetPen() { return new Pen(penColor, thinkness); }
-    }
-    
-    
+    }   
 }

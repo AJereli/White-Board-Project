@@ -173,6 +173,7 @@
             this.line.Size = new System.Drawing.Size(30, 30);
             this.line.TabIndex = 3;
             this.line.TabStop = false;
+            this.line.Click += new System.EventHandler(this.line_Click);
             // 
             // Pencil
             // 
