@@ -20,7 +20,7 @@ namespace WB_Client
             points = new List<Point>();
             penColor = Color.Black;
             List<Shape> arl = new List<Shape>();
-
+           
 
         }
         public Curve(List<Point> pnts)

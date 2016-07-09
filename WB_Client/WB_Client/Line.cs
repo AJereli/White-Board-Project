@@ -34,6 +34,7 @@ namespace WB_Client
         override protected GraphicsPath GetPath()
         {
             var path = new GraphicsPath();
+           
             try
             {
                 if (points.Count != 0)
