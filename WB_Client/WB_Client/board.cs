@@ -105,7 +105,7 @@ namespace WB_Client
 
                 msg = new string(Encoding.UTF8.GetChars(buff), 0, rec);
                 string[] parsed = msg.Split('+'); // Распарсить параметры
-                if (parsed.Length == 4)
+                if (parsed.Length == 5)
                 {
                     switch (parsed[0])
                     {
@@ -113,11 +113,13 @@ namespace WB_Client
                             shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Curve()));
                             shape_list[shape_list.Count - 1].Item2.penColor = Color.FromArgb(Convert.ToInt32(parsed[1]));
                             shape_list[shape_list.Count - 1].Item2.thinkness = Convert.ToInt32(parsed[2]);
+                            shape_list[shape_list.Count - 1].Item2.matrixFromStr(parsed[4]);
                             break;
                         case "2":
                             shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Line()));
                             shape_list[shape_list.Count - 1].Item2.penColor = Color.FromArgb(Convert.ToInt32(parsed[1]));
                             shape_list[shape_list.Count - 1].Item2.thinkness = Convert.ToInt32(parsed[2]);
+                            shape_list[shape_list.Count - 1].Item2.matrixFromStr(parsed[4]);
                             break;
                         default: break;
                     }
@@ -157,46 +159,50 @@ namespace WB_Client
         }
         private void Board_MouseMove(object sender, MouseEventArgs e)// События, происходящие пока мыши двигается
         {
+            if ((e.Button & MouseButtons.Left) != MouseButtons.Left)
+                return;
+
             if (flagDown)
             {
                 mouseS.X = e.X;
                 mouseS.Y = e.Y;
             }
-
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && pressed && mode == 1)
+            
+            if (pressed && mode == 1)
             {
                 Point pt = new Point(e.X, e.Y);
                 string msg = pt.X.ToString() + '+' + pt.Y.ToString();
                 Thread.Sleep(1);
                 client.Send(Encoding.UTF8.GetBytes(msg));
                 shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
-            }
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && pressed && mode == 2)
+            }else if (pressed && mode == 2)
             {
                 Point pt = new Point(e.X, e.Y);
                 string msg = pt.X.ToString() + '+' + pt.Y.ToString();
                 client.Send(Encoding.UTF8.GetBytes(msg));
                 shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
-            }
-            if ((e.Button & MouseButtons.Left) == MouseButtons.Left && mode == 0)// Перемещаем в режиме выбора
+            }else if (mode == 0 && idOfShape != -1)// Перемещаем в режиме выбора
             {
-                if (idOfShape == -1)
-                    return;
-
+                
+                bool isChanged = false;
+                
+               
                 if (shape_list[idOfShape].Item2.resizing == 1) // Масштабирование по Y
                 {
                     if (e.Location.Y > prevLoc.Y)
                         shape_list[idOfShape].Item2.transform.Scale(1, 1.01f);
                     if (e.Location.Y < prevLoc.Y)
                         shape_list[idOfShape].Item2.transform.Scale(1, 0.99f);
-
+                    isChanged = true;
                 }
+                
                 else if (shape_list[idOfShape].Item2.resizing == 2)// Масштабирование по X
                 {
                     if (e.Location.X > prevLoc.X)
                         shape_list[idOfShape].Item2.transform.Scale(1.01f, 1);
                     if (e.Location.X < prevLoc.X)
                         shape_list[idOfShape].Item2.transform.Scale(0.99f, 1);
+                    isChanged = true;
                 }
                 else
                 {
@@ -204,8 +210,20 @@ namespace WB_Client
                     Point offset = new Point(e.X - stPoint.X, (e.Y - stPoint.Y)); // Смещение
                     shape_list[idOfShape].Item2.transform.Translate(offset.X, offset.Y, MatrixOrder.Append);
                     shape_list[idOfShape].Item2.select_point = e.Location; // Новая "нулевая" точка 
-
+                    isChanged = true;
                 }
+                
+                if (isChanged)
+                {
+                    string transformQuery = "0" + "+" + idOfShape.ToString() + "+";
+                    transformQuery += shape_list[idOfShape].Item2.transform.Elements[0].ToString();
+                    richTextBox1.AppendText("matr size: " + shape_list[idOfShape].Item2.transform.Elements.Length + "\n");
+                    for (int i = 1; i < shape_list[idOfShape].Item2.transform.Elements.Length; ++i)
+                        transformQuery += "!" + shape_list[idOfShape].Item2.transform.Elements[i].ToString();
+                    client.Send(Encoding.UTF8.GetBytes(transformQuery));
+                    richTextBox1.AppendText(transformQuery + "\n");
+                }
+                
                 prevLoc = e.Location;
             }
         }
@@ -339,21 +357,23 @@ namespace WB_Client
             for (int i = 0; i < shape_list.Count; ++i)
                 shape_list[i].Item2.Draw(m_grp);
         }
-
-
         private void broadcastToTheWorld() /// Broadcast to the world Out of control Broadcast to the world Ready to fold
         {
+            byte[] infoBuff = new byte[256];
             while (true)
             {
-                Thread.Sleep(10);
-                byte[] infoBuff = new byte[256];
-
+                Thread.Sleep(12);
+               
                 int rec = client.Receive(infoBuff);
                 string msg = new string(Encoding.UTF8.GetChars(infoBuff), 0, rec);
-                //richTextBox1.AppendText(rec.ToString());
                 string[] parsed = msg.Split('+');
                 if (parsed.Length == 3)
                 {
+                    if (parsed[0] == "0")
+                    {
+                        int id = Convert.ToInt32(parsed[1]);
+                        shape_list[id].Item2.matrixFromStr(parsed[2]);
+                    }
                     if (parsed[0] == "1")
                     {
                         shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Curve()));
@@ -377,23 +397,11 @@ namespace WB_Client
                 }
 
                 else if (parsed.Length == 2)
-                {
-                    //int index = Convert.ToInt32(parsed[2]);
-
+                {  
                     Point coords = new Point(Convert.ToInt32(parsed[0]), Convert.ToInt32(parsed[1]));
-                    try
-                    {
-                        if (canLoadFromOther)
-                            shape_list[shape_list.Count - 1].Item2.points.Add(coords);
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        richTextBox1.AppendText("WRONG IDX: " + (shape_list.Count - 1).ToString() + '\n');
-                        for (int i = shape_list.Count; i <= shape_list.Count - 1; ++i)
-                            shape_list.Add(new Tuple<int, Shape>(i, new Curve()));
-                        
-                        canLoadFromOther = false;
-                    }
+                    
+                    shape_list[shape_list.Count - 1].Item2.points.Add(coords);
+                   
 
                 }
 

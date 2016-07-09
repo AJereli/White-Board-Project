@@ -21,6 +21,7 @@ namespace WB_Client
         static public byte[] connect_board_code = new byte[1]; //6
         static public byte[] create_board_err_code = new byte[1]; //105
         static public byte[] server_ok_code = new byte[1];
+        static public byte board_not_found_code = 3;
         public Menu()
         {
             server_ok_code[0] = 0;
@@ -46,11 +47,12 @@ namespace WB_Client
             if (answer[0] == server_ok_code[0])
             {
                 loadMode = 6;
+
                 Board F2 = new Board(); //переход к чистойs доске
                 F2.ShowDialog();
                     
-        }        
-            else
+            }        
+            else if (answer[0] == board_not_found_code)
             {
                 MessageBox.Show("Не сегодня!");
             }

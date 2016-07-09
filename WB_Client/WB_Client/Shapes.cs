@@ -52,6 +52,14 @@ namespace WB_Client
             }
             return path;
         }
+        public void matrixFromStr (string strMatrix)
+        {
+            string[] parsed = strMatrix.Split('!');
+            float[] nm = new float[6]; // Новая матрица
+            for (int i = 0; i < parsed.Length; ++i)
+                nm[i] = Convert.ToSingle(parsed[i]);
+            transform = new Matrix(nm[0], nm[1], nm[2], nm[3], nm[4], nm[5]);
+        }
         virtual public void Draw(Graphics g)
         {
             var path = GetPath();

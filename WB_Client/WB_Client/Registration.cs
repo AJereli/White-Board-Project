@@ -54,15 +54,15 @@ namespace WB_Client
             Socket client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
             client.Connect(ipEndPoint);
-            int loginLength = Login.Text.Length;
-            int emailLenght = Email.Text.Length;
-            int passwordLength = Password.Text.Length;
+            //int loginLength = Login.Text.Length;
+            //int emailLenght = Email.Text.Length;
+            //int passwordLength = Password.Text.Length;
             client.Send(registration_code);
-            client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
+            //client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
             client.Send(Encoding.UTF8.GetBytes(Login.Text));           
-            client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
+           // client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
             client.Send(Encoding.UTF8.GetBytes(Password.Text));
-            client.Send(Encoding.UTF8.GetBytes(emailLenght.ToString()));
+           // client.Send(Encoding.UTF8.GetBytes(emailLenght.ToString()));
             client.Send(Encoding.UTF8.GetBytes(Email.Text));
 
             client.Receive(bytes);
@@ -88,9 +88,10 @@ namespace WB_Client
             if (registrationServer(port))
             {
                 MessageBox.Show("Успешно загегестрировались!");
+                           
                 Menu menuShow = new Menu();
-                this.Hide();
                 menuShow.Show();
+                Close();
                         }
                         else
                         {

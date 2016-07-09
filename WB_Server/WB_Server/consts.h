@@ -6,7 +6,7 @@ using namespace std;
 const char server_ok_code = 0;
 const char authorize_code = 1;
 const char registration_code = 2;
-
+const char board_not_found_code = 3;
 
 const char new_board_code = 5;
 const char connect_board_code = 6;
