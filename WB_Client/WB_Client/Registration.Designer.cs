@@ -32,6 +32,9 @@
             this.Email = new System.Windows.Forms.RichTextBox();
             this.Login = new System.Windows.Forms.RichTextBox();
             this.Password = new System.Windows.Forms.RichTextBox();
+            this.name = new System.Windows.Forms.Label();
+            this.passwrod = new System.Windows.Forms.Label();
+            this.email_lable = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Enter
@@ -74,12 +77,45 @@
             this.Password.Text = "";
             this.Password.TextChanged += new System.EventHandler(this.Password_TextChanged);
             // 
+            // name
+            // 
+            this.name.AutoSize = true;
+            this.name.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.name.Location = new System.Drawing.Point(3, 45);
+            this.name.Name = "name";
+            this.name.Size = new System.Drawing.Size(38, 17);
+            this.name.TabIndex = 7;
+            this.name.Text = "Login";
+            // 
+            // passwrod
+            // 
+            this.passwrod.AutoSize = true;
+            this.passwrod.Font = new System.Drawing.Font("Franklin Gothic Medium", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.passwrod.Location = new System.Drawing.Point(3, 82);
+            this.passwrod.Name = "passwrod";
+            this.passwrod.Size = new System.Drawing.Size(55, 16);
+            this.passwrod.TabIndex = 8;
+            this.passwrod.Text = "Password";
+            // 
+            // email_lable
+            // 
+            this.email_lable.AutoSize = true;
+            this.email_lable.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.email_lable.Location = new System.Drawing.Point(3, 117);
+            this.email_lable.Name = "email_lable";
+            this.email_lable.Size = new System.Drawing.Size(39, 17);
+            this.email_lable.TabIndex = 9;
+            this.email_lable.Text = "Email";
+            // 
             // Registration
             // 
             this.AcceptButton = this.Enter;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Controls.Add(this.email_lable);
+            this.Controls.Add(this.passwrod);
+            this.Controls.Add(this.name);
             this.Controls.Add(this.Password);
             this.Controls.Add(this.Enter);
             this.Controls.Add(this.Email);
@@ -91,6 +127,7 @@
             this.Text = "Регистрация";
             this.Load += new System.EventHandler(this.Registration_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -100,5 +137,8 @@
         private System.Windows.Forms.RichTextBox Email;
         private System.Windows.Forms.RichTextBox Login;
         private System.Windows.Forms.RichTextBox Password;
+        private System.Windows.Forms.Label name;
+        private System.Windows.Forms.Label passwrod;
+        private System.Windows.Forms.Label email_lable;
     }
 }

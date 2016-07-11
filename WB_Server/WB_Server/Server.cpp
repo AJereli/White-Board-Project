@@ -59,38 +59,29 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 }
 
 bool Server::registration(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr <Client> & client) {
-	char info_size[1];
-	int i_n, i_p, i_e = 0; // Кол-во символов в name, passw, email
-	char * name = nullptr;
-	char * passw = nullptr;
-	char * email = nullptr;
-	size_t received = 0;
+
+	//int i_n, i_p, i_e = 0; // Кол-во символов в name, passw, email
+	char * name = new char[128];
+	char * passw = new char[128];
+	char * email = new char[128];
+	size_t rec_name = 0, rec_pass = 0, rec_email = 0;
 	bool name_check = 1;
 	ofstream users_write("info/users_data.txt", ios_base::app);
 
-	if (client_socket->receive(info_size, 1, received) == sf::Socket::Done)
-		i_n = atoi(info_size);
+	
 
-	name = new char[i_n];
-	client_socket->receive(name, i_n, received);
+	
+	client_socket->receive(name, 128, rec_name);
 	for (auto it = info_of_usres.begin(); it != info_of_usres.end(); ++it)
-		if (it->first == string(name, i_n)) {
+		if (it->first == string(name, rec_name)) {
 			name_check = 0;
 			break;
 		}
-
-	if (client_socket->receive(info_size, 1, received) == sf::Socket::Done)
-		i_p = atoi(info_size);
-	passw = new char[i_p];
-	client_socket->receive(passw, i_p, received);
-
-	if (client_socket->receive(info_size, 1, received) == sf::Socket::Done)
-		i_e = atoi(info_size);
-	email = new char[i_e];
-	client_socket->receive(email, i_e, received);
+	client_socket->receive(passw, 128, rec_pass);
+	client_socket->receive(email, 128, rec_email);
 
 	if (name_check)
-		users_write << string(name, i_n) << " " << string(passw, i_p) << " " << string(email, i_e) << endl;
+		users_write << string(name, rec_name) << " " << string(passw, rec_pass) << " " << string(email, rec_email) << endl;
 
 	users_write.close();
 	name != nullptr ? delete[] name : 1;
@@ -171,20 +162,23 @@ void Server::startListening() {
 							if ((int)query_code[0] == connect_board_code) {//Подключение к доске
 								
 								size_t received;
-
+								bool find = 0;
 								char * name_c = new char[128];
 								client.receive(name_c, 128, received);			
 								for (int i = 0; i < BOARD_CNT; ++i) { //Если найдется такое имя, подключаемся к доске
 									if (all_boards[i]->getCreaterName() == string(name_c, received)) {
-										char query_code[1];
-										query_code[0] = server_ok_code;
-										client.send(query_code, sizeof(char));
+										//connectingThread = new sf::Thread(&all_boards[i]->addUser, it->first);
 										all_boards[i]->addUser(it->first);
-										selector.remove(client);
-										
+										selector.remove(client);	
+										find = 1;
 									}
 								}
-
+								
+								if (!find) {
+									answer[0] = board_not_found_code;
+									client.send(answer, 1);
+								}
+									
 							}
 						}
 
@@ -198,5 +192,9 @@ void Server::startListening() {
 }
 Server::~Server()
 {
+	if (connectingThread != nullptr) {
+		connectingThread->terminate();
+		delete connectingThread;
+	}
 	listener.close();
 }

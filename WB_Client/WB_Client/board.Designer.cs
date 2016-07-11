@@ -32,6 +32,10 @@
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.select_thickness = new System.Windows.Forms.TrackBar();
+            this.timerFoServ = new System.Windows.Forms.Timer(this.components);
+            this.user_name = new System.Windows.Forms.Label();
+            this.debug_lable = new System.Windows.Forms.Label();
             this.anyColor = new System.Windows.Forms.PictureBox();
             this.yellow = new System.Windows.Forms.PictureBox();
             this.blue = new System.Windows.Forms.PictureBox();
@@ -43,10 +47,8 @@
             this.line = new System.Windows.Forms.PictureBox();
             this.Pencil = new System.Windows.Forms.PictureBox();
             this.Select = new System.Windows.Forms.PictureBox();
-            this.select_thickness = new System.Windows.Forms.TrackBar();
-            this.timerFoServ = new System.Windows.Forms.Timer(this.components);
-            this.user_name = new System.Windows.Forms.Label();
-            this.debug_lable = new System.Windows.Forms.Label();
+            this.mainPict = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.select_thickness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.anyColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.yellow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blue)).BeginInit();
@@ -58,7 +60,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.line)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pencil)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Select)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.select_thickness)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainPict)).BeginInit();
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -71,8 +73,50 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 20;
+            this.timer1.Interval = 30;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // select_thickness
+            // 
+            this.select_thickness.AutoSize = false;
+            this.select_thickness.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.select_thickness.LargeChange = 2;
+            this.select_thickness.Location = new System.Drawing.Point(538, 12);
+            this.select_thickness.MaximumSize = new System.Drawing.Size(150, 30);
+            this.select_thickness.Minimum = 1;
+            this.select_thickness.MinimumSize = new System.Drawing.Size(150, 30);
+            this.select_thickness.Name = "select_thickness";
+            this.select_thickness.Size = new System.Drawing.Size(150, 30);
+            this.select_thickness.TabIndex = 12;
+            this.select_thickness.TabStop = false;
+            this.select_thickness.Tag = "Тощина кисти";
+            this.select_thickness.Value = 2;
+            this.select_thickness.Scroll += new System.EventHandler(this.select_thickness_Scroll);
+            // 
+            // timerFoServ
+            // 
+            this.timerFoServ.Tick += new System.EventHandler(this.timerFoServ_Tick);
+            // 
+            // user_name
+            // 
+            this.user_name.AutoSize = true;
+            this.user_name.Location = new System.Drawing.Point(192, 20);
+            this.user_name.Name = "user_name";
+            this.user_name.Size = new System.Drawing.Size(35, 13);
+            this.user_name.TabIndex = 14;
+            this.user_name.Text = "label2";
+            this.user_name.Click += new System.EventHandler(this.user_name_Click);
+            // 
+            // debug_lable
+            // 
+            this.debug_lable.AutoSize = true;
+            this.debug_lable.Location = new System.Drawing.Point(392, 490);
+            this.debug_lable.MinimumSize = new System.Drawing.Size(200, 25);
+            this.debug_lable.Name = "debug_lable";
+            this.debug_lable.Size = new System.Drawing.Size(200, 25);
+            this.debug_lable.TabIndex = 15;
+            this.debug_lable.Text = "label1";
+            this.debug_lable.Click += new System.EventHandler(this.debug_lable_Click);
             // 
             // anyColor
             // 
@@ -199,54 +243,23 @@
             this.Select.TabStop = false;
             this.Select.Click += new System.EventHandler(this.Select_Click);
             // 
-            // select_thickness
+            // mainPict
             // 
-            this.select_thickness.AutoSize = false;
-            this.select_thickness.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.select_thickness.LargeChange = 2;
-            this.select_thickness.Location = new System.Drawing.Point(538, 12);
-            this.select_thickness.MaximumSize = new System.Drawing.Size(150, 30);
-            this.select_thickness.Minimum = 1;
-            this.select_thickness.MinimumSize = new System.Drawing.Size(150, 30);
-            this.select_thickness.Name = "select_thickness";
-            this.select_thickness.Size = new System.Drawing.Size(150, 30);
-            this.select_thickness.TabIndex = 12;
-            this.select_thickness.TabStop = false;
-            this.select_thickness.Tag = "Тощина кисти";
-            this.select_thickness.Value = 2;
-            this.select_thickness.Scroll += new System.EventHandler(this.select_thickness_Scroll);
-            // 
-            // timerFoServ
-            // 
-            this.timerFoServ.Tick += new System.EventHandler(this.timerFoServ_Tick);
-            // 
-            // user_name
-            // 
-            this.user_name.AutoSize = true;
-            this.user_name.Location = new System.Drawing.Point(192, 20);
-            this.user_name.Name = "user_name";
-            this.user_name.Size = new System.Drawing.Size(35, 13);
-            this.user_name.TabIndex = 14;
-            this.user_name.Text = "label2";
-            this.user_name.Click += new System.EventHandler(this.user_name_Click);
-            // 
-            // debug_lable
-            // 
-            this.debug_lable.AutoSize = true;
-            this.debug_lable.Location = new System.Drawing.Point(392, 490);
-            this.debug_lable.MinimumSize = new System.Drawing.Size(200, 25);
-            this.debug_lable.Name = "debug_lable";
-            this.debug_lable.Size = new System.Drawing.Size(200, 25);
-            this.debug_lable.TabIndex = 15;
-            this.debug_lable.Text = "label1";
-            this.debug_lable.Click += new System.EventHandler(this.debug_lable_Click);
+            this.mainPict.BackColor = System.Drawing.Color.White;
+            this.mainPict.Location = new System.Drawing.Point(46, 411);
+            this.mainPict.Name = "mainPict";
+            this.mainPict.Size = new System.Drawing.Size(14, 20);
+            this.mainPict.TabIndex = 16;
+            this.mainPict.TabStop = false;
             // 
             // Board
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(866, 556);
+            this.Controls.Add(this.mainPict);
             this.Controls.Add(this.debug_lable);
             this.Controls.Add(this.user_name);
             this.Controls.Add(this.select_thickness);
@@ -268,9 +281,12 @@
             this.Text = "Board";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Board_FormClosing);
             this.Load += new System.EventHandler(this.Board_Load);
+            this.Shown += new System.EventHandler(this.Board_Shown);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Board_Paint);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Board_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Board_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Board_MouseUp);
+            ((System.ComponentModel.ISupportInitialize)(this.select_thickness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.anyColor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.yellow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.blue)).EndInit();
@@ -282,7 +298,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.line)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pencil)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Select)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.select_thickness)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainPict)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -308,5 +324,6 @@
         private System.Windows.Forms.Timer timerFoServ;
         private System.Windows.Forms.Label user_name;
         private System.Windows.Forms.Label debug_lable;
+        private System.Windows.Forms.PictureBox mainPict;
     }
 }

@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 namespace WB_Client
 {
-    abstract class Shape : Object // Базовый класс для фигур
+    abstract class Shape : Panel  // Базовый класс для фигур
     {
         public List<Point> points { get; set; } // Вершины фигуры
         public Point select_point { get; set; } // "Нулевая" точка, исп. в перемещнии фигуры
@@ -51,6 +51,14 @@ namespace WB_Client
                 path.Reset();
             }
             return path;
+        }
+        public void matrixFromStr (string strMatrix)
+        {
+            string[] parsed = strMatrix.Split('!');
+            float[] nm = new float[6]; // Новая матрица
+            for (int i = 0; i < parsed.Length; ++i)
+                nm[i] = Convert.ToSingle(parsed[i]);
+            transform = new Matrix(nm[0], nm[1], nm[2], nm[3], nm[4], nm[5]);
         }
         virtual public void Draw(Graphics g)
         {

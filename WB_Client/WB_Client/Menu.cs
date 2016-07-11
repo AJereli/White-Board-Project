@@ -15,11 +15,13 @@ namespace WB_Client
     {
         static public Socket client = Authorization.client;
         static private int port = 8000;
+        static public int loadMode;
         static public string name;
         static public byte[] query_board_code = new byte[1]; //5
         static public byte[] connect_board_code = new byte[1]; //6
         static public byte[] create_board_err_code = new byte[1]; //105
         static public byte[] server_ok_code = new byte[1];
+        static public byte board_not_found_code = 3;
         public Menu()
         {
             server_ok_code[0] = 0;
@@ -30,7 +32,7 @@ namespace WB_Client
             InitializeComponent();
         }
 
-
+        
 
         private void Menu_Load(object sender, EventArgs e)//Создаем меню
         {
@@ -44,29 +46,31 @@ namespace WB_Client
             client.Receive(answer);
             if (answer[0] == server_ok_code[0])
             {
+                loadMode = 6;
+
                 Board F2 = new Board(); //переход к чистойs доске
                 F2.ShowDialog();
-
-            }
-            else
+                    
+            }        
+            else if (answer[0] == board_not_found_code)
             {
                 MessageBox.Show("Не сегодня!");
             }
         }
-        private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
-        {
-            Application.Exit(); //Закрытие приложения
-        }
+         private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
+         {
+             Application.Exit(); //Закрытие приложения
+         }
         //запрос на создание доски 5!!!!! query_board_code = 5
         public bool chekingServer(int port)
-        {
-            byte[] bytes = new byte[1024];
+         {
+             byte[] bytes = new byte[1024];
 
             IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
             IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
+           
 
-
-            // client.Connect(ipEndPoint);
+           // client.Connect(ipEndPoint);
 
             client.Send(query_board_code);
 
@@ -85,8 +89,10 @@ namespace WB_Client
             if (chekingServer(port))
             {
                 Board F2 = new Board(); //переход к чистойs доске
+                loadMode = 5;
                 F2.ShowDialog();
-                this.Close();//закрываем Menu
+               
+                this.Hide();//закрываем Menu
             }
             else
             {

@@ -44,29 +44,29 @@ namespace WB_Client
 
         public bool authorizationServer(int port)
         {
-            byte[] bytes = new byte[1024];
+                byte[] bytes = new byte[1024];
             client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp); 
 
 
             client.Connect(ipEndPoint);
-            int loginLength = Login.Text.Length;
-            int passwordLength = Password.Text.Length;
-            client.Send(authorize_code);
-            client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
-            client.Send(Encoding.UTF8.GetBytes(Login.Text));
-             client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
-            Thread.Sleep(123);
-            client.Send(Encoding.UTF8.GetBytes(Password.Text));
+                int loginLength = Login.Text.Length;
+                int passwordLength = Password.Text.Length;
+                client.Send(authorize_code);
+           // client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
+                client.Send(Encoding.UTF8.GetBytes(Login.Text));
+                Thread.Sleep(123);
+           //client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
+                client.Send(Encoding.UTF8.GetBytes(Password.Text));
 
-            client.Receive(bytes);
+                client.Receive(bytes);
 
-            if (bytes[0] == server_ok_code[0])
-                return true;
-            else if (bytes[0] == wrong_pass_code[0])
-            {
-                client.Close();
-                return false;
-            }
+                if (bytes[0] == server_ok_code[0])
+                    return true;
+                else if (bytes[0] == wrong_pass_code[0])
+                {
+                    client.Close();
+                    return false;
+                }
             else
                 return false;
             
@@ -78,15 +78,15 @@ namespace WB_Client
             {
                 if (Password.Text.Length >= 5)
                 {
-            if (authorizationServer(port))
-            {
+                    if (authorizationServer(port))
+                    {
                 name = Login.Text;
-                Menu menuShow = new Menu();            
-                this.Hide();
-                menuShow.Show();
+                        Menu menuShow = new Menu();            
+                        this.Hide();
+                        menuShow.Show();                
                 
-            }
-                    else
+                    }
+                    else                    
                     {
                         MessageBox.Show("Неверное имя или пароль!");
                     }
@@ -117,5 +117,7 @@ namespace WB_Client
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
+        
     }
 }
