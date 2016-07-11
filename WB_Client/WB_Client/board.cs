@@ -177,7 +177,7 @@ namespace WB_Client
             {
                 Point pt = new Point(e.X, e.Y);
                 string msg = pt.X.ToString() + '+' + pt.Y.ToString() + '+' + (shape_list.Count - 1).ToString() ;
-                Thread.Sleep(1);
+                
                 client.Send(Encoding.UTF8.GetBytes(msg));
                 shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
             }else if (pressed && mode == 2)
@@ -375,7 +375,7 @@ namespace WB_Client
             byte[] infoBuff = new byte[256];
             while (true)
             {
-                Thread.Sleep(12);
+                Thread.Sleep(10);
                
                 int rec = client.Receive(infoBuff);
                 string msg = new string(Encoding.UTF8.GetChars(infoBuff), 0, rec);

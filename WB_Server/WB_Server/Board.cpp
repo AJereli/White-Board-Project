@@ -55,8 +55,8 @@ bool Board::saveShape(string & shapeInfo) {
 }
 void Board::broadcastPainting() {
 	while (board_online) {
-		sf::sleep(sf::microseconds(1000));
-		if (members.wait(sf::seconds(0.3f))) {
+		sf::sleep(sf::microseconds(10));
+		if (members.wait(sf::seconds(1.3f))) {
 
 			for (auto it = sock_of_members.begin(); it != sock_of_members.end(); ++it) {
 				sf::TcpSocket & client = **it;
@@ -69,10 +69,9 @@ void Board::broadcastPainting() {
 
 						// —Œ’–¿Õ≈Õ»≈ ‘»√”–€
 						bool sayThis = saveShape(string(query, rec));
-
 						if (sayThis)
 							for (auto say_all = sock_of_members.begin(); say_all != sock_of_members.end(); ++say_all) {
-								sf::sleep(sf::microseconds(50));
+								
 								if (say_all != it)
 									(**say_all).send(query, rec);
 							}

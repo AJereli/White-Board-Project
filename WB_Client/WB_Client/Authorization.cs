@@ -11,7 +11,7 @@ namespace WB_Client
     {
         static public int port = 8000;
         static public byte[] wrong_pass_code = new byte[1];
-        static public IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
+        static public IPAddress ipAddr = IPAddress.Parse("192.168.1.104");
         static public IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
         static public Socket client;
         static public string name;
@@ -54,7 +54,7 @@ namespace WB_Client
                 client.Send(authorize_code);
            // client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
                 client.Send(Encoding.UTF8.GetBytes(Login.Text));
-                Thread.Sleep(123);
+                Thread.Sleep(550);
            //client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
                 client.Send(Encoding.UTF8.GetBytes(Password.Text));
 
