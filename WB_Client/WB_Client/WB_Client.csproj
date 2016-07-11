@@ -59,8 +59,15 @@
     <Compile Include="Board.Designer.cs">
       <DependentUpon>Board.cs</DependentUpon>
     </Compile>
-    <Compile Include="Curve.cs" />
-    <Compile Include="Line.cs" />
+    <Compile Include="Curve.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Ellipse.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Line.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Menu.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,7 +91,9 @@
     <Compile Include="Registration.Designer.cs">
       <DependentUpon>Registration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Shapes.cs" />
+    <Compile Include="Shapes.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="User.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -150,6 +159,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\loadGIF.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\ellipse.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

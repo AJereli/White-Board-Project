@@ -162,18 +162,12 @@ namespace WB_Client
             progressGif.Dispose();
 
         }
-        private void Board_MouseMove(object sender, MouseEventArgs e)// События, происходящие пока мыши двигается
+        private void Board_MouseMove(object sender, MouseEventArgs e)// События, происходящие пока мышь двигается
         {
             if ((e.Button & MouseButtons.Left) != MouseButtons.Left)
                 return;
-
-            if (flagDown)
-            {
-                mouseS.X = e.X;
-                mouseS.Y = e.Y;
-            }
-            
-            if (pressed && (mode == 1 || mode == 2))
+                        
+            if (pressed && (mode == 1 || mode == 2 || mode == 4))
             {
                 Point pt = new Point(e.X, e.Y);
                 string msg = pt.X.ToString() + '+' + pt.Y.ToString() + '+' + (shape_list.Count - 1).ToString() ;
@@ -181,6 +175,13 @@ namespace WB_Client
                 client.Send(Encoding.UTF8.GetBytes(msg));
                 shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
             }else if (pressed && mode == 2)
+            {
+                Point pt = new Point(e.X, e.Y);
+                string msg = pt.X.ToString() + '+' + pt.Y.ToString() + (shape_list.Count - 1).ToString();
+                client.Send(Encoding.UTF8.GetBytes(msg));
+                shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
+            }
+            else if (pressed && mode == 4)
             {
                 Point pt = new Point(e.X, e.Y);
                 string msg = pt.X.ToString() + '+' + pt.Y.ToString() + (shape_list.Count - 1).ToString();
@@ -246,18 +247,7 @@ namespace WB_Client
         private void Board_MouseDown(object sender, MouseEventArgs e)// События, когда опущенна ЛКМ
         {
             if ((e.Button & MouseButtons.Left) != MouseButtons.Left)
-                return;
-            
-
-            if (!flagDown)
-            {
-                mouseF.X = e.X;
-                mouseF.Y = e.Y;
-                mouseS.X = e.X;
-                mouseS.Y = e.Y;
-                
-                flagDown = true;
-            }
+                return;    
 
             switch (mode)
             {
@@ -326,6 +316,24 @@ namespace WB_Client
                     shape_list[shape_list.Count - 1].Item2.points.Add(e.Location);
                     shape_list[shape_list.Count - 1].Item2.penColor = selectedColor;
                     shape_list[shape_list.Count - 1].Item2.thinkness = actualThickness;
+                    break;                
+                case 4: // Draw ellipse
+                    typeOfShape[0] = 4;
+                    canLoadFromOther = true;
+                    shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Ellipse()));
+                    string query3 = typeOfShape[0].ToString() +
+                        '+' + selectedColor.ToArgb().ToString() +
+                        '+' + actualThickness.ToString() +
+                        '+' + (shape_list.Count - 1).ToString();
+
+                    client.Send(Encoding.UTF8.GetBytes(query3));
+
+                    debug_lable.Text = shape_list.Count.ToString() + "Before come";
+                    richTextBox1.AppendText(shape_list.Count.ToString() + "Before come\n");
+                    pressed = true;
+                    shape_list[shape_list.Count - 1].Item2.points.Add(e.Location);
+                    shape_list[shape_list.Count - 1].Item2.penColor = selectedColor;
+                    shape_list[shape_list.Count - 1].Item2.thinkness = actualThickness;
                     break;
                 default: break;
             }
@@ -333,13 +341,6 @@ namespace WB_Client
 
         private void Board_MouseUp(object sender, MouseEventArgs e) // ЛКМ поднята
         {
-            if (flagDown)
-            {
-                mouseS.X = e.X;
-                mouseS.Y = e.Y;
-                flagDown = false;
-            }
-
             if (mode == 1)
             {
                 // timerFoServ.Stop();
@@ -347,6 +348,11 @@ namespace WB_Client
 
             }
             else if (mode == 2)
+            {
+                // timerFoServ.Stop();
+                pressed = false;
+            }
+            else if (mode == 4)
             {
                 // timerFoServ.Stop();
                 pressed = false;
@@ -533,6 +539,11 @@ namespace WB_Client
         private void Board_Paint(object sender, PaintEventArgs e)
         {
             
+        }
+
+        private void ellipse_Click(object sender, EventArgs e)
+        {
+            mode = 4;
         }
     }
 }

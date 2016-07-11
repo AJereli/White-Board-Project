@@ -52,10 +52,10 @@ namespace WB_Client
                 int loginLength = Login.Text.Length;
                 int passwordLength = Password.Text.Length;
                 client.Send(authorize_code);
-           // client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
+            client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
                 client.Send(Encoding.UTF8.GetBytes(Login.Text));
                 Thread.Sleep(123);
-           //client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
+           client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
                 client.Send(Encoding.UTF8.GetBytes(Password.Text));
 
                 client.Receive(bytes);
