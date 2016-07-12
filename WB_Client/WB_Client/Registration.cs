@@ -116,5 +116,10 @@ namespace WB_Client
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
+        private void passwrod_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

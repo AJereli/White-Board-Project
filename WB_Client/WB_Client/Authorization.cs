@@ -46,35 +46,35 @@ namespace WB_Client
         public bool authorizationServer(int port)
         {
             byte[] bytes = new byte[64];
-            client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp); 
 
 
             client.Connect(ipEndPoint);
-            int loginLength = Login.Text.Length;
-            int passwordLength = Password.Text.Length;
-            client.Send(authorize_code);
-            client.Send(Encoding.UTF8.GetBytes(Login.Text));
+                int loginLength = Login.Text.Length;
+                int passwordLength = Password.Text.Length;
+                client.Send(authorize_code);
+                client.Send(Encoding.UTF8.GetBytes(Login.Text));
             Thread.Sleep(550);
-            client.Send(Encoding.UTF8.GetBytes(Password.Text));
+                client.Send(Encoding.UTF8.GetBytes(Password.Text));
 
-            client.Receive(bytes);
+                client.Receive(bytes);
 
-            if (bytes[0] == server_ok_code[0])
-                return true;
-            else if (bytes[0] == wrong_pass_code[0])
-            {
+                if (bytes[0] == server_ok_code[0])
+                    return true;
+                else if (bytes[0] == wrong_pass_code[0])
+                {
                 client.Close();
                 return false;
             }
             else if (bytes[0] == already_online_code[0])
             {
                 MessageBox.Show("Пользователь уже в сети.");
-                client.Close();
-                return false;
-            }
+                    client.Close();
+                    return false;
+                }
             else
                 return false;
-
+            
         }
 
         private void Enter_Click(object sender, EventArgs e)
@@ -85,13 +85,13 @@ namespace WB_Client
                 {
                     if (authorizationServer(port))
                     {
-                        name = Login.Text;
-                        Menu menuShow = new Menu();
+                name = Login.Text;
+                        Menu menuShow = new Menu();            
                         this.Hide();
-                        menuShow.Show();
-
+                        menuShow.Show();                
+                
                     }
-                    else
+                    else                    
                     {
                         MessageBox.Show("Неверное имя или пароль!");
                     }
@@ -109,7 +109,7 @@ namespace WB_Client
 
         private void registration_Click(object sender, EventArgs e)
         {
-            Registration registrationShow = new Registration();
+            Registration registrationShow = new Registration();            
             registrationShow.Show();
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) //закрытие окна при нажатии клавиши "Esc"
@@ -122,6 +122,9 @@ namespace WB_Client
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-
+        private void Login_TextChanged_1(object sender, EventArgs e)
+        {
+        
     }
+}
 }

@@ -33,7 +33,10 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.select_thickness = new System.Windows.Forms.TrackBar();
+            this.timerFoServ = new System.Windows.Forms.Timer(this.components);
             this.user_name = new System.Windows.Forms.Label();
+            this.debug_lable = new System.Windows.Forms.Label();
+            this.mainPict = new System.Windows.Forms.PictureBox();
             this.anyColor = new System.Windows.Forms.PictureBox();
             this.yellow = new System.Windows.Forms.PictureBox();
             this.blue = new System.Windows.Forms.PictureBox();
@@ -45,7 +48,9 @@
             this.line = new System.Windows.Forms.PictureBox();
             this.Pencil = new System.Windows.Forms.PictureBox();
             this.Select = new System.Windows.Forms.PictureBox();
+            this.ellipse = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.select_thickness)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainPict)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.anyColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.yellow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blue)).BeginInit();
@@ -57,6 +62,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.line)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pencil)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Select)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ellipse)).BeginInit();
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -98,6 +104,26 @@
             this.user_name.TabIndex = 14;
             this.user_name.Text = "label2";
             this.user_name.Click += new System.EventHandler(this.user_name_Click);
+            // 
+            // debug_lable
+            // 
+            this.debug_lable.AutoSize = true;
+            this.debug_lable.Location = new System.Drawing.Point(392, 490);
+            this.debug_lable.MinimumSize = new System.Drawing.Size(200, 25);
+            this.debug_lable.Name = "debug_lable";
+            this.debug_lable.Size = new System.Drawing.Size(200, 25);
+            this.debug_lable.TabIndex = 15;
+            this.debug_lable.Text = "label1";
+            this.debug_lable.Click += new System.EventHandler(this.debug_lable_Click);
+            // 
+            // mainPict
+            // 
+            this.mainPict.BackColor = System.Drawing.Color.White;
+            this.mainPict.Location = new System.Drawing.Point(46, 411);
+            this.mainPict.Name = "mainPict";
+            this.mainPict.Size = new System.Drawing.Size(14, 20);
+            this.mainPict.TabIndex = 16;
+            this.mainPict.TabStop = false;
             // 
             // anyColor
             // 
@@ -187,6 +213,7 @@
             this.rect.Size = new System.Drawing.Size(30, 30);
             this.rect.TabIndex = 4;
             this.rect.TabStop = false;
+            this.rect.Click += new System.EventHandler(this.rect_Click);
             // 
             // line
             // 
@@ -224,13 +251,28 @@
             this.Select.TabStop = false;
             this.Select.Click += new System.EventHandler(this.Select_Click);
             // 
+            // ellipse
+            // 
+            this.ellipse.BackgroundImage = global::WB_Client.Properties.Resources.ellipse;
+            this.ellipse.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ellipse.InitialImage = global::WB_Client.Properties.Resources.ellipse;
+            this.ellipse.Location = new System.Drawing.Point(154, 12);
+            this.ellipse.Name = "ellipse";
+            this.ellipse.Size = new System.Drawing.Size(30, 30);
+            this.ellipse.TabIndex = 17;
+            this.ellipse.TabStop = false;
+            this.ellipse.Click += new System.EventHandler(this.ellipse_Click);
+            // 
             // Board
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(884, 562);
+            this.ClientSize = new System.Drawing.Size(866, 556);
+            this.Controls.Add(this.ellipse);
+            this.Controls.Add(this.mainPict);
+            this.Controls.Add(this.debug_lable);
             this.Controls.Add(this.user_name);
             this.Controls.Add(this.select_thickness);
             this.Controls.Add(this.anyColor);
@@ -259,6 +301,7 @@
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Board_MouseUp);
             this.Resize += new System.EventHandler(this.Board_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.select_thickness)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mainPict)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.anyColor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.yellow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.blue)).EndInit();
@@ -270,6 +313,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.line)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pencil)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Select)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ellipse)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

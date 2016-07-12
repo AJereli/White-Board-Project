@@ -60,6 +60,7 @@
       <DependentUpon>Board.cs</DependentUpon>
     </Compile>
     <Compile Include="Curve.cs" />
+    <Compile Include="Ellipse.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Menu.cs">
       <SubType>Form</SubType>
@@ -78,6 +79,7 @@
     <EmbeddedResource Include="Menu.resx">
       <DependentUpon>Menu.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Include="Rectangle.cs" />
     <Compile Include="Registration.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +152,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\loadGIF.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\ellipse.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
