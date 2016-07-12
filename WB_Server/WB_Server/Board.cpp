@@ -8,9 +8,9 @@ Board::Board(shared_ptr <Client> & _creator, shared_ptr <sf::TcpSocket> & _sock,
 	creator = (_creator);
 	sock_creator = _sock;
 	members.add(*listener);
-	sock_of_members.push_back(sock_creator);
+	//sock_of_members.push_back(sock_creator);
 	members.add(*sock_creator);
-
+	users.push_back(make_pair(sock_creator, creator));
 	board_online = 1;
 	boar_main_thr = new sf::Thread(&Board::broadcastPainting, this);
 	boar_main_thr->launch();
@@ -37,8 +37,8 @@ bool Board::saveShape(string & shapeInfo) {
 		}
 		else {
 			int id = stoi(shapeInfo.substr(shapeInfo.find_last_of('+') + 1, shapeInfo.length()));
-			try{
-			all_shapes.at(id).second.push_back(shapeInfo);
+			try {
+				all_shapes.at(id).second.push_back(shapeInfo);
 			}
 			catch (out_of_range) {
 				all_shapes.erase(all_shapes.end()--);
@@ -58,22 +58,28 @@ void Board::broadcastPainting() {
 		sf::sleep(sf::microseconds(10));
 		if (members.wait(sf::seconds(1.3f))) {
 
-			for (auto it = sock_of_members.begin(); it != sock_of_members.end(); ++it) {
-				sf::TcpSocket & client = **it;
+			for (auto it = users.begin(); it != users.end(); ++it) {
+				sf::TcpSocket & client = (*it->first);
 				if (members.isReady(client)) {
 
 					char query[512];
 
 					size_t rec = 0;
 					if (client.receive(query, sizeof(query), rec) == sf::Socket::Done) {
+						if (string(query, rec) == "goodbye") {
+							members.remove(client);
+							cout << it->second->getName() << " disconnect\n";
+							users.erase(it);
+							break;
+						}
 
 						// ÑÎÕÐÀÍÅÍÈÅ ÔÈÃÓÐÛ
 						bool sayThis = saveShape(string(query, rec));
 						if (sayThis)
-							for (auto say_all = sock_of_members.begin(); say_all != sock_of_members.end(); ++say_all) {
-								
+							for (auto say_all = users.begin(); say_all != users.end(); ++say_all) {
+
 								if (say_all != it)
-									(**say_all).send(query, rec);
+									(*say_all->first).send(query, rec);
 							}
 					}
 				}
@@ -85,7 +91,7 @@ void Board::broadcastPainting() {
 void Board::sendBoard() {
 
 }
-void Board::addUser(shared_ptr <sf::TcpSocket> & _sock) {
+void Board::addUser(shared_ptr <sf::TcpSocket> & _sock, shared_ptr <Client> & client) {
 	char query_code[64];
 	size_t rec = 0;
 	query_code[0] = server_ok_code;
@@ -93,7 +99,7 @@ void Board::addUser(shared_ptr <sf::TcpSocket> & _sock) {
 	sf::sleep(sf::microseconds(10000));
 	members.add(*_sock);
 	cout << "Connect" << endl;
-	sock_of_members.push_back(_sock);
+	users.push_back(make_pair(_sock, client));
 
 	char * end = "END";
 	if (all_shapes.size() == 0) {
@@ -120,7 +126,12 @@ void Board::addUser(shared_ptr <sf::TcpSocket> & _sock) {
 		_sock->send(info.c_str(), info.length());
 
 		string oneBigString;
-		oneBigString.append(all_shapes[i].second[0]);
+		try {
+			oneBigString.append(all_shapes[i].second.at(0));
+		}
+		catch (out_of_range) {
+			continue;
+		}
 		for (auto it = 1; it < all_shapes[i].second.size(); ++it)
 			oneBigString.append("-" + all_shapes[i].second[it]);
 
@@ -128,8 +139,8 @@ void Board::addUser(shared_ptr <sf::TcpSocket> & _sock) {
 		_sock->send(oneBigString.c_str(), oneBigString.length());
 	}
 
-
-	cout << "User connected, total users: " << sock_of_members.size() << endl;
+	//users.push_back(make_pair(_sock, client));
+	cout << "User connected, total users: " << users.size() << endl;
 }
 
 string Board::getCreaterName() {

@@ -32,49 +32,73 @@ namespace WB_Client
             InitializeComponent();
         }
 
-        
+
 
         private void Menu_Load(object sender, EventArgs e)//Создаем меню
         {
 
         }
+        private void Enter_Click(object sender, EventArgs e)
+        {
+            loadOfBoard_Click(sender, e);
+        }
         private void loadOfBoard_Click(object sender, EventArgs e)
         {
-            client.Send(connect_board_code);
-            client.Send(Encoding.UTF8.GetBytes(UserName.Text));
-            byte[] answer = new byte[16];
-            client.Receive(answer);
-            if (answer[0] == server_ok_code[0])
+            if (UserName.Text.Length >= 3)
             {
-                loadMode = 6;
+                try
+                {
+                    client.Send(connect_board_code);
+                    client.Send(Encoding.UTF8.GetBytes(UserName.Text));
+                }
+                catch (SocketException se)
+                {
+                    if (se.ErrorCode == 10054)
+                    {
+                        MessageBox.Show("Проблемы с подключением к серверу.\nПриложение будет закрыто =(");
+                        Application.Exit();
+                    }
+                }
+                byte[] answer = new byte[16];
+                client.Receive(answer);
+                if (answer[0] == server_ok_code[0])
+                {
+                    loadMode = 6;
 
-                Board F2 = new Board(); //переход к чистойs доске
-                F2.ShowDialog();
-                    
-            }        
-            else if (answer[0] == board_not_found_code)
-            {
-                MessageBox.Show("Не сегодня!");
+                    Board F2 = new Board(); //переход к чистойs доске
+                    F2.ShowDialog();
+
+                }
+                else if (answer[0] == board_not_found_code)
+                {
+                    MessageBox.Show("Пользователь с таким логином не создавал доску");
+                }
             }
         }
-         private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
-         {
-             Application.Exit(); //Закрытие приложения
-         }
+        private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
+        {
+            Application.Exit(); //Закрытие приложения
+        }
         //запрос на создание доски 5!!!!! query_board_code = 5
         public bool chekingServer(int port)
-         {
-             byte[] bytes = new byte[1024];
+        {
+            byte[] bytes = new byte[64];
 
-            IPAddress ipAddr = IPAddress.Parse("127.1.1.1");
-            IPEndPoint ipEndPoint = new IPEndPoint(ipAddr, port);
-           
+            try
+            {
+                client.Send(query_board_code);
+                client.Receive(bytes);
+            }catch (SocketException se)
+            {
+                if (se.ErrorCode == 10054)
+                {
+                    MessageBox.Show("Проблемы с подключением к серверу.\nПриложение будет закрыто =(");
+                    Application.Exit();
+                }
+            }
 
-           // client.Connect(ipEndPoint);
 
-            client.Send(query_board_code);
 
-            client.Receive(bytes);
 
             if (bytes[0] == server_ok_code[0])
                 return true;
@@ -91,13 +115,19 @@ namespace WB_Client
                 Board F2 = new Board(); //переход к чистойs доске
                 loadMode = 5;
                 F2.ShowDialog();
-               
+
                 this.Hide();//закрываем Menu
             }
             else
             {
                 MessageBox.Show("Не сегодня!");
             }
+        }
+
+        private void Menu_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            ActiveForm.Close();
+            Application.Exit();
         }
     }
 }

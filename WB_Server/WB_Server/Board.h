@@ -13,8 +13,9 @@ private:
 		vector <pair <pair <string, string>, vector<string> > > all_shapes; // Pair - settings of shape - type, color, thickness in first, transform matrix in second
 																  // Senond - Parts of shape in byte;
 		shared_ptr <sf::TcpSocket> sock_creator;
+		list <pair < shared_ptr <sf::TcpSocket>, shared_ptr <Client> > > users; // Список пользователей. Пара из клиент-сокета и клиента - пользователь.
 		sf::SocketSelector members ;
-		vector <shared_ptr <sf::TcpSocket>>  sock_of_members;
+	//	vector <shared_ptr <sf::TcpSocket>>  sock_of_members;
 		sf::Thread * boar_main_thr = nullptr;
 		sf::Thread * sendBoardThr = nullptr;
 
@@ -26,7 +27,7 @@ public:
 
 	void setBoard_ID(int b_ID) { board_ID = b_ID; }
 
-	void addUser(shared_ptr <sf::TcpSocket> & _sock);
+	void addUser(shared_ptr <sf::TcpSocket> & _sock, shared_ptr <Client> & client);
 	void broadcastPainting();
 	string getCreaterName();
 

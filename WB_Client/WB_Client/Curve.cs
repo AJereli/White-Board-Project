@@ -9,9 +9,7 @@ namespace WB_Client
 {
     class Curve : Shape
     {
-
-
-        public Curve()
+       public Curve()
         {
             selected = false;
             resizing = -1;
@@ -20,8 +18,6 @@ namespace WB_Client
             points = new List<Point>();
             penColor = Color.Black;
             List<Shape> arl = new List<Shape>();
-           
-
         }
         public Curve(List<Point> pnts)
         {
@@ -30,7 +26,5 @@ namespace WB_Client
             thinkness = 2;
             penColor = Color.Black;
         }
-
-
     }
 }

@@ -4,14 +4,14 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Net.Sockets;
 using System.Net;
-
+using System.Threading;
 namespace WB_Client
 {
     public partial class Registration : Form
     {
         static public int port = 8000;
         static public byte[] wrong_name_code = new byte[1];
-        
+
         static public byte[] server_ok_code = new byte[1];
         static public byte[] registration_code = new byte[1];
 
@@ -54,19 +54,16 @@ namespace WB_Client
             Socket client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
             client.Connect(ipEndPoint);
-            //int loginLength = Login.Text.Length;
-            //int emailLenght = Email.Text.Length;
-            //int passwordLength = Password.Text.Length;
+
             client.Send(registration_code);
-            //client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
-            client.Send(Encoding.UTF8.GetBytes(Login.Text));           
-           // client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
+            client.Send(Encoding.UTF8.GetBytes(Login.Text));
+            Thread.Sleep(250);
             client.Send(Encoding.UTF8.GetBytes(Password.Text));
-           // client.Send(Encoding.UTF8.GetBytes(emailLenght.ToString()));
+            Thread.Sleep(250);
             client.Send(Encoding.UTF8.GetBytes(Email.Text));
 
             client.Receive(bytes);
-          
+
 
             if (bytes[0] == server_ok_code[0])
                 return true;
@@ -85,13 +82,10 @@ namespace WB_Client
                 {
                     if (Regex.IsMatch(Email.Text, pattern, RegexOptions.IgnoreCase))//Проверка соответствия строки шаблону
                     {
-            if (registrationServer(port))
-            {
-                MessageBox.Show("Успешно загегестрировались!");
-                           
-                Menu menuShow = new Menu();
-                menuShow.Show();
-                Close();
+                        if (registrationServer(port))
+                        {
+                            MessageBox.Show("Успешно загегестрировались!");
+                            Close();
                         }
                         else
                         {

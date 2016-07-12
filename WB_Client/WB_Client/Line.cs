@@ -9,8 +9,6 @@ namespace WB_Client
 {
     class Line : Shape
     {
-
-
         public Line()
         {
             selected = false;
@@ -20,8 +18,6 @@ namespace WB_Client
             points = new List<Point>();
             penColor = Color.Black;
             List<Shape> arl = new List<Shape>();
-
-
         }
         public Line(List<Point> pnts)
         {
@@ -33,17 +29,12 @@ namespace WB_Client
 
         override protected GraphicsPath GetPath()
         {
-            var path = new GraphicsPath();
-           
+            var path = new GraphicsPath();  
             try
             {
                 if (points.Count != 0)
-                {
                     path.AddLine(points[0], points[points.Count-1]);                    
-                }
-                    
                 path.Transform(transform);
-                
             }
             catch (ArgumentException)
             {

@@ -41,7 +41,16 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 	
 	client_socket->receive(pass, 256, received_pass);
 	cout << string(pass, received_pass) << endl;;
-	
+	char ans[1] = { already_online_code };
+	for (auto it = users.begin(); it != users.end(); ++it) {
+		if (it->second->getName() == string(name_c, received_name))
+			if (it->second->getStatus() == USER_ONLINE) {
+				client_socket->send(ans, 1);
+				return false;
+			}
+				
+	}
+
 	for (auto it = info_of_usres.begin(); it != info_of_usres.end(); ++it) // Поиск юзера в БД
 		if (it->first == string(name_c, received_name))
 			if (it->second == string(pass, received_pass)) {
@@ -59,8 +68,6 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 }
 
 bool Server::registration(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr <Client> & client) {
-
-	//int i_n, i_p, i_e = 0; // Кол-во символов в name, passw, email
 	char * name = new char[128];
 	char * passw = new char[128];
 	char * email = new char[128];
@@ -68,9 +75,6 @@ bool Server::registration(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr
 	bool name_check = 1;
 	ofstream users_write("info/users_data.txt", ios_base::app);
 
-	
-
-	
 	client_socket->receive(name, 128, rec_name);
 	for (auto it = info_of_usres.begin(); it != info_of_usres.end(); ++it)
 		if (it->first == string(name, rec_name)) {
@@ -84,6 +88,7 @@ bool Server::registration(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr
 		users_write << string(name, rec_name) << " " << string(passw, rec_pass) << " " << string(email, rec_email) << endl;
 
 	users_write.close();
+	getUsersInfo(info_of_usres);
 	name != nullptr ? delete[] name : 1;
 	passw != nullptr ? delete[] passw : 1;
 	email != nullptr ? delete[] email : 1;
@@ -156,8 +161,9 @@ void Server::startListening() {
 								all_boards[BOARD_CNT] = new Board(it->second, it->first, &listener);
 								all_boards[BOARD_CNT]->setBoard_ID(BOARD_CNT);
 								BOARD_CNT++;
-
+								users.erase(it);
 								selector.remove(client);
+								break;
 							}
 							if ((int)query_code[0] == connect_board_code) {//Подключение к доске
 								
@@ -168,9 +174,11 @@ void Server::startListening() {
 								for (int i = 0; i < BOARD_CNT; ++i) { //Если найдется такое имя, подключаемся к доске
 									if (all_boards[i]->getCreaterName() == string(name_c, received)) {
 										//connectingThread = new sf::Thread(&all_boards[i]->addUser, it->first);
-										all_boards[i]->addUser(it->first);
+										all_boards[i]->addUser(it->first, it->second);
 										selector.remove(client);	
+										users.erase(it);
 										find = 1;
+										break;
 									}
 								}
 								
@@ -178,6 +186,8 @@ void Server::startListening() {
 									answer[0] = board_not_found_code;
 									client.send(answer, 1);
 								}
+								else
+									break;
 									
 							}
 						}

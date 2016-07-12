@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +18,7 @@ namespace WB_Client
     {
         static public Socket client = WB_Client.Menu.client;
         Thread broadCast;
+
         List<Tuple<int, Shape>> shape_list;// Коллекция фигур
 
         Graphics graphics_buffer; // main_graphics
@@ -57,37 +55,45 @@ namespace WB_Client
             InitializeComponent();
             winCenter = new Point(Size.Width / 2, Size.Height / 2);
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            
+
             loadMode = WB_Client.Menu.loadMode;
-            // WB_Client.Menu.ActiveForm.Close();
+
             user_name.Text = WB_Client.Menu.name;
             broadCast = new Thread(delegate () { broadcastToTheWorld(); });
+            broadCast.Priority = ThreadPriority.Lowest;
             shape_list = new List<Tuple<int, Shape>>();
-            mainPict.BackColor = Color.Transparent;
-            //mainPict.Parent = Select;
-            //m_grp = mainPict.CreateGraphics();
+
             visible_graphics = this.CreateGraphics();
             offScreenBmp = new Bitmap(Width, Height);
             graphics_buffer = Graphics.FromImage(offScreenBmp);
+            graphics_buffer.SmoothingMode = SmoothingMode.AntiAlias;
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            //m_grp.SmoothingMode = SmoothingMode.HighQuality;
+
 
             timer1.Start();
-
-
-
             prevLoc = new Point();
         }
-        private void loadBoard()// Загрузка борда
+        private void boardWaitingStart()
         {
             this.Enabled = false;
-            
+
             //// Загрузка анимации
             progressGif = WB_Client.Properties.Resources.loadGIF as Bitmap;
             ImageAnimator.Animate(progressGif,
                                         new EventHandler(this.OnFrameChanged));
             progressGifRect = new Rectangle(winCenter, progressGif.Size);
             ////
+
+        }
+        private void boardWaitingStop()
+        {
+            this.Enabled = true;
+            progressGifRect.Size = new Size(0, 0);
+            progressGif.Dispose();
+        }
+        private void loadBoard()// Загрузка борда
+        {
+            boardWaitingStart();
             byte[] ans = new byte[64]; // Буфер для подтвержения
             ans = Encoding.UTF8.GetBytes("PLS GIVE SOME PART BRO"); // Команда для подтверждения
             byte[] buff = new byte[16384 * 2];// Основной буфер для информации и фигуре
@@ -108,7 +114,6 @@ namespace WB_Client
                 rec = client.Receive(buff); // Принимает тип фигуры и её параметры
 
                 msg = new string(Encoding.UTF8.GetChars(buff), 0, rec);
-                richTextBox1.AppendText(msg + "\n");
                 string[] parsed = msg.Split('+'); // Распарсить параметры
                 if (parsed.Length == 6)
                 {
@@ -157,9 +162,7 @@ namespace WB_Client
 
                 }
             }
-            this.Enabled = true;
-            progressGifRect.Size = new Size(0, 0);
-            progressGif.Dispose();
+            boardWaitingStop();
 
         }
         private void Board_MouseMove(object sender, MouseEventArgs e)// События, происходящие пока мыши двигается
@@ -172,26 +175,28 @@ namespace WB_Client
                 mouseS.X = e.X;
                 mouseS.Y = e.Y;
             }
-            
+
             if (pressed && (mode == 1 || mode == 2))
             {
                 Point pt = new Point(e.X, e.Y);
-                string msg = pt.X.ToString() + '+' + pt.Y.ToString() + '+' + (shape_list.Count - 1).ToString() ;
-                
+                string msg = pt.X.ToString() + '+' + pt.Y.ToString() + '+' + (shape_list.Count - 1).ToString();
+
                 client.Send(Encoding.UTF8.GetBytes(msg));
                 shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
-            }else if (pressed && mode == 2)
+            }
+            else if (pressed && mode == 2)
             {
                 Point pt = new Point(e.X, e.Y);
                 string msg = pt.X.ToString() + '+' + pt.Y.ToString() + (shape_list.Count - 1).ToString();
                 client.Send(Encoding.UTF8.GetBytes(msg));
                 shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
-            }else if (mode == 0 && idOfShape != -1)// Перемещаем в режиме выбора
+            }
+            else if (mode == 0 && idOfShape != -1)// Перемещаем в режиме выбора
             {
-                
+
                 bool isChanged = false;
-                
-               
+
+
                 if (shape_list[idOfShape].Item2.resizing == 1) // Масштабирование по Y
                 {
                     if (e.Location.Y > prevLoc.Y)
@@ -200,7 +205,7 @@ namespace WB_Client
                         shape_list[idOfShape].Item2.transform.Scale(1, 0.99f);
                     isChanged = true;
                 }
-                
+
                 else if (shape_list[idOfShape].Item2.resizing == 2)// Масштабирование по X
                 {
                     if (e.Location.X > prevLoc.X)
@@ -217,18 +222,17 @@ namespace WB_Client
                     shape_list[idOfShape].Item2.select_point = e.Location; // Новая "нулевая" точка 
                     isChanged = true;
                 }
-                
+
                 if (isChanged)
                 {
                     string transformQuery = "0" + "+" + idOfShape.ToString() + "+";
                     transformQuery += shape_list[idOfShape].Item2.transform.Elements[0].ToString();
-                    richTextBox1.AppendText("matr size: " + shape_list[idOfShape].Item2.transform.Elements.Length + "\n");
                     for (int i = 1; i < shape_list[idOfShape].Item2.transform.Elements.Length; ++i)
                         transformQuery += "!" + shape_list[idOfShape].Item2.transform.Elements[i].ToString();
                     client.Send(Encoding.UTF8.GetBytes(transformQuery));
-                    richTextBox1.AppendText(transformQuery + "\n");
+                    
                 }
-                
+
                 prevLoc = e.Location;
             }
         }
@@ -239,7 +243,10 @@ namespace WB_Client
         }
         private void Board_FormClosing(object sender, FormClosingEventArgs e)
         {
+
             broadCast.Abort();
+            
+            client.Send(Encoding.UTF8.GetBytes("goodbye"));
             timer1.Stop();
             Application.Exit();
         }
@@ -247,7 +254,7 @@ namespace WB_Client
         {
             if ((e.Button & MouseButtons.Left) != MouseButtons.Left)
                 return;
-            
+
 
             if (!flagDown)
             {
@@ -255,7 +262,7 @@ namespace WB_Client
                 mouseF.Y = e.Y;
                 mouseS.X = e.X;
                 mouseS.Y = e.Y;
-                
+
                 flagDown = true;
             }
 
@@ -283,8 +290,6 @@ namespace WB_Client
                             shape_list[i].Item2.select_point = e.Location;
                             shape_list[i].Item2.selected = true;
                             idOfShape = i;
-                            richTextBox1.AppendText(shape_list[idOfShape].GetType().ToString() + '\n');
-
                         }
                     }
                     break;
@@ -300,10 +305,6 @@ namespace WB_Client
 
                     if (!pressed)
                         client.Send(Encoding.UTF8.GetBytes(query));
-
-
-                    debug_lable.Text = shape_list.Count.ToString() + "Before come";
-                    richTextBox1.AppendText(shape_list.Count.ToString() + "Before come\n");
                     pressed = true;
                     shape_list[shape_list.Count - 1].Item2.points.Add(e.Location);
                     shape_list[shape_list.Count - 1].Item2.penColor = selectedColor;
@@ -313,15 +314,12 @@ namespace WB_Client
                     typeOfShape[0] = 2;
                     canLoadFromOther = true;
                     shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Line()));
-                    string query2 = typeOfShape[0].ToString() + 
-                        '+' + selectedColor.ToArgb().ToString() + 
+                    string query2 = typeOfShape[0].ToString() +
+                        '+' + selectedColor.ToArgb().ToString() +
                         '+' + actualThickness.ToString() +
                         '+' + (shape_list.Count - 1).ToString();
 
-                    client.Send(Encoding.UTF8.GetBytes(query2));
-                   
-                    debug_lable.Text = shape_list.Count.ToString() + "Before come";
-                    richTextBox1.AppendText(shape_list.Count.ToString() + "Before come\n");
+                    client.Send(Encoding.UTF8.GetBytes(query2));          
                     pressed = true;
                     shape_list[shape_list.Count - 1].Item2.points.Add(e.Location);
                     shape_list[shape_list.Count - 1].Item2.penColor = selectedColor;
@@ -341,16 +339,9 @@ namespace WB_Client
             }
 
             if (mode == 1)
-            {
-                // timerFoServ.Stop();
                 pressed = false;
-
-            }
             else if (mode == 2)
-            {
-                // timerFoServ.Stop();
                 pressed = false;
-            }
             else if (mode == 0)
             {
                 if (idOfShape != -1)
@@ -375,14 +366,36 @@ namespace WB_Client
             byte[] infoBuff = new byte[256];
             while (true)
             {
-                Thread.Sleep(10);
-               
-                int rec = client.Receive(infoBuff);
+               // Thread.Sleep(12);
+                int rec = 0;
+                try
+                {
+                    rec = client.Receive(infoBuff);
+                }
+                catch (SocketException se)
+                {
+                    if (se.ErrorCode == 10054)
+                    {
+                        Invoke((MethodInvoker)delegate ()
+                        {
+                            boardWaitingStart();
+                        });
+                        MessageBox.Show("Проблемы с подключением к серверу, приложение будет закрыто.");
+                        Invoke((MethodInvoker)delegate ()
+                        {
+                            timer1.Stop();
+                            Application.Exit();
+                        });
+                        return;
+
+                    }
+                }
+
                 string msg = new string(Encoding.UTF8.GetChars(infoBuff), 0, rec);
                 string[] parsed = msg.Split('+');
                 if (parsed.Length == 4)
                 {
-                    
+
                     if (parsed[0] == "1")
                     {
                         shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Curve()));
@@ -395,17 +408,9 @@ namespace WB_Client
                         shape_list[shape_list.Count - 1].Item2.penColor = Color.FromArgb(Convert.ToInt32(parsed[1]));
                         shape_list[shape_list.Count - 1].Item2.thinkness = Convert.ToInt32(parsed[2]);
                     }
-                        
-
-                   
-                    Invoke((MethodInvoker)delegate ()
-                    {
-                        debug_lable.Text = shape_list.Count.ToString() + "After come";
-                        richTextBox1.AppendText(shape_list.Count.ToString() + "After come\n");
-                    });
                 }
 
-                else if (parsed.Length == 3  )
+                else if (parsed.Length == 3)
                 {
                     if (parsed[0] == "0" && msg.IndexOf('!') != -1)
                     {
@@ -415,7 +420,8 @@ namespace WB_Client
                     else {
                         Point coords = new Point(Convert.ToInt32(parsed[0]), Convert.ToInt32(parsed[1]));
                         int id = Convert.ToInt32(parsed[2]);
-                        try {
+                        try
+                        {
                             shape_list[id].Item2.points.Add(coords);
                         }
                         catch (ArgumentOutOfRangeException)
@@ -423,20 +429,12 @@ namespace WB_Client
                             continue;
                         }
                     }
-                    
-                   
+
+
 
                 }
 
             }
-
-        }
-
-
-
-
-        private void timerFoServ_Tick(object sender, EventArgs e)
-        {
 
         }
 
@@ -495,24 +493,12 @@ namespace WB_Client
         private void select_thickness_Scroll(object sender, EventArgs e)
         {
             actualThickness = select_thickness.Value;
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
+        }    
 
         private void user_name_Click(object sender, EventArgs e)
         {
 
         }
-
-        private void debug_lable_Click(object sender, EventArgs e)
-        {
-
-        }
-
-
 
         private void Board_Shown(object sender, EventArgs e)
         {
@@ -523,16 +509,21 @@ namespace WB_Client
             new_shape_code[0] = 7;
         }
 
-
-
         private void line_Click(object sender, EventArgs e)
         {
             mode = 2;
         }
 
-        private void Board_Paint(object sender, PaintEventArgs e)
+        private void Board_Resize(object sender, EventArgs e)
         {
-            
+            visible_graphics.Dispose();
+            visible_graphics = this.CreateGraphics();
+            winCenter = new Point(Size.Width / 2, Size.Height / 2);
+            offScreenBmp.Dispose();
+            offScreenBmp = new Bitmap(Size.Width, Size.Height);
+            graphics_buffer.Dispose();
+            graphics_buffer = Graphics.FromImage(offScreenBmp);
+            graphics_buffer.SmoothingMode = SmoothingMode.AntiAlias;
         }
     }
 }

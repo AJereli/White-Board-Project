@@ -17,13 +17,14 @@ namespace WB_Client
         static public string name;
         static public byte[] server_ok_code = new byte[1];
         static public byte[] authorize_code = new byte[1];
+        static public byte[] already_online_code = new byte[1];
 
-        
         public Authorization()
         {
             wrong_pass_code[0] = 100;
             server_ok_code[0] = 0;
             authorize_code[0] = 1;
+            already_online_code[0] = 4;
             InitializeComponent();
         }
 
@@ -44,32 +45,36 @@ namespace WB_Client
 
         public bool authorizationServer(int port)
         {
-                byte[] bytes = new byte[1024];
-            client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp); 
+            byte[] bytes = new byte[64];
+            client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
 
             client.Connect(ipEndPoint);
-                int loginLength = Login.Text.Length;
-                int passwordLength = Password.Text.Length;
-                client.Send(authorize_code);
-           // client.Send(Encoding.UTF8.GetBytes(loginLength.ToString()));
-                client.Send(Encoding.UTF8.GetBytes(Login.Text));
-                Thread.Sleep(550);
-           //client.Send(Encoding.UTF8.GetBytes(passwordLength.ToString()));
-                client.Send(Encoding.UTF8.GetBytes(Password.Text));
+            int loginLength = Login.Text.Length;
+            int passwordLength = Password.Text.Length;
+            client.Send(authorize_code);
+            client.Send(Encoding.UTF8.GetBytes(Login.Text));
+            Thread.Sleep(550);
+            client.Send(Encoding.UTF8.GetBytes(Password.Text));
 
-                client.Receive(bytes);
+            client.Receive(bytes);
 
-                if (bytes[0] == server_ok_code[0])
-                    return true;
-                else if (bytes[0] == wrong_pass_code[0])
-                {
-                    client.Close();
-                    return false;
-                }
+            if (bytes[0] == server_ok_code[0])
+                return true;
+            else if (bytes[0] == wrong_pass_code[0])
+            {
+                client.Close();
+                return false;
+            }
+            else if (bytes[0] == already_online_code[0])
+            {
+                MessageBox.Show("Пользователь уже в сети.");
+                client.Close();
+                return false;
+            }
             else
                 return false;
-            
+
         }
 
         private void Enter_Click(object sender, EventArgs e)
@@ -80,13 +85,13 @@ namespace WB_Client
                 {
                     if (authorizationServer(port))
                     {
-                name = Login.Text;
-                        Menu menuShow = new Menu();            
+                        name = Login.Text;
+                        Menu menuShow = new Menu();
                         this.Hide();
-                        menuShow.Show();                
-                
+                        menuShow.Show();
+
                     }
-                    else                    
+                    else
                     {
                         MessageBox.Show("Неверное имя или пароль!");
                     }
@@ -104,8 +109,7 @@ namespace WB_Client
 
         private void registration_Click(object sender, EventArgs e)
         {
-            Registration registrationShow = new Registration();            
-            this.Hide();
+            Registration registrationShow = new Registration();
             registrationShow.Show();
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData) //закрытие окна при нажатии клавиши "Esc"
@@ -118,6 +122,6 @@ namespace WB_Client
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        
+
     }
 }
