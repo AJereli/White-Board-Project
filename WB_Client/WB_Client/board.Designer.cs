@@ -217,6 +217,7 @@
             this.rect.Size = new System.Drawing.Size(30, 30);
             this.rect.TabIndex = 4;
             this.rect.TabStop = false;
+            this.rect.Click += new System.EventHandler(this.rect_Click);
             // 
             // line
             // 

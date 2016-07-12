@@ -33,6 +33,8 @@ namespace WB_Client
         mode == 0 - режим выбора
         mode == 1 - карандаш
         mode == 2 - линия
+        mode == 3 - прямоугольник
+        mode == 4 - эллипс
         ..........
         */
         int mode = 0;
@@ -167,7 +169,7 @@ namespace WB_Client
             if ((e.Button & MouseButtons.Left) != MouseButtons.Left)
                 return;
                         
-            if (pressed && (mode == 1 || mode == 2 || mode == 4))
+            if (pressed && (mode == 1 || mode == 2 || mode == 4 || mode == 3))
             {
                 Point pt = new Point(e.X, e.Y);
                 string msg = pt.X.ToString() + '+' + pt.Y.ToString() + '+' + (shape_list.Count - 1).ToString() ;
@@ -182,6 +184,13 @@ namespace WB_Client
                 shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
             }
             else if (pressed && mode == 4)
+            {
+                Point pt = new Point(e.X, e.Y);
+                string msg = pt.X.ToString() + '+' + pt.Y.ToString() + (shape_list.Count - 1).ToString();
+                client.Send(Encoding.UTF8.GetBytes(msg));
+                shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
+            }
+            else if (pressed && mode == 3)
             {
                 Point pt = new Point(e.X, e.Y);
                 string msg = pt.X.ToString() + '+' + pt.Y.ToString() + (shape_list.Count - 1).ToString();
@@ -335,6 +344,24 @@ namespace WB_Client
                     shape_list[shape_list.Count - 1].Item2.penColor = selectedColor;
                     shape_list[shape_list.Count - 1].Item2.thinkness = actualThickness;
                     break;
+                case 3: // Draw ellipse
+                    typeOfShape[0] = 3;
+                    canLoadFromOther = true;
+                    shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new RectangleC()));
+                    string query4 = typeOfShape[0].ToString() +
+                        '+' + selectedColor.ToArgb().ToString() +
+                        '+' + actualThickness.ToString() +
+                        '+' + (shape_list.Count - 1).ToString();
+
+                    client.Send(Encoding.UTF8.GetBytes(query4));
+
+                    debug_lable.Text = shape_list.Count.ToString() + "Before come";
+                    richTextBox1.AppendText(shape_list.Count.ToString() + "Before come\n");
+                    pressed = true;
+                    shape_list[shape_list.Count - 1].Item2.points.Add(e.Location);
+                    shape_list[shape_list.Count - 1].Item2.penColor = selectedColor;
+                    shape_list[shape_list.Count - 1].Item2.thinkness = actualThickness;
+                    break;
                 default: break;
             }
         }
@@ -353,6 +380,11 @@ namespace WB_Client
                 pressed = false;
             }
             else if (mode == 4)
+            {
+                // timerFoServ.Stop();
+                pressed = false;
+            }
+            else if (mode == 3)
             {
                 // timerFoServ.Stop();
                 pressed = false;
@@ -401,9 +433,21 @@ namespace WB_Client
                         shape_list[shape_list.Count - 1].Item2.penColor = Color.FromArgb(Convert.ToInt32(parsed[1]));
                         shape_list[shape_list.Count - 1].Item2.thinkness = Convert.ToInt32(parsed[2]);
                     }
-                        
+                    if (parsed[0] == "3")
+                    {
+                        shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new RectangleC()));
+                        shape_list[shape_list.Count - 1].Item2.penColor = Color.FromArgb(Convert.ToInt32(parsed[1]));
+                        shape_list[shape_list.Count - 1].Item2.thinkness = Convert.ToInt32(parsed[2]);
+                    }
+                    if (parsed[0] == "4")
+                    {
+                        shape_list.Add(new Tuple<int, Shape>(shape_list.Count, new Ellipse()));
+                        shape_list[shape_list.Count - 1].Item2.penColor = Color.FromArgb(Convert.ToInt32(parsed[1]));
+                        shape_list[shape_list.Count - 1].Item2.thinkness = Convert.ToInt32(parsed[2]);
+                    }
 
-                   
+
+
                     Invoke((MethodInvoker)delegate ()
                     {
                         debug_lable.Text = shape_list.Count.ToString() + "After come";
@@ -544,6 +588,11 @@ namespace WB_Client
         private void ellipse_Click(object sender, EventArgs e)
         {
             mode = 4;
+        }
+
+        private void rect_Click(object sender, EventArgs e)
+        {
+            mode = 3;
         }
     }
 }

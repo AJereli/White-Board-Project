@@ -39,7 +39,7 @@ namespace WB_Client
 
         private void Password_TextChanged(object sender, EventArgs e)
         {
-
+            
         }
 
         public bool authorizationServer(int port)
@@ -118,6 +118,9 @@ namespace WB_Client
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        
+        private void Login_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

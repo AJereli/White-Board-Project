@@ -28,32 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Login = new System.Windows.Forms.RichTextBox();
-            this.Password = new System.Windows.Forms.RichTextBox();
             this.Enter = new System.Windows.Forms.Button();
             this.registration = new System.Windows.Forms.Button();
+            this.Password = new System.Windows.Forms.TextBox();
+            this.Login = new System.Windows.Forms.TextBox();
+            this.name_a = new System.Windows.Forms.Label();
+            this.password_a = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // Login
-            // 
-            this.Login.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Login.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Login.Location = new System.Drawing.Point(59, 39);
-            this.Login.Name = "Login";
-            this.Login.Size = new System.Drawing.Size(150, 30);
-            this.Login.TabIndex = 0;
-            this.Login.Text = "";
-            this.Login.TextChanged += new System.EventHandler(this.Login_TextChanged);
-            // 
-            // Password
-            // 
-            this.Password.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Password.Location = new System.Drawing.Point(59, 103);
-            this.Password.Name = "Password";
-            this.Password.Size = new System.Drawing.Size(150, 30);
-            this.Password.TabIndex = 1;
-            this.Password.Text = "";
-            this.Password.TextChanged += new System.EventHandler(this.Password_TextChanged);
             // 
             // Enter
             // 
@@ -76,31 +57,75 @@
             this.registration.UseVisualStyleBackColor = true;
             this.registration.Click += new System.EventHandler(this.registration_Click);
             // 
+            // Password
+            // 
+            this.Password.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Password.Location = new System.Drawing.Point(71, 87);
+            this.Password.Multiline = true;
+            this.Password.Name = "Password";
+            this.Password.PasswordChar = '•';
+            this.Password.Size = new System.Drawing.Size(150, 30);
+            this.Password.TabIndex = 4;
+            // 
+            // Login
+            // 
+            this.Login.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Login.Location = new System.Drawing.Point(71, 38);
+            this.Login.Multiline = true;
+            this.Login.Name = "Login";
+            this.Login.Size = new System.Drawing.Size(150, 30);
+            this.Login.TabIndex = 5;
+            this.Login.TextChanged += new System.EventHandler(this.Login_TextChanged_1);
+            // 
+            // name_a
+            // 
+            this.name_a.AutoSize = true;
+            this.name_a.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.name_a.Location = new System.Drawing.Point(3, 51);
+            this.name_a.Name = "name_a";
+            this.name_a.Size = new System.Drawing.Size(38, 17);
+            this.name_a.TabIndex = 6;
+            this.name_a.Text = "Login";
+            // 
+            // password_a
+            // 
+            this.password_a.AutoSize = true;
+            this.password_a.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.password_a.Location = new System.Drawing.Point(3, 100);
+            this.password_a.Name = "password_a";
+            this.password_a.Size = new System.Drawing.Size(62, 17);
+            this.password_a.TabIndex = 7;
+            this.password_a.Text = "Password";
+            // 
             // Authorization
             // 
             this.AcceptButton = this.Enter;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(278, 261);
+            this.Controls.Add(this.password_a);
+            this.Controls.Add(this.name_a);
+            this.Controls.Add(this.Login);
+            this.Controls.Add(this.Password);
             this.Controls.Add(this.registration);
             this.Controls.Add(this.Enter);
-            this.Controls.Add(this.Password);
-            this.Controls.Add(this.Login);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "Authorization";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Авторизация";
             this.Load += new System.EventHandler(this.Authorization_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.RichTextBox Login;
-        private System.Windows.Forms.RichTextBox Password;
         private System.Windows.Forms.Button Enter;
         private System.Windows.Forms.Button registration;
+        private System.Windows.Forms.TextBox Password;
+        private System.Windows.Forms.TextBox Login;
+        private System.Windows.Forms.Label name_a;
+        private System.Windows.Forms.Label password_a;
     }
 }
