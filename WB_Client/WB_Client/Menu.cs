@@ -126,7 +126,7 @@ namespace WB_Client
 
         private void Menu_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ActiveForm.Close();
+            
             Application.Exit();
         }
     }

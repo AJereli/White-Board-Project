@@ -16,15 +16,16 @@ Board::Board(shared_ptr <Client> & _creator, shared_ptr <sf::TcpSocket> & _sock,
 	boar_main_thr->launch();
 
 }
-bool Board::saveShape(string & shapeInfo) {
+bool Board::saveShape(string & shapeInfo, sf::TcpSocket & client) {
 	bool sayThis = true;
 	int cntOfPlus = 0;
+	string identityMatr = "1!0!0!1!0!0";
+	int id;
 	for (int i = 0; i < shapeInfo.size(); ++i)
 		if (shapeInfo[i] == '+')
 			cntOfPlus++;
 	if (cntOfPlus == 3)
 		if (shapeInfo.find("-") != string::npos) {
-			string identityMatr = "1!0!0!1!0!0";
 			all_shapes.push_back(make_pair(make_pair(shapeInfo, identityMatr), vector<string>()));
 		}
 		else
@@ -32,7 +33,7 @@ bool Board::saveShape(string & shapeInfo) {
 	else if (cntOfPlus == 2) {
 		int lastPlus = shapeInfo.find_last_of('+');
 		if (shapeInfo[0] == '0' && shapeInfo.find("!") != string::npos) {
-			int id = stoi(shapeInfo.substr(2, lastPlus - 1));
+			id = stoi(shapeInfo.substr(2, lastPlus - 1));
 			all_shapes.at(id).first.second = shapeInfo.substr(shapeInfo.find_last_of('+') + 1, shapeInfo.length());
 		}
 		else {
@@ -41,16 +42,29 @@ bool Board::saveShape(string & shapeInfo) {
 				all_shapes.at(id).second.push_back(shapeInfo);
 			}
 			catch (out_of_range) {
-				all_shapes.erase(all_shapes.end()--);
-				return false;
+
+				//all_shapes.push_back(make_pair(make_pair(string("1+-16777216+1+"+to_string(id)), identityMatr), vector<string>()));
+				//all_shapes.resize(all_shapes.size() - 1);
+				
+				char ans[30000];
+				size_t rec = 0;
+				string query = "SENDME+" + to_string(id);
+				client.send(query.c_str(), query.length());
+				sf::sleep(sf::microseconds(250));
+				client.receive(ans, 30000, rec);
+				all_shapes.push_back(make_pair(make_pair(string(ans, rec), identityMatr), vector<string>()));
+				cout << "PROBLEMKA: " << string(ans, rec) + " " << sayThis << endl;
+				sayThis = false;
+				throw string(ans, rec);
+				//return false;
 			}
 		}
 
 	}
 
-
-	return sayThis;
 	cout << "Shapes on board " << creator->getName() + " : " << all_shapes.size() << endl;
+	return sayThis;
+
 
 }
 void Board::broadcastPainting() {
@@ -74,13 +88,19 @@ void Board::broadcastPainting() {
 						}
 
 						// ÑÎÕÐÀÍÅÍÈÅ ÔÈÃÓÐÛ
-						bool sayThis = saveShape(string(query, rec));
+						bool sayThis = false;
+						try {
+							sayThis = saveShape(string(query, rec), *it->first);
+						}
+						catch (string exp_query) {
+							for (auto say_all = users.begin(); say_all != users.end(); ++say_all)
+								if (say_all != it)
+									(*say_all->first).send(exp_query.c_str(), rec);
+						}
 						if (sayThis)
-							for (auto say_all = users.begin(); say_all != users.end(); ++say_all) {
-
+							for (auto say_all = users.begin(); say_all != users.end(); ++say_all)
 								if (say_all != it)
 									(*say_all->first).send(query, rec);
-							}
 					}
 				}
 			}
@@ -123,6 +143,7 @@ void Board::addUser(shared_ptr <sf::TcpSocket> & _sock, shared_ptr <Client> & cl
 			+ all_shapes[i].first.second); // Matrix
 
 		_sock->receive(query_code, 64, rec);
+		sf::sleep(sf::microseconds(1000));
 		_sock->send(info.c_str(), info.length());
 
 		string oneBigString;

@@ -25,7 +25,7 @@ namespace WB_Client
         public int resizing { get; set; } // Переменная для изменения размеров
         public int size = 10; // Размер прямоугольников-тригеров.   
         public int thinkness { get; set; } // Толищна кисти для рисования
-
+        public int type { get; set; }
 
         virtual public bool Contains(Point p)
         {

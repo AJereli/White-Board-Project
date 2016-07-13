@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Authorization));
             this.Enter = new System.Windows.Forms.Button();
             this.registration = new System.Windows.Forms.Button();
             this.Password = new System.Windows.Forms.TextBox();
@@ -65,7 +66,7 @@
             this.Password.Name = "Password";
             this.Password.PasswordChar = '•';
             this.Password.Size = new System.Drawing.Size(150, 30);
-            this.Password.TabIndex = 4;
+            this.Password.TabIndex = 2;
             // 
             // Login
             // 
@@ -74,7 +75,7 @@
             this.Login.Multiline = true;
             this.Login.Name = "Login";
             this.Login.Size = new System.Drawing.Size(150, 30);
-            this.Login.TabIndex = 5;
+            this.Login.TabIndex = 1;
             this.Login.TextChanged += new System.EventHandler(this.Login_TextChanged_1);
             // 
             // name_a
@@ -102,6 +103,7 @@
             this.AcceptButton = this.Enter;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+          
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(278, 261);
             this.Controls.Add(this.password_a);
@@ -111,9 +113,10 @@
             this.Controls.Add(this.registration);
             this.Controls.Add(this.Enter);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Authorization";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Авторизация";
+            this.Text = "Good idea! - Авторизация";
             this.Load += new System.EventHandler(this.Authorization_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

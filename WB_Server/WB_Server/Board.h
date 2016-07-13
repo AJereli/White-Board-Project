@@ -19,7 +19,7 @@ private:
 		sf::Thread * boar_main_thr = nullptr;
 		sf::Thread * sendBoardThr = nullptr;
 
-		bool saveShape(string & shapeInfo);
+		bool saveShape(string & shapeInfo, sf::TcpSocket & client);
 		void sendBoard();
 public:
 	
