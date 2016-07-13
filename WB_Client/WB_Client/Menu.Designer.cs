@@ -37,7 +37,7 @@
             // 
             // exitingFromProgram
             // 
-            this.exitingFromProgram.Location = new System.Drawing.Point(77, 239);
+            this.exitingFromProgram.Location = new System.Drawing.Point(77, 254);
             this.exitingFromProgram.Name = "exitingFromProgram";
             this.exitingFromProgram.Size = new System.Drawing.Size(120, 23);
             this.exitingFromProgram.TabIndex = 0;
@@ -91,7 +91,7 @@
             this.AcceptButton = this.loadOfBoard;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::WB_Client.Properties.Resources.pam_pam_menu;
+            this.BackgroundImage = global::WB_Client.Properties.Resources.pam_pam_menu2;
             this.ClientSize = new System.Drawing.Size(284, 316);
             this.Controls.Add(this.connectInfo);
             this.Controls.Add(this.UserName);

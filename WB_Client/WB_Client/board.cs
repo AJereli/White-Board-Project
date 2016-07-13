@@ -178,7 +178,7 @@ namespace WB_Client
         {
             if ((e.Button & MouseButtons.Left) != MouseButtons.Left)
                 return;
-            Thread.Sleep(4);
+            Thread.Sleep(2);
             if (pressed && mode != 0)
             {
                 Point pt = new Point(e.X, e.Y);
