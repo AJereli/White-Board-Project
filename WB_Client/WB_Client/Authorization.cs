@@ -31,8 +31,8 @@ namespace WB_Client
 
         private void Authorization_Load(object sender, EventArgs e)
         {
-           
-            
+
+
         }
 
         private void Login_TextChanged(object sender, EventArgs e)
@@ -50,17 +50,10 @@ namespace WB_Client
             byte[] bytes = new byte[64];
             client = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-            try
-            {
-                client.Connect(ipEndPoint);
-            }
-            catch (SocketException se)
-            {
-               
-                if (se.ErrorCode == 10061)
-                    MessageBox.Show("Сервер оффлайн");
-                client.Close();
-            }
+           
+            client.Connect(ipEndPoint);
+            
+            
 
             int loginLength = Login.Text.Length;
             int passwordLength = Password.Text.Length;
@@ -95,17 +88,28 @@ namespace WB_Client
             {
                 if (Password.Text.Length >= 5)
                 {
-                    if (authorizationServer(port))
+                    try
                     {
-                        name = Login.Text;
-                        Menu menuShow = new Menu();
-                        this.Hide();
-                        menuShow.Show();
+                        if (authorizationServer(port))
+                        {
+                            name = Login.Text;
+                            Menu menuShow = new Menu();
+                            this.Hide();
+                            menuShow.Show();
 
+                        }
+                        else
+                        {
+                            MessageBox.Show("Неверное имя или пароль!");
+                        }
                     }
-                    else
+                    catch (SocketException se)
                     {
-                        MessageBox.Show("Неверное имя или пароль!");
+
+                        if (se.ErrorCode == 10061)
+                            MessageBox.Show("Сервер оффлайн");
+                        client.Close();
+
                     }
                 }
                 else

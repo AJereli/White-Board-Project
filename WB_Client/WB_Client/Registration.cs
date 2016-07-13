@@ -82,14 +82,24 @@ namespace WB_Client
                 {
                     if (Regex.IsMatch(Email.Text, pattern, RegexOptions.IgnoreCase))//Проверка соответствия строки шаблону
                     {
-                        if (registrationServer(port))
+                        try
                         {
-                            MessageBox.Show("Успешно загегестрировались!");
-                            Close();
+                            if (registrationServer(port))
+                            {
+                                MessageBox.Show("Успешно загегестрировались!");
+                                Close();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Это имя занято!");
+                            }
                         }
-                        else
+                        catch (SocketException se)
                         {
-                            MessageBox.Show("Это имя занято!");
+
+                            if (se.ErrorCode == 10061)
+                                MessageBox.Show("Сервер оффлайн");
+                           
                         }
                     }
                     else
