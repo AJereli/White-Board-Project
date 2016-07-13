@@ -54,8 +54,6 @@ bool Board::saveShape(string & shapeInfo, sf::TcpSocket & client) {
 		id = stoi(shapeInfo.substr(shapeInfo.find_last_of('+') + 1, shapeInfo.length()));
 		all_shapes.erase(all_shapes.begin() + id);
 	}
-
-	cout << "Shapes on board " << creator->getName() + " : " << all_shapes.size() << endl;
 	return sayThis;
 
 

@@ -36,11 +36,8 @@ bool Server::authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_pt
 	char * pass = new char[256];
 		
 	client_socket->receive(name_c, 256, received_name);
-	cout << string(name_c, received_name) << endl;;
-	
 	
 	client_socket->receive(pass, 256, received_pass);
-	cout << string(pass, received_pass) << endl;;
 	char ans[1] = { already_online_code };
 	for (auto it = users.begin(); it != users.end(); ++it) {
 		if (it->second->getName() == string(name_c, received_name))
@@ -118,7 +115,7 @@ void Server::startListening() {
 				if (listener.accept(*client_socket) == sf::Socket::Done) { // Если клиент успешно подсоеденился к сокету
 
 					client_socket->receive(answer, 1, rec);
-					cout << "some one try to connecnt with code: " << answer[0] << endl;;
+				
 					if (answer[0] == authorize_code) // Запрос авторизации
 						if (authorization(client_socket, client)) {
 							cout << "authorization\n";
