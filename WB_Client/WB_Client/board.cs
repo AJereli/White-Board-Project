@@ -61,7 +61,7 @@ namespace WB_Client
 
             loadMode = WB_Client.Menu.loadMode;
 
-            user_name.Text = WB_Client.Menu.name;
+          
             broadCast = new Thread(delegate () { broadcastToTheWorld(); });
             muteShapeList = new Mutex();
             broadCast.Priority = ThreadPriority.Lowest;
@@ -72,8 +72,8 @@ namespace WB_Client
             graphics_buffer = Graphics.FromImage(offScreenBmp);
             graphics_buffer.SmoothingMode = SmoothingMode.AntiAlias;
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-
-
+            this.Text = "Good idea! - " + WB_Client.Menu.name;
+            this.KeyPreview = true;
             timer1.Start();
             prevLoc = new Point();
         }
@@ -398,6 +398,11 @@ namespace WB_Client
 
                     client.Send(Encoding.UTF8.GetBytes(query));
                 }
+                if (parsed[0] == "CTRLZ")
+                {
+                    int id = Convert.ToInt32(parsed[1]);
+                    shape_list.Remove(shape_list[id]);
+                }
                 if (parsed.Length == 4)
                 {
 
@@ -549,6 +554,16 @@ namespace WB_Client
         private void rect_Click(object sender, EventArgs e)
         {
             mode = 3;
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            if (e.KeyCode == Keys.Z && e.Control)
+            {
+                shape_list.Remove(shape_list[shape_list.Count - 1]);
+                client.Send(Encoding.UTF8.GetBytes("CTRLZ+" + (shape_list.Count).ToString()));
+            }
         }
     }
 }

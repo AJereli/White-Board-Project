@@ -18,18 +18,13 @@ const char wrong_pass_code = 100;
 const char wrong_name_code = 101;
 
 
-
-
 const char create_board_err_code = 105;
-
-
 ////////
 
 //////// USERS CODE
 
 const char USER_WAIT_CONFIRM = 0;
 const char USER_ONLINE = 1;
-
 
 
 ////////

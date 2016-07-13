@@ -37,7 +37,7 @@
             // 
             // exitingFromProgram
             // 
-            this.exitingFromProgram.Location = new System.Drawing.Point(77, 206);
+            this.exitingFromProgram.Location = new System.Drawing.Point(77, 239);
             this.exitingFromProgram.Name = "exitingFromProgram";
             this.exitingFromProgram.Size = new System.Drawing.Size(120, 23);
             this.exitingFromProgram.TabIndex = 0;
@@ -47,7 +47,7 @@
             // 
             // loadOfBoard
             // 
-            this.loadOfBoard.Location = new System.Drawing.Point(77, 134);
+            this.loadOfBoard.Location = new System.Drawing.Point(77, 160);
             this.loadOfBoard.Name = "loadOfBoard";
             this.loadOfBoard.Size = new System.Drawing.Size(120, 34);
             this.loadOfBoard.TabIndex = 1;
@@ -69,7 +69,7 @@
             // 
             this.UserName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.UserName.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.UserName.Location = new System.Drawing.Point(77, 98);
+            this.UserName.Location = new System.Drawing.Point(77, 124);
             this.UserName.Name = "UserName";
             this.UserName.Size = new System.Drawing.Size(120, 30);
             this.UserName.TabIndex = 3;
@@ -80,7 +80,7 @@
             this.connectInfo.AutoSize = true;
             this.connectInfo.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.connectInfo.ForeColor = System.Drawing.Color.Black;
-            this.connectInfo.Location = new System.Drawing.Point(74, 78);
+            this.connectInfo.Location = new System.Drawing.Point(74, 104);
             this.connectInfo.Name = "connectInfo";
             this.connectInfo.Size = new System.Drawing.Size(128, 17);
             this.connectInfo.TabIndex = 4;
@@ -91,7 +91,8 @@
             this.AcceptButton = this.loadOfBoard;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.BackgroundImage = global::WB_Client.Properties.Resources.pam_pam_menu;
+            this.ClientSize = new System.Drawing.Size(284, 316);
             this.Controls.Add(this.connectInfo);
             this.Controls.Add(this.UserName);
             this.Controls.Add(this.creatingOfBoard);
@@ -100,7 +101,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "Menu";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Good idea! - Меню";
+            this.Text = "Good idea! - username";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Menu_FormClosed);
             this.Load += new System.EventHandler(this.Menu_Load);
             this.ResumeLayout(false);

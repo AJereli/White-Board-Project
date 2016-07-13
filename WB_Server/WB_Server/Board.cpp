@@ -1,14 +1,9 @@
 #include "Board.h"
 
-
-
-
-
 Board::Board(shared_ptr <Client> & _creator, shared_ptr <sf::TcpSocket> & _sock, sf::TcpListener * listener) {
 	creator = (_creator);
 	sock_creator = _sock;
 	members.add(*listener);
-	//sock_of_members.push_back(sock_creator);
 	members.add(*sock_creator);
 	users.push_back(make_pair(sock_creator, creator));
 	board_online = 1;
@@ -42,24 +37,22 @@ bool Board::saveShape(string & shapeInfo, sf::TcpSocket & client) {
 				all_shapes.at(id).second.push_back(shapeInfo);
 			}
 			catch (out_of_range) {
-
-				//all_shapes.push_back(make_pair(make_pair(string("1+-16777216+1+"+to_string(id)), identityMatr), vector<string>()));
-				//all_shapes.resize(all_shapes.size() - 1);
-				
-				char ans[30000];
+				char ans[512];
 				size_t rec = 0;
 				string query = "SENDME+" + to_string(id);
 				client.send(query.c_str(), query.length());
 				sf::sleep(sf::microseconds(250));
-				client.receive(ans, 30000, rec);
+				client.receive(ans, sizeof(ans), rec);
 				all_shapes.push_back(make_pair(make_pair(string(ans, rec), identityMatr), vector<string>()));
-				cout << "PROBLEMKA: " << string(ans, rec) + " " << sayThis << endl;
 				sayThis = false;
 				throw string(ans, rec);
-				//return false;
 			}
 		}
 
+	}
+	else if (cntOfPlus == 1) {
+		id = stoi(shapeInfo.substr(shapeInfo.find_last_of('+') + 1, shapeInfo.length()));
+		all_shapes.erase(all_shapes.begin() + id);
 	}
 
 	cout << "Shapes on board " << creator->getName() + " : " << all_shapes.size() << endl;
@@ -75,7 +68,6 @@ void Board::broadcastPainting() {
 			for (auto it = users.begin(); it != users.end(); ++it) {
 				sf::TcpSocket & client = (*it->first);
 				if (members.isReady(client)) {
-
 					char query[512];
 
 					size_t rec = 0;
@@ -86,7 +78,6 @@ void Board::broadcastPainting() {
 							users.erase(it);
 							break;
 						}
-
 						// —Œ’–¿Õ≈Õ»≈ ‘»√”–€
 						bool sayThis = false;
 						try {
@@ -108,9 +99,7 @@ void Board::broadcastPainting() {
 
 	}
 }
-void Board::sendBoard() {
 
-}
 void Board::addUser(shared_ptr <sf::TcpSocket> & _sock, shared_ptr <Client> & client) {
 	char query_code[64];
 	size_t rec = 0;
@@ -170,7 +159,6 @@ string Board::getCreaterName() {
 }
 
 Board::~Board() {
-	cout << "del" << endl;
 	board_online = 0;
 	if (boar_main_thr != nullptr) {
 		boar_main_thr->terminate();

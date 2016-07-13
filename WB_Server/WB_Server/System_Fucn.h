@@ -14,4 +14,3 @@
 
 bool getUsersInfo(vector <pair <string, string> > & info_of_usres); // —читывает информацию о пользовател€х из users_data.txt в вектор. True в случае успеха, false иначе.
 	
-vector <int> parseCharArr(char * arr, size_t size);

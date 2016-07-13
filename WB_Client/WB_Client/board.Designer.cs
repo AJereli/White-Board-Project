@@ -34,7 +34,6 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.select_thickness = new System.Windows.Forms.TrackBar();
-            this.user_name = new System.Windows.Forms.Label();
             this.debug_lable = new System.Windows.Forms.Label();
             this.ellipse = new System.Windows.Forms.PictureBox();
             this.anyColor = new System.Windows.Forms.PictureBox();
@@ -70,6 +69,7 @@
             this.richTextBox1.Size = new System.Drawing.Size(158, 96);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
+            this.richTextBox1.Visible = false;
             // 
             // timer1
             // 
@@ -92,16 +92,6 @@
             this.select_thickness.Tag = "Тощина кисти";
             this.select_thickness.Value = 2;
             this.select_thickness.Scroll += new System.EventHandler(this.select_thickness_Scroll);
-            // 
-            // user_name
-            // 
-            this.user_name.AutoSize = true;
-            this.user_name.Location = new System.Drawing.Point(192, 20);
-            this.user_name.Name = "user_name";
-            this.user_name.Size = new System.Drawing.Size(35, 13);
-            this.user_name.TabIndex = 14;
-            this.user_name.Text = "label2";
-            this.user_name.Click += new System.EventHandler(this.user_name_Click);
             // 
             // debug_lable
             // 
@@ -254,7 +244,6 @@
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(866, 556);
             this.Controls.Add(this.ellipse);
-            this.Controls.Add(this.user_name);
             this.Controls.Add(this.select_thickness);
             this.Controls.Add(this.anyColor);
             this.Controls.Add(this.yellow);
@@ -296,7 +285,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.Pencil)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Select)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -317,7 +305,6 @@
         private System.Windows.Forms.PictureBox yellow;
         private System.Windows.Forms.PictureBox anyColor;
         private System.Windows.Forms.TrackBar select_thickness;
-        private System.Windows.Forms.Label user_name;
         private System.Windows.Forms.PictureBox ellipse;
         private System.Windows.Forms.Label debug_lable;
     }

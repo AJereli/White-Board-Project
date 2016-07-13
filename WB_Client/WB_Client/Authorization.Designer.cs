@@ -39,7 +39,7 @@
             // 
             // Enter
             // 
-            this.Enter.Location = new System.Drawing.Point(93, 168);
+            this.Enter.Location = new System.Drawing.Point(107, 187);
             this.Enter.Name = "Enter";
             this.Enter.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Enter.Size = new System.Drawing.Size(75, 23);
@@ -50,7 +50,7 @@
             // 
             // registration
             // 
-            this.registration.Location = new System.Drawing.Point(59, 226);
+            this.registration.Location = new System.Drawing.Point(70, 281);
             this.registration.Name = "registration";
             this.registration.Size = new System.Drawing.Size(150, 23);
             this.registration.TabIndex = 3;
@@ -61,7 +61,7 @@
             // Password
             // 
             this.Password.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Password.Location = new System.Drawing.Point(71, 87);
+            this.Password.Location = new System.Drawing.Point(87, 138);
             this.Password.Multiline = true;
             this.Password.Name = "Password";
             this.Password.PasswordChar = '•';
@@ -71,7 +71,7 @@
             // Login
             // 
             this.Login.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Login.Location = new System.Drawing.Point(71, 38);
+            this.Login.Location = new System.Drawing.Point(87, 82);
             this.Login.Multiline = true;
             this.Login.Name = "Login";
             this.Login.Size = new System.Drawing.Size(150, 30);
@@ -82,7 +82,7 @@
             // 
             this.name_a.AutoSize = true;
             this.name_a.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.name_a.Location = new System.Drawing.Point(3, 51);
+            this.name_a.Location = new System.Drawing.Point(8, 89);
             this.name_a.Name = "name_a";
             this.name_a.Size = new System.Drawing.Size(38, 17);
             this.name_a.TabIndex = 6;
@@ -92,7 +92,7 @@
             // 
             this.password_a.AutoSize = true;
             this.password_a.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.password_a.Location = new System.Drawing.Point(3, 100);
+            this.password_a.Location = new System.Drawing.Point(8, 145);
             this.password_a.Name = "password_a";
             this.password_a.Size = new System.Drawing.Size(62, 17);
             this.password_a.TabIndex = 7;
@@ -103,15 +103,16 @@
             this.AcceptButton = this.Enter;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-          
+            this.BackgroundImage = global::WB_Client.Properties.Resources.pam_pam_501_note_offsset;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(278, 261);
+            this.ClientSize = new System.Drawing.Size(284, 316);
             this.Controls.Add(this.password_a);
             this.Controls.Add(this.name_a);
             this.Controls.Add(this.Login);
             this.Controls.Add(this.Password);
             this.Controls.Add(this.registration);
             this.Controls.Add(this.Enter);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Authorization";

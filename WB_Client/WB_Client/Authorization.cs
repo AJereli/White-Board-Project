@@ -56,7 +56,8 @@ namespace WB_Client
             }
             catch (SocketException se)
             {
-                if (se.ErrorCode == 10054)
+               
+                if (se.ErrorCode == 10061)
                     MessageBox.Show("Сервер оффлайн");
                 client.Close();
             }

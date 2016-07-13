@@ -14,8 +14,7 @@ private:
 		unsigned int port = 8000;
 		bool running = 0;
 		int BOARD_CNT = 0;
-
-		
+	
 		sf::TcpListener listener;
 		sf::SocketSelector selector; //  онтейнер дл€ массового взаимодействи€ с сокетами
 
@@ -23,7 +22,6 @@ private:
 		 list <pair < shared_ptr <sf::TcpSocket>, shared_ptr <Client> > > users; // —писок пользователей. ѕара из клиент-сокета и клиента - пользователь.
 		vector <Board*> all_boards;
 		sf::Thread * connectingThread;
-		//sf::Mutex listen_mutex;
 
 		bool authorization(shared_ptr <sf::TcpSocket> & client_socket, shared_ptr <Client> & client);
 		void initListen();
