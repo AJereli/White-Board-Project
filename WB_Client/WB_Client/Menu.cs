@@ -28,6 +28,7 @@ namespace WB_Client
             query_board_code[0] = 5;
             create_board_err_code[0] = 105;
             connect_board_code[0] = 6;
+            Text = "Good idea! - " + Authorization.name;
             name = Authorization.name;
             InitializeComponent();
         }

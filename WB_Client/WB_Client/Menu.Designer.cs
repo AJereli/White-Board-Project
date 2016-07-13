@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Menu));
             this.exitingFromProgram = new System.Windows.Forms.Button();
             this.loadOfBoard = new System.Windows.Forms.Button();
             this.creatingOfBoard = new System.Windows.Forms.Button();
@@ -99,6 +100,7 @@
             this.Controls.Add(this.loadOfBoard);
             this.Controls.Add(this.exitingFromProgram);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Menu";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Good idea! - username";
