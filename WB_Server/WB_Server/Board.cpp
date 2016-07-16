@@ -60,7 +60,7 @@ bool Board::saveShape(string & shapeInfo, sf::TcpSocket & client) {
 }
 void Board::broadcastPainting() {
 	while (board_online) {
-		sf::sleep(sf::microseconds(10));
+		sf::sleep(sf::microseconds(40));
 		if (members.wait(sf::seconds(1.3f))) {
 
 			for (auto it = users.begin(); it != users.end(); ++it) {
@@ -130,7 +130,7 @@ void Board::addUser(shared_ptr <sf::TcpSocket> & _sock, shared_ptr <Client> & cl
 			+ all_shapes[i].first.second); // Matrix
 
 		_sock->receive(query_code, 64, rec);
-		sf::sleep(sf::microseconds(1000));
+		
 		_sock->send(info.c_str(), info.length());
 
 		string oneBigString;

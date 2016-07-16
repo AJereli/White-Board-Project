@@ -47,6 +47,7 @@
             this.line = new System.Windows.Forms.PictureBox();
             this.Pencil = new System.Windows.Forms.PictureBox();
             this.Select = new System.Windows.Forms.PictureBox();
+            this.undo = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.select_thickness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ellipse)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.anyColor)).BeginInit();
@@ -60,6 +61,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.line)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pencil)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Select)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.undo)).BeginInit();
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -236,6 +238,16 @@
             this.Select.TabStop = false;
             this.Select.Click += new System.EventHandler(this.Select_Click);
             // 
+            // undo
+            // 
+            this.undo.BackgroundImage = global::WB_Client.Properties.Resources.undo;
+            this.undo.Location = new System.Drawing.Point(190, 12);
+            this.undo.Name = "undo";
+            this.undo.Size = new System.Drawing.Size(30, 30);
+            this.undo.TabIndex = 16;
+            this.undo.TabStop = false;
+            this.undo.Click += new System.EventHandler(this.undo_Click);
+            // 
             // Board
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -243,6 +255,7 @@
             this.AutoSize = true;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(866, 556);
+            this.Controls.Add(this.undo);
             this.Controls.Add(this.ellipse);
             this.Controls.Add(this.select_thickness);
             this.Controls.Add(this.anyColor);
@@ -284,6 +297,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.line)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Pencil)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Select)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.undo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -307,5 +321,6 @@
         private System.Windows.Forms.TrackBar select_thickness;
         private System.Windows.Forms.PictureBox ellipse;
         private System.Windows.Forms.Label debug_lable;
+        private System.Windows.Forms.PictureBox undo;
     }
 }

@@ -68,7 +68,7 @@ namespace WB_Client
 
                     Board F2 = new Board(); //переход к чистойs доске
                     F2.ShowDialog();
-
+                    Close();
                 }
                 else if (answer[0] == board_not_found_code)
                 {
@@ -76,11 +76,11 @@ namespace WB_Client
                 }
             }
         }
-        private void exitingFromBoard_Click(object sender, EventArgs e) //Кнопка Exit. Работает при клике на нее
+        private void exitingFromBoard_Click(object sender, EventArgs e) 
         {
-            Application.Exit(); //Закрытие приложения
+            Application.Exit(); 
         }
-        //запрос на создание доски 5!!!!! query_board_code = 5
+   
         public bool chekingServer(int port)
         {
             byte[] bytes = new byte[64];
@@ -98,9 +98,6 @@ namespace WB_Client
                 }
             }
 
-
-
-
             if (bytes[0] == server_ok_code[0])
                 return true;
 
@@ -109,7 +106,7 @@ namespace WB_Client
             else
                 return false;
         }
-        private void creatingOfBoard_Click(object sender, EventArgs e)//Загрузка доски.Работает при клике на нее
+        private void creatingOfBoard_Click(object sender, EventArgs e)
         {
             if (chekingServer(port))
             {
@@ -117,7 +114,7 @@ namespace WB_Client
                 loadMode = 5;
                 F2.ShowDialog();
 
-                this.Hide();//закрываем Menu
+                this.Close();//закрываем Menu
             }
             else
             {

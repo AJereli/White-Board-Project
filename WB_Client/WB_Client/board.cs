@@ -48,7 +48,7 @@ namespace WB_Client
 
         Point prevLoc;
         Color selectedColor = Color.Black;
-        
+
         Point winCenter;
         Bitmap progressGif;
         Rectangle progressGifRect;
@@ -61,12 +61,12 @@ namespace WB_Client
 
             loadMode = WB_Client.Menu.loadMode;
 
-          
+
             broadCast = new Thread(delegate () { broadcastToTheWorld(); });
             muteShapeList = new Mutex();
             broadCast.Priority = ThreadPriority.Lowest;
             shape_list = new List<Tuple<int, Shape>>();
-
+            
             visible_graphics = this.CreateGraphics();
             offScreenBmp = new Bitmap(Width, Height);
             graphics_buffer = Graphics.FromImage(offScreenBmp);
@@ -184,7 +184,18 @@ namespace WB_Client
                 Point pt = new Point(e.X, e.Y);
                 string msg = pt.X.ToString() + '+' + pt.Y.ToString() + '+' + (shape_list.Count - 1).ToString();
 
-                client.Send(Encoding.UTF8.GetBytes(msg));
+                try {
+                    client.Send(Encoding.UTF8.GetBytes(msg));
+                }catch (SocketException se)
+                {
+                    if (se.ErrorCode == 10054)
+                    {
+                        broadCast.Abort();
+                        timer1.Stop();
+                        Application.Exit();
+                    }
+                }
+              
                 shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
             }
             else if (mode == 0 && idOfShape != -1)// Перемещаем в режиме выбора
@@ -386,7 +397,7 @@ namespace WB_Client
 
                 string msg = new string(Encoding.UTF8.GetChars(infoBuff), 0, rec);
                 string[] parsed = msg.Split('+');
-                
+
                 if (parsed[0] == "SENDME")
                 {
                     int id = Convert.ToInt32(parsed[1]);
@@ -442,9 +453,9 @@ namespace WB_Client
                             shape_list[id].Item2.points.Add(coords);
                             Invoke((MethodInvoker)delegate ()
                             {
-                                richTextBox1.AppendText("id: "+ id.ToString()+" cnt: "+shape_list[id].Item2.points.Count.ToString()+"\n");
+                                richTextBox1.AppendText("id: " + id.ToString() + " cnt: " + shape_list[id].Item2.points.Count.ToString() + "\n");
                             });
-                            
+
                         }
                         catch (ArgumentOutOfRangeException)
                         {
@@ -555,15 +566,27 @@ namespace WB_Client
         {
             mode = 3;
         }
-
+        private void deleteLast()
+        {
+            if (shape_list.Count > 0)
+            {
+                shape_list.Remove(shape_list[shape_list.Count - 1]);
+                client.Send(Encoding.UTF8.GetBytes("CTRLZ+" + (shape_list.Count).ToString()));
+            }
+        }
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
             if (e.KeyCode == Keys.Z && e.Control)
             {
-                shape_list.Remove(shape_list[shape_list.Count - 1]);
-                client.Send(Encoding.UTF8.GetBytes("CTRLZ+" + (shape_list.Count).ToString()));
+                deleteLast();
+
             }
+        }
+
+        private void undo_Click(object sender, EventArgs e)
+        {
+            deleteLast();
         }
     }
 }
