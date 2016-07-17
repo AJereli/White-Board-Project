@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Board));
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.select_thickness = new System.Windows.Forms.TrackBar();
@@ -63,15 +62,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.Select)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.undo)).BeginInit();
             this.SuspendLayout();
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(696, 448);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(158, 96);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
-            this.richTextBox1.Visible = false;
             // 
             // timer1
             // 
@@ -269,7 +259,6 @@
             this.Controls.Add(this.line);
             this.Controls.Add(this.Pencil);
             this.Controls.Add(this.Select);
-            this.Controls.Add(this.richTextBox1);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(1980, 1024);
@@ -303,8 +292,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.PictureBox Pencil;
         private System.Windows.Forms.PictureBox Select;

@@ -38,41 +38,38 @@ namespace WB_Client
         int mode = 0;
         int idOfShape = -1; // Сюда Номер выбранного объекта в списке
         int actualThickness = 2; // Текузая ширина кисти
-        static int loadMode;
+        static int loadMode;// Режим загрузки, новая доска или подключение к уже созданной
         static public byte[] new_shape_code = new byte[1];
         static public byte[] typeOfShape = new byte[1];
         static public string name;
-        static public Point mouseF;
-        static public Point mouseS;
-        public bool flagDown = false;
 
         Point prevLoc;
-        Color selectedColor = Color.Black;
+        Color selectedColor = Color.Black; // Цвет, которы рисуют
 
         Point winCenter;
-        Bitmap progressGif;
+        Bitmap progressGif; // Анимация прогресса 
         Rectangle progressGifRect;
 
         public Board()
         {
             InitializeComponent();
-            winCenter = new Point(Size.Width / 2, Size.Height / 2);
+            winCenter = new Point(Size.Width / 2, Size.Height / 2); // Текущий центр окна
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
 
-            loadMode = WB_Client.Menu.loadMode;
+            loadMode = WB_Client.Menu.loadMode; // Режим загрузки, новая доска или подключение к уже созданной
 
 
-            broadCast = new Thread(delegate () { broadcastToTheWorld(); });
+            broadCast = new Thread(delegate () { broadcastToTheWorld(); }); // Инициализация потока для принятия изменений других пользователей.
             muteShapeList = new Mutex();
             broadCast.Priority = ThreadPriority.Lowest;
             shape_list = new List<Tuple<int, Shape>>();
-            
-            visible_graphics = this.CreateGraphics();
-            offScreenBmp = new Bitmap(Width, Height);
-            graphics_buffer = Graphics.FromImage(offScreenBmp);
+
+            visible_graphics = this.CreateGraphics(); // Основная т.е. видимая графика.
+            offScreenBmp = new Bitmap(Width, Height); // Битмап для двойной буферизации .
+            graphics_buffer = Graphics.FromImage(offScreenBmp); // Графика для двойной буферизации .
             graphics_buffer.SmoothingMode = SmoothingMode.AntiAlias;
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            this.Text = "Good idea! - " + WB_Client.Menu.name;
+            this.Text = "Good idea! - " + WB_Client.Menu.name; // Заголовок окна
             this.KeyPreview = true;
             timer1.Start();
             prevLoc = new Point();
@@ -184,9 +181,11 @@ namespace WB_Client
                 Point pt = new Point(e.X, e.Y);
                 string msg = pt.X.ToString() + '+' + pt.Y.ToString() + '+' + (shape_list.Count - 1).ToString();
 
-                try {
+                try
+                {
                     client.Send(Encoding.UTF8.GetBytes(msg));
-                }catch (SocketException se)
+                }
+                catch (SocketException se)
                 {
                     if (se.ErrorCode == 10054)
                     {
@@ -195,7 +194,7 @@ namespace WB_Client
                         Application.Exit();
                     }
                 }
-              
+
                 shape_list[shape_list.Count - 1].Item2.points.Add(pt); // Добавляем точки в режиме рисования
             }
             else if (mode == 0 && idOfShape != -1)// Перемещаем в режиме выбора
@@ -273,27 +272,27 @@ namespace WB_Client
             muteShapeList.WaitOne();
             switch (mode)
             {
-                case 0: // Selecting and move
-                    for (int i = 0; i < shape_list.Count; i++) // Проверяем попадание в фигуру (контур)
+                case 0: // Выбор и перемещение
+                    for (int i = 0; i < shape_list.Count; i++) // Проверяем в какую именно фигуру мы попали
                     {
-                        if (shape_list[i].Item2.selected)
+                        if (shape_list[i].Item2.selected) // Если выделенно 
                         {
-                            if (shape_list[i].Item2.recF[1].Contains(e.Location))
+                            if (shape_list[i].Item2.recF[1].Contains(e.Location))// Если выбранный прямоугольник отвечает за масштабирование по оси X
                             {
                                 idOfShape = i;
-                                shape_list[i].Item2.resizing = 1;
+                                shape_list[i].Item2.resizing = 1; // Режим масштабирования по X
                             }
-                            else if (shape_list[i].Item2.recF[2].Contains(e.Location))
+                            else if (shape_list[i].Item2.recF[2].Contains(e.Location))// Если выбранный прямоугольник отвечает за масштабирование по оси Y
                             {
                                 idOfShape = i;
-                                shape_list[i].Item2.resizing = 2;
+                                shape_list[i].Item2.resizing = 2;// Режим масштабирования по Y
                             }
-                            else shape_list[i].Item2.selected = false;
+                            else shape_list[i].Item2.selected = false; // Выключить выделение
                         }
                         if (shape_list[i].Item2.Contains(new Point(e.X, e.Y)) && idOfShape == -1) // Первое попадание в фигуру
                         {
                             shape_list[i].Item2.select_point = e.Location;
-                            shape_list[i].Item2.selected = true;
+                            shape_list[i].Item2.selected = true; // Включаем выделение фигуры
                             idOfShape = i;
                         }
                     }
@@ -312,7 +311,7 @@ namespace WB_Client
                     break;
                 default: break;
             }
-            if (mode != 0)
+            if (mode != 0) // Отсылаем примитив
             {
                 typeOfShape[0] = Convert.ToByte(mode);
                 canLoadFromOther = true;
@@ -374,7 +373,7 @@ namespace WB_Client
                 int rec = 0;
                 try
                 {
-                    rec = client.Receive(infoBuff);
+                    rec = client.Receive(infoBuff); // Принимает сообщение от сервера
                 }
                 catch (SocketException se)
                 {
@@ -396,9 +395,9 @@ namespace WB_Client
                 }
 
                 string msg = new string(Encoding.UTF8.GetChars(infoBuff), 0, rec);
-                string[] parsed = msg.Split('+');
+                string[] parsed = msg.Split('+'); // Парсит сообщение на множество строк, разделение происходит по ключу, знаку +
 
-                if (parsed[0] == "SENDME")
+                if (parsed[0] == "SENDME") // Запрос повторную отправку информации о фигуре
                 {
                     int id = Convert.ToInt32(parsed[1]);
                     string query =
@@ -409,12 +408,12 @@ namespace WB_Client
 
                     client.Send(Encoding.UTF8.GetBytes(query));
                 }
-                if (parsed[0] == "CTRLZ")
+                if (parsed[0] == "CTRLZ") // Запрос на отмену последнего действия 
                 {
                     int id = Convert.ToInt32(parsed[1]);
                     shape_list.Remove(shape_list[id]);
                 }
-                if (parsed.Length == 4)
+                if (parsed.Length == 4) // Запрос на добавлении новой фигуры
                 {
 
                     if (parsed[0] == "1")
@@ -432,10 +431,7 @@ namespace WB_Client
                     shape_list[id].Item2.type = Convert.ToInt32(parsed[0]);
                     shape_list[id].Item2.penColor = Color.FromArgb(Convert.ToInt32(parsed[1]));
                     shape_list[id].Item2.thinkness = Convert.ToInt32(parsed[2]);
-                    Invoke((MethodInvoker)delegate ()
-                    {
-                        richTextBox1.AppendText(shape_list.Count.ToString() + "\n");
-                    });
+
                 }
 
                 else if (parsed.Length == 3)
@@ -443,18 +439,15 @@ namespace WB_Client
                     if (parsed[0] == "0" && msg.IndexOf('!') != -1)
                     {
                         int id = Convert.ToInt32(parsed[1]);
-                        shape_list[id].Item2.matrixFromStr(parsed[2]);
+                        shape_list[id].Item2.matrixFromStr(parsed[2]); // Формирование матрицы трансформации из строки
                     }
-                    else {
+                    else { // Добавление новой точки в фигуру.
                         Point coords = new Point(Convert.ToInt32(parsed[0]), Convert.ToInt32(parsed[1]));
                         int id = Convert.ToInt32(parsed[2]);
                         try
                         {
                             shape_list[id].Item2.points.Add(coords);
-                            Invoke((MethodInvoker)delegate ()
-                            {
-                                richTextBox1.AppendText("id: " + id.ToString() + " cnt: " + shape_list[id].Item2.points.Count.ToString() + "\n");
-                            });
+
 
                         }
                         catch (ArgumentOutOfRangeException)

@@ -116,13 +116,13 @@ void Board::addUser(shared_ptr <sf::TcpSocket> & _sock, shared_ptr <Client> & cl
 
 	string shapeSizeStr = to_string(all_shapes.size());
 
-	_sock->send(shapeSizeStr.c_str(), shapeSizeStr.length());
+	_sock->send(shapeSizeStr.c_str(), shapeSizeStr.length()); // Общее количество фигур на доске
 
 
 	cout << "Send size: " << shapeSizeStr << endl;
 
 	for (int i = 0; i < all_shapes.size(); ++i) {
-		string info = (
+		string info = ( // Формирование основной информации о фигуре
 			all_shapes[i].first.first // type, color, thickness, id
 			+ "+"
 			+ to_string(all_shapes[i].second.size())  // Numb of part
@@ -135,12 +135,12 @@ void Board::addUser(shared_ptr <sf::TcpSocket> & _sock, shared_ptr <Client> & cl
 
 		string oneBigString;
 		try {
-			oneBigString.append(all_shapes[i].second.at(0));
+			oneBigString.append(all_shapes[i].second.at(0)); 
 		}
 		catch (out_of_range) {
 			continue;
 		}
-		for (auto it = 1; it < all_shapes[i].second.size(); ++it)
+		for (auto it = 1; it < all_shapes[i].second.size(); ++it) // Отправка всех точек фигуры
 			oneBigString.append("-" + all_shapes[i].second[it]);
 
 

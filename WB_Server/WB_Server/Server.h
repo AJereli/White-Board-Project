@@ -19,7 +19,7 @@ private:
 		sf::SocketSelector selector; //  онтейнер дл€ массового взаимодействи€ с сокетами
 
 		vector <pair <string, string> > info_of_usres;
-		 list <pair < shared_ptr <sf::TcpSocket>, shared_ptr <Client> > > users; // —писок пользователей. ѕара из клиент-сокета и клиента - пользователь.
+		list <pair < shared_ptr <sf::TcpSocket>, shared_ptr <Client> > > users; // —писок пользователей. ѕара из клиент-сокета и клиента - пользователь.
 		vector <Board*> all_boards;
 		sf::Thread * connectingThread;
 
